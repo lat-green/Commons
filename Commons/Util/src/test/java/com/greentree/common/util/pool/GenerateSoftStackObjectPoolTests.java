@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.pool.GenerateSoftStackObjectPool;
+import com.greentree.commons.util.pool.GenerateSoftStackObjectPool;
 
 public class GenerateSoftStackObjectPoolTests {
 

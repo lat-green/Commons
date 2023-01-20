@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.joml.Matrix2f;
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.math.Mathf;
+import com.greentree.commons.math.Mathf;
+import com.greentree.commons.math.vector.Vector2f;
 
 public class MatrixTest {
 

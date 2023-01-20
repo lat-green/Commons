@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.math.Mathf;
-import com.greentree.common.math.vector.Vector3f;
+import com.greentree.commons.math.Mathf;
+import com.greentree.commons.math.geometry.MathLine3D;
+import com.greentree.commons.math.geometry.MathPlane3D;
+import com.greentree.commons.math.vector.Vector3f;
 
 public class MathPlane3DTest {
 

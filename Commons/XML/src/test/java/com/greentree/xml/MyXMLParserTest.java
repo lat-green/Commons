@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.greentree.common.xml.MyXMLParser;
+import com.greentree.commons.xml.MyXMLParser;
 
 public class MyXMLParserTest {
 

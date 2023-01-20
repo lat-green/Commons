@@ -11,7 +11,7 @@ import java.io.ObjectOutputStream;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.action.container.MultiContainer;
+import com.greentree.commons.action.container.MultiContainer;
 
 public class MultiContainerSerializableTest {
 

@@ -11,10 +11,10 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.greentree.data.resource.location.ClassLoaderResourceLocation;
-import com.greentree.data.resource.location.RecursionFileSystemLocation;
-import com.greentree.data.resource.location.RootFileResourceLocation;
-import com.greentree.data.resource.location.ZipResourceLocation;
+import com.greentree.commons.data.resource.location.ClassLoaderResourceLocation;
+import com.greentree.commons.data.resource.location.RecursionFileSystemLocation;
+import com.greentree.commons.data.resource.location.RootFileResourceLocation;
+import com.greentree.commons.data.resource.location.ZipResourceLocation;
 
 /** testing class FileSystemLocation
  * @author Arseny Latyshev

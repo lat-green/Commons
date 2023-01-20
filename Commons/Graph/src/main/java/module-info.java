@@ -1,13 +1,13 @@
 
-open module common.graph {
+open module commons.graph {
 	
-	requires transitive common.util;
+	requires transitive commons.util;
 	
-	exports com.greentree.common.graph;
-	exports com.greentree.common.graph.algorithm.walk;
-	exports com.greentree.common.graph.algorithm.path;
-	exports com.greentree.common.graph.algorithm.cycle;
-	exports com.greentree.common.graph.algorithm.brige;
-	exports com.greentree.common.graph.algorithm.component;
+	exports com.greentree.commons.graph;
+	exports com.greentree.commons.graph.algorithm.walk;
+	exports com.greentree.commons.graph.algorithm.path;
+	exports com.greentree.commons.graph.algorithm.cycle;
+	exports com.greentree.commons.graph.algorithm.brige;
+	exports com.greentree.commons.graph.algorithm.component;
 	
 }

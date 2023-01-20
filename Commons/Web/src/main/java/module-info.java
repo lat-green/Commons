@@ -1,14 +1,14 @@
 
-open module common.web {
-
-	requires transitive common.util;
-	requires transitive common.action;
-
-	exports com.greentree.common.web.protocol;
-	exports com.greentree.common.web.protocol.tcp;
-	exports com.greentree.common.web.protocol.udp;
-	exports com.greentree.common.web.protocol.netchannel;
-	exports com.greentree.common.web.room;
+open module commons.web {
 	
-
+	requires transitive commons.util;
+	requires transitive commons.action;
+	
+	exports com.greentree.commons.web.protocol;
+	exports com.greentree.commons.web.protocol.tcp;
+	exports com.greentree.commons.web.protocol.udp;
+	exports com.greentree.commons.web.protocol.netchannel;
+	exports com.greentree.commons.web.room;
+	
+	
 }

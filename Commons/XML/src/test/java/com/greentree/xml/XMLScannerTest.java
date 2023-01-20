@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.greentree.common.util.cortege.Pair;
-import com.greentree.common.util.iterator.IteratorUtil;
-import com.greentree.common.xml.parser.XMLScanner;
-import com.greentree.common.xml.parser.XMLTocen;
-import com.greentree.common.xml.parser.XMLTocenType;
+import com.greentree.commons.util.cortege.Pair;
+import com.greentree.commons.util.iterator.IteratorUtil;
+import com.greentree.commons.xml.parser.XMLScanner;
+import com.greentree.commons.xml.parser.XMLTocen;
+import com.greentree.commons.xml.parser.XMLTocenType;
 
 public class XMLScannerTest {
 

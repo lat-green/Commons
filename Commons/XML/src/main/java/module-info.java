@@ -1,9 +1,9 @@
-open module common.xml {
-
+open module commons.xml {
+	
+	requires transitive commons.util;
 	requires transitive java.xml;
-	requires transitive common.util;
-
-	exports com.greentree.common.xml;
-	exports com.greentree.common.xml.parser;
+	
+	exports com.greentree.commons.xml;
+	exports com.greentree.commons.xml.parser;
 	
 }

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.greentree.commons.util.function.LambdaSaveFunction;
+
 public class SaveFunctionTest {
 	
 	private boolean run_one;

@@ -14,11 +14,13 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import com.greentree.common.graph.algorithm.brige.BridgeFinderImpl;
-import com.greentree.common.graph.algorithm.cycle.CycleFinderImpl;
-import com.greentree.common.graph.algorithm.path.AllPathFinder;
-import com.greentree.common.graph.algorithm.path.MinPathFinder;
-import com.greentree.common.graph.algorithm.path.SmartAllPathFinder;
+import com.greentree.commons.graph.DirectedArc;
+import com.greentree.commons.graph.DirectedGraph;
+import com.greentree.commons.graph.algorithm.brige.BridgeFinderImpl;
+import com.greentree.commons.graph.algorithm.cycle.CycleFinderImpl;
+import com.greentree.commons.graph.algorithm.path.AllPathFinder;
+import com.greentree.commons.graph.algorithm.path.MinPathFinder;
+import com.greentree.commons.graph.algorithm.path.SmartAllPathFinder;
 
 public class DirectedGraphTest {
 	

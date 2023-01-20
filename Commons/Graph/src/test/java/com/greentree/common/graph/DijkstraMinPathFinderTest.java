@@ -6,8 +6,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.graph.algorithm.path.DijkstraMinPathFinder;
-import com.greentree.common.graph.algorithm.path.VertexPath;
+import com.greentree.commons.graph.DirectedGraph;
+import com.greentree.commons.graph.algorithm.path.DijkstraMinPathFinder;
+import com.greentree.commons.graph.algorithm.path.VertexPath;
 
 public class DijkstraMinPathFinderTest {
 	

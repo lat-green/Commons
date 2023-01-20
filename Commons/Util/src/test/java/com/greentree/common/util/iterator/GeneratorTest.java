@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.iterator.IteratorUtil;
+import com.greentree.commons.util.iterator.IteratorUtil;
 
 public class GeneratorTest {
 

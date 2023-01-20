@@ -2,8 +2,8 @@ package com.greentree.common.web.test;
 
 import java.net.InetAddress;
 
-import com.greentree.common.util.function.CheckedRunnable;
-import com.greentree.common.web.protocol.netchannel.NetChannel;
+import com.greentree.commons.util.function.CheckedRunnable;
+import com.greentree.commons.web.protocol.netchannel.NetChannel;
 
 public class NetChannelTest {
 

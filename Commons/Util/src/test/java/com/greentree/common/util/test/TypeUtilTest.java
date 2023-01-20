@@ -14,10 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.greentree.common.util.classes.info.TypeInfo;
-import com.greentree.common.util.classes.info.TypeInfoBuilder;
-import com.greentree.common.util.classes.info.TypeUtil;
-import com.greentree.common.util.cortege.Pair;
+import com.greentree.commons.util.classes.info.TypeInfo;
+import com.greentree.commons.util.classes.info.TypeInfoBuilder;
+import com.greentree.commons.util.classes.info.TypeUtil;
+import com.greentree.commons.util.cortege.Pair;
 
 public class TypeUtilTest {
 

@@ -1,14 +1,14 @@
 
-open module common.math {
-
-	requires transitive common.action;
-
+open module commons.math {
+	
+	requires transitive commons.action;
+	
 	requires transitive org.joml;
-
-	exports com.greentree.common.math;
-	exports com.greentree.common.math.vector;
-	exports com.greentree.common.math.vector.link;
-	exports com.greentree.common.math.geometry;
-	exports com.greentree.common.math.analysis;
-
+	
+	exports com.greentree.commons.math;
+	exports com.greentree.commons.math.vector;
+	exports com.greentree.commons.math.vector.link;
+	exports com.greentree.commons.math.geometry;
+	exports com.greentree.commons.math.analysis;
+	
 }

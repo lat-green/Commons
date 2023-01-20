@@ -15,8 +15,8 @@ import java.util.RandomAccess;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.classes.info.TypeInfo;
-import com.greentree.common.util.classes.info.TypeInfoBuilder;
+import com.greentree.commons.util.classes.info.TypeInfo;
+import com.greentree.commons.util.classes.info.TypeInfoBuilder;
 
 public class TypeInfoTest {
 	

@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.greentree.common.util.array.TArray;
-import com.greentree.common.util.cortege.Pair;
-import com.greentree.data.file.DataFile;
+import com.greentree.commons.data.file.DataFile;
+import com.greentree.commons.util.array.TArray;
+import com.greentree.commons.util.cortege.Pair;
 
 public class AssetFileTest {
 

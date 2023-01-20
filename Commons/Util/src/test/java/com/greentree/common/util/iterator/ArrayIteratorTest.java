@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.iterator.ArrayIterator;
+import com.greentree.commons.util.iterator.ArrayIterator;
 
 public class ArrayIteratorTest {
 

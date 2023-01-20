@@ -1,8 +1,6 @@
 package com.greentree.common.util.test;
 
-import static com.greentree.common.util.classes.ClassUtil.isMutable;
-import static com.greentree.common.util.classes.ClassUtil.read;
-import static com.greentree.common.util.classes.ClassUtil.write;
+import static com.greentree.commons.util.classes.ClassUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,7 +21,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.greentree.common.util.classes.ClassUtil;
+import com.greentree.commons.util.classes.ClassUtil;
 
 /**
  * testing ClassUtil.write and ClassUtil.read

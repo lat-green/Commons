@@ -1,5 +1,5 @@
-open module common.logger {
-
-	requires transitive common.util;
-
+open module commons.logger {
+	
+	requires transitive commons.util;
+	
 }

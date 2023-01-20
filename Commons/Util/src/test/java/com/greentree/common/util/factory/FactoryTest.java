@@ -7,9 +7,9 @@ import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.factory.IntProperty;
-import com.greentree.common.util.factory.MapInstanceProperties;
-import com.greentree.common.util.factory.ObjectFactories;
+import com.greentree.commons.util.factory.IntProperty;
+import com.greentree.commons.util.factory.MapInstanceProperties;
+import com.greentree.commons.util.factory.ObjectFactories;
 
 public class FactoryTest {
 	

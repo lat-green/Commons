@@ -2,23 +2,121 @@
 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-	<parent>
-		<groupId>com.greentree</groupId>
-		<artifactId>greentree-root</artifactId>
-		<version>0.0.4</version>
-	</parent>
-	
-	<name>Common</name>
-	
-	<packaging>pom</packaging>
-	
 	<groupId>com.greentree.commons</groupId>
    	<artifactId>commons</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
+
+	<packaging>pom</packaging>
+	
+	<name>Commons</name>
+	
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+		<java.version.source>18</java.version.source>
+		<java.version.target>${java.version.source}</java.version.target>
+		
+		<junit.version>5.5.2</junit.version>
+        <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+	</properties>
+	
+  	<organization>
+		<name>Green Tree</name>
+	</organization>
+
+	<developers>
+        <developer>
+            <name>Arseny Latyshev</name>
+            <email>arseny.latyshev@gmail.com</email>
+        </developer>
+    </developers>
+  
+  <distributionManagement>
+	   <repository>
+	     <id>github</id>
+	     <name>GitHub OWNER Apache Maven Packages</name>
+	     <url>https://maven.pkg.github.com/ara2003/base</url>
+	   </repository>
+	</distributionManagement>
+    
+    <dependencies>
+		<!--tests-->
+        <dependency>
+			<groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter</artifactId>
+		    <version>${junit.version}</version>
+		    <scope>test</scope>
+        </dependency>
+	</dependencies>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>action</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>assets</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>data</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>geometry</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>graph</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>image</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>logger</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>math</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>xml</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	
 	<modules>
 		<module>Action</module>
+		<module>Assets</module>
 		<module>Data</module>
+		<module>Geometry</module>
 		<module>Graph</module>
 		<module>Image</module>
 		<module>Logger</module>
@@ -28,4 +126,123 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 		<module>XML</module>
 	</modules>
 	
+	<build>
+		<pluginManagement>
+			<plugins>
+	            <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-surefire-plugin</artifactId>
+	                <version>${maven-surefire-plugin.version}</version>
+			        <configuration>
+			            <parallel>classes</parallel>
+			            <threadCount>8</threadCount>
+			        </configuration>
+	            </plugin>
+	            <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-jar-plugin</artifactId>
+					<configuration>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+							</manifest>
+						</archive>
+					</configuration>
+	            </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<source>${java.version.source}</source>
+						<target>${java.version.target}</target>
+				    	<compilerArgs>
+				       		<arg>-parameters</arg>
+				    	</compilerArgs>
+					</configuration>
+				</plugin>
+				<plugin>
+			        <groupId>org.jacoco</groupId>
+			        <artifactId>jacoco-maven-plugin</artifactId>
+	  				<version>${jacoco-maven-plugin.version}</version>
+			        <executions>
+			            <execution>
+			                <goals>
+			                    <goal>prepare-agent</goal>
+			                </goals>
+			            </execution>
+			            <execution>
+			                <id>report</id>
+			                <phase>test</phase>
+			                <goals>
+			                    <goal>report</goal>
+			                </goals>
+			            </execution>
+			             <execution>
+			                <id>jacoco-check</id>
+			                <goals>
+			                    <goal>check</goal>
+			                </goals>
+			                <configuration>
+			                	<haltOnFailure>false</haltOnFailure>
+			                    <rules>
+			                        <rule>
+			                            <element>PACKAGE</element>
+			                            <limits>
+			                                <limit>
+			                                    <counter>LINE</counter>
+			                                    <value>COVEREDRATIO</value>
+			                                    <minimum>0.75</minimum>
+			                                </limit>
+			                            </limits>
+			                        </rule>
+			                    </rules>
+			                </configuration>
+			            </execution>
+			        </executions>
+			    </plugin>
+			     <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven-shade-plugin.version}</version>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>bin</shadedClassifierName>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>org/datanucleus/**</exclude>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+	  	</plugins>
+		</pluginManagement>
+  </build>
+  
 </project>

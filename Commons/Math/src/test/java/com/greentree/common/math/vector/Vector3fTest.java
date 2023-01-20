@@ -5,6 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
+import com.greentree.commons.math.vector.AbstractVector3f;
+import com.greentree.commons.math.vector.Vector2f;
+import com.greentree.commons.math.vector.Vector3f;
+
 public class Vector3fTest {
 
 	@Test

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.cortege.UnOrentetPair;
+import com.greentree.commons.util.cortege.UnOrentetPair;
 /**
  * @author Arseny Latyshev
  *

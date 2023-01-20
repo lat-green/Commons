@@ -12,9 +12,9 @@ import java.time.Duration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.greentree.data.resource.location.CacheResourceLocation;
-import com.greentree.data.resource.location.RootFileResourceLocation;
-import com.greentree.data.resource.location.RootUrlResourceLocation;
+import com.greentree.commons.data.resource.location.CacheResourceLocation;
+import com.greentree.commons.data.resource.location.RootFileResourceLocation;
+import com.greentree.commons.data.resource.location.RootUrlResourceLocation;
 
 public class CacheFolderResourceLocationTest {
 	

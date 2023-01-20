@@ -2,6 +2,8 @@ package com.greentree.common.graph;
 
 import org.junit.jupiter.api.Test;
 
+import com.greentree.commons.graph.DirectedGraph;
+
 public class LipskijCycleFinderTest {
 
 	public static <T> void addUnoriented(DirectedGraph<T> graph, T a, T b) {

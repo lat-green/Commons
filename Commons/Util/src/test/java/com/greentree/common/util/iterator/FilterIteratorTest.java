@@ -7,8 +7,8 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.iterator.EmptyIterator;
-import com.greentree.common.util.iterator.FilterIterator;
+import com.greentree.commons.util.iterator.EmptyIterator;
+import com.greentree.commons.util.iterator.FilterIterator;
 
 public class FilterIteratorTest {
 

@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 
+import com.greentree.commons.data.FileWatcher;
+
 public class FileWatcherTest {
 	
 	private static final int SLEEP = 5;

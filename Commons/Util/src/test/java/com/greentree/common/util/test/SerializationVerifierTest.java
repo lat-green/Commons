@@ -1,7 +1,6 @@
 package com.greentree.common.util.test;
 
-import static com.greentree.common.util.classes.SerializationVerifier.isSerializabeClass;
-import static com.greentree.common.util.classes.SerializationVerifier.isSerializabeObject;
+import static com.greentree.commons.util.classes.SerializationVerifier.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,7 +11,7 @@ import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.cortege.Pair;
+import com.greentree.commons.util.cortege.Pair;
 
 /**
  * testing ClassUtil.write and ClassUtil.read

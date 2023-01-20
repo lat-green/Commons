@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.common.util.classes.ClassUtil;
+import com.greentree.commons.util.classes.ClassUtil;
 
 public class ClassUtilLCA {
 

@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.greentree.action.container.ListenerNotCloseException;
+import com.greentree.commons.action.container.ListenerNotCloseException;
+import com.greentree.commons.action.observer.integer.IntAction;
 
 public class IntActionTest {
 	

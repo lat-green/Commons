@@ -1,16 +1,16 @@
 
-open module common.action {
+open module commons.action {
 	
-	requires transitive common.util;
+	requires transitive commons.util;
 	
-	exports com.greentree.action;
-	exports com.greentree.action.observable;
-	exports com.greentree.action.observer;
-	exports com.greentree.action.observer.run;
-	exports com.greentree.action.observer.object;
-	exports com.greentree.action.observer.pair;
-	exports com.greentree.action.observer.type;
-	exports com.greentree.action.observer.integer;
-	exports com.greentree.action.container;
+	exports com.greentree.commons.action;
+	exports com.greentree.commons.action.observable;
+	exports com.greentree.commons.action.observer;
+	exports com.greentree.commons.action.observer.run;
+	exports com.greentree.commons.action.observer.object;
+	exports com.greentree.commons.action.observer.pair;
+	exports com.greentree.commons.action.observer.type;
+	exports com.greentree.commons.action.observer.integer;
+	exports com.greentree.commons.action.container;
 	
 }

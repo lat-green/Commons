@@ -1,9 +1,8 @@
 package com.greentree.common.math.analysis;
 
+import static com.greentree.commons.math.analysis.AnalysisFunctions.*;
+
 import org.junit.jupiter.api.Test;
-
-
-import static com.greentree.common.math.analysis.AnalysisFunctions.*;
 
 public class AnalysisFunctionsTest {
 
