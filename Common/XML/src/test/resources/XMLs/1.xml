@@ -1,0 +1,27 @@
+<scene>
+	<system type="TimeSystem"/>
+	<entity> 
+		<component type="ActionTransform">
+			<value name="position">
+				<x>0</x>
+				<y>2</y>
+				<z>0</z>
+			</value>
+		</component>
+		<component type="SpriteRendener">
+			<value name="texture">brick/brick.txt</value>
+		</component>
+	</entity>
+	<entity> 
+		<component type="ActionTransform">
+			<value name="position">
+				<x>0</x>
+				<y>2</y>
+				<z>0</z>
+			</value>
+		</component>
+		<component type="SpriteRendener">
+			<value name="texture">brick/brick.txt</value>
+		</component>
+	</entity>
+</scene>

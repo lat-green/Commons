@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene name="scene 1">
+	<system type="com.greentree.engine.render.ShowFPS"/>
+	<system type="com.greentree.engine.system.TimeSystem"/>
+	<system type="com.greentree.engine.system.ESCExtitSystem"/>
+	<system type="com.greentree.engine.system.UpdatingGameComponentSystem"/>
+	<system type="com.greentree.game.RotateSystem"/>
+	
+	<system type="com.greentree.engine3d.render.Camera3DRenderSystem"/>
+	
+	<system type="com.greentree.engine.system.StartGameComponentSystem"/>
+	<system type="com.greentree.engine.system.SaveSystem">
+		<value name="file to save">test1.save</value>
+	</system>
+	
+	<object name="test cube 1">
+		<component type="com.greentree.engine.component.Transform">
+			<value name="scale">
+				<value name="x">1</value>
+				<value name="y">1</value>
+				<value name="z">1</value>
+			</value>
+			<value name="position">
+				<value name="y">5</value>
+			</value>
+		</component>
+		<component type="com.greentree.engine.component.ObjMeshComponent">
+			<value name="mesh">cube</value>
+		</component>
+		<component type="com.greentree.engine3d.render.MeshRenderer">
+			<value name="matirial">iron</value>
+		</component>
+		<component type="com.greentree.game.RotateComponent">
+			<value name="speedY">.01</value>
+		</component>
+	</object>
+	<object name="OX">
+		<component type="com.greentree.engine.component.Transform">
+			<value name="position">
+				<value name="x">0</value>
+				<value name="y">5</value>
+				<value name="z">0</value>
+			</value>
+			<value name="scale">
+				<value name="x">10</value>
+				<value name="y">0.01</value>
+				<value name="z">0.01</value>
+			</value>
+		</component>
+		<component type="com.greentree.engine.component.ObjMeshComponent">
+			<value name="mesh">cube</value>
+		</component>
+		<component type="com.greentree.engine3d.render.MeshRenderer">
+			<value name="matirial">iron</value>
+		</component>
+	</object>
+	<object name="OY">
+		<component type="com.greentree.engine.component.Transform">
+			<value name="position">
+				<value name="y">5</value>
+			</value>
+			<value name="scale">
+				<value name="x">0.01</value>
+				<value name="y">10</value>
+				<value name="z">0.01</value>
+			</value>
+		</component>
+		<component type="com.greentree.engine.component.ObjMeshComponent">
+			<value name="mesh">cube</value>
+		</component>
+		<component type="com.greentree.engine3d.render.MeshRenderer">
+			<value name="matirial">iron</value>
+		</component>
+	</object>
+	<object name="OZ">
+		<component type="com.greentree.engine.component.Transform">
+			<value name="position">
+				<value name="x">0</value>
+				<value name="y">5</value>
+				<value name="z">0</value>
+			</value>
+			<value name="scale">
+				<value name="x">0.01</value>
+				<value name="y">0.01</value>
+				<value name="z">10</value>
+			</value>
+		</component>
+		<component type="com.greentree.engine.component.ObjMeshComponent">
+			<value name="mesh">cube</value>
+		</component>
+		<component type="com.greentree.engine3d.render.MeshRenderer">
+			<value name="matirial">iron</value>
+		</component>
+	</object>
+	<object name="test cube 2">
+		<component type="com.greentree.engine.component.Transform">
+			<value name="position">
+				<value name="x">-22</value>
+				<value name="y">3</value>
+				<value name="z">-70</value>
+			</value>
+		</component>
+		<component type="com.greentree.engine.component.ObjMeshComponent">
+			<value name="mesh">cube</value>
+		</component>
+		<component type="com.greentree.engine3d.render.MeshRenderer">
+			<value name="matirial">test</value>
+		</component>
+	</object>
+	<object name="test cube 3">
+		<component type="com.greentree.engine.component.Transform">
+			<value name="position">
+				<value name="x">-18</value>
+				<value name="y">3</value>
+				<value name="z">-70</value>
+			</value>
+		</component>
+		<component type="com.greentree.engine.component.ObjMeshComponent">
+			<value name="mesh">cube</value>
+		</component>
+		<component type="com.greentree.engine3d.render.MeshRenderer">
+			<value name="matirial">iron</value>
+		</component>
+		<component type="com.greentree.game.RotateComponent">
+			<value name="speedY">.021</value>
+			<value name="speedX">.01</value>
+		</component>
+	</object>
+	<object name="player">
+		<component type="com.greentree.engine.component.Transform"/>
+		<component type="com.greentree.engine.render.CameraComponent">
+			<value name="width">1600</value>
+			<value name="height">1200</value>
+		</component>
+		<component type="com.greentree.game.Controler3D">
+			<value name="control">wasd</value>
+			<value name="speed">15</value>
+		</component>
+	</object>
+</scene>
