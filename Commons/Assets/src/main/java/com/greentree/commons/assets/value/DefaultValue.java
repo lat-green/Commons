@@ -27,17 +27,20 @@ public final class DefaultValue<T> extends AbstractValue<T> implements Serializa
 	}
 	
 	public static <T> Value<T> newValue(Iterable<? extends Value<T>> values) {
-		values = IteratorUtil.clone(IteratorUtil.filter(values, x->!(x.isConst() && x.isNull())));
-		if(IteratorUtil.isEmpty(values))
-			throw new IllegalArgumentException();
-		if(IteratorUtil.size(values) == 1)
-			return values.iterator().next();
-		for(var v : values) {
+		final var list = new ArrayList<Value<T>>();
+		for(var v : values)
+			if(!(v.isConst() && v.isNull()))
+				list.add(v);
+		for(var v : list) {
 			if(!v.isConst())
 				break;
 			if(!v.isNull())
 				return v;
 		}
+		if(list.isEmpty())
+			return NullValue.instance();
+		if(list.size() == 1)
+			return list.iterator().next();
 		return new DefaultValue<>(values);
 	}
 	
