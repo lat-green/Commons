@@ -12,13 +12,13 @@ import org.junit.jupiter.api.Test;
 
 import com.greentree.commons.assets.value.MutableValue;
 import com.greentree.commons.assets.value.NullValue;
-import com.greentree.commons.assets.value.Value;
+import com.greentree.commons.assets.value.ObservableValue;
 
 public class ValueSerializableTest {
 	
-	private int checkClone(Value<?> obj) throws ClassNotFoundException, IOException {
+	private int checkClone(ObservableValue<?> obj) throws ClassNotFoundException, IOException {
 		final var ser = ser(obj);
-		final var c = (Value<?>) deser(ser);
+		final var c = (ObservableValue<?>) deser(ser);
 		assertEquals(obj, c);
 		assertEquals(obj.get(), c.get());
 		return ser.length;

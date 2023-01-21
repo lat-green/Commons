@@ -33,6 +33,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
             <email>arseny.latyshev@gmail.com</email>
         </developer>
     </developers>
+	
+	<modules>
+		<module>Action</module>
+		<module>Assets</module>
+		<module>Data</module>
+		<module>Geometry</module>
+		<module>Graph</module>
+		<module>Image</module>
+		<module>Logger</module>
+		<module>Math</module>
+		<module>Util</module>
+		<module>Web</module>
+		<module>XML</module>
+	</modules>
   
   <distributionManagement>
 	   <repository>
@@ -111,20 +125,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
-	<modules>
-		<module>Action</module>
-		<module>Assets</module>
-		<module>Data</module>
-		<module>Geometry</module>
-		<module>Graph</module>
-		<module>Image</module>
-		<module>Logger</module>
-		<module>Math</module>
-		<module>Util</module>
-		<module>Web</module>
-		<module>XML</module>
-	</modules>
 	
 	<build>
 		<pluginManagement>
