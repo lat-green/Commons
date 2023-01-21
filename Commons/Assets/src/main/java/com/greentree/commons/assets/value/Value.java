@@ -68,7 +68,9 @@ public interface Value<T> extends AutoCloseable {
 		return ConstValue.newValue(get());
 	}
 	
-	Serializable toSerializable();
+	default Serializable toSerializable() {
+		return toConst().toSerializable();
+	}
 	
 	default Value<T> toLazy() {
 		return ConstWrappedValue.newValue(this, LazyValue.newValue());

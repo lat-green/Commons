@@ -51,16 +51,6 @@ public final class LazyValue<T, R> extends AbstractValue<R>
 	}
 	
 	@Override
-	public boolean isNull() {
-		return value.isNull();
-	}
-	
-	@Override
-	public boolean isSerializeKey() {
-		return value.isSerializeKey();
-	}
-	
-	@Override
 	public ObjectObservable<R> observer() {
 		return value.observer();
 	}

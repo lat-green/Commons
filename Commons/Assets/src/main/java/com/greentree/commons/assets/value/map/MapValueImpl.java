@@ -19,11 +19,6 @@ public abstract class MapValueImpl<T, R> extends AbstractValue<R>
 	private T source;
 	
 	@Override
-	public boolean isSerializeKey() {
-		return true;
-	}
-	
-	@Override
 	public final R get() {
 		synchronized(this) {
 			return result.get();

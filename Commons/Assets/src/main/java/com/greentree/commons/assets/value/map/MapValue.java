@@ -6,6 +6,4 @@ public interface MapValue<T, R> extends Value<R> {
 	
 	void set(T value);
 	
-	boolean isSerializeKey();
-	
 }

@@ -43,4 +43,9 @@ public final class ConstValue<T> extends AbstractValue<T> implements Serializabl
 		return true;
 	}
 	
+	@Override
+	public Value<T> toConst() {
+		return this;
+	}
+	
 }

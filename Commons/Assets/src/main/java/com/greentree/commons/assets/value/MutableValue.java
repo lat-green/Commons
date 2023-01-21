@@ -48,9 +48,4 @@ public final class MutableValue<T> extends AbstractValue<T> implements Serializa
 		return "Mutable [" + value + "]";
 	}
 	
-	@Override
-	public boolean isSerializeKey() {
-		return true;
-	}
-	
 }
