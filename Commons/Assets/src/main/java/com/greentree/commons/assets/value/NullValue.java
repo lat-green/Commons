@@ -52,4 +52,9 @@ public final class NullValue<T> extends AbstractValue<T> implements Serializable
 		return true;
 	}
 	
+	@Override
+	public Value<T> toConst() {
+		return this;
+	}
+	
 }

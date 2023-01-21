@@ -43,6 +43,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 		<module>Image</module>
 		<module>Logger</module>
 		<module>Math</module>
+		<module>Tests</module>
 		<module>Util</module>
 		<module>Web</module>
 		<module>XML</module>
@@ -107,6 +108,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 				<groupId>com.greentree.commons</groupId>
 				<artifactId>math</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
+				<artifactId>tests</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.greentree.commons</groupId>

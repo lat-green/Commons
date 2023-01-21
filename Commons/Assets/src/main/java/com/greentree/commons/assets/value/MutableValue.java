@@ -14,11 +14,10 @@ public final class MutableValue<T> extends AbstractValue<T> implements Serializa
 	private final EventAction<T> action = new EventAction<>();
 	
 	public MutableValue() {
-		this(null);
 	}
 	
 	public MutableValue(T value) {
-		set(value);
+		this.value = value;
 	}
 	
 	public void event() {

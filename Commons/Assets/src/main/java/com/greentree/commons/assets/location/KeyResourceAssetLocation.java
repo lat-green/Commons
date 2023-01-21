@@ -11,13 +11,13 @@ import com.greentree.commons.util.exception.WrappedException;
 
 
 public class KeyResourceAssetLocation implements AssetLocation {
-
+	
 	private final ResourceLocation resources;
-
+	
 	public KeyResourceAssetLocation(ResourceLocation resources) {
 		this.resources = resources;
 	}
-
+	
 	private static AssetKey get(Resource res) throws IOException, ClassNotFoundException {
 		try(final var in = res.open()) {
 			try(final var oin = new ObjectInputStream(in)) {
@@ -25,31 +25,32 @@ public class KeyResourceAssetLocation implements AssetLocation {
 			}
 		}
 	}
-
+	
 	@Override
 	public AssetKey getKey(String name) {
 		AssetKey key = null;
 		try {
-			key = get0(name);
-		}catch (Exception e1) {
+			key = get0(name + ".key");
+		}catch(Exception e1) {
 			try {
-				key = get0(name+".key");
-			}catch (Exception e2) {
+				key = get0(name);
+			}catch(Exception e2) {
 				throw new MultiException(e1, e2);
 			}
 		}
-		if(key == null) try {
-			key = get0(name+".key");
-		}catch (Exception e) {
-			throw new WrappedException(e);
-		}
+		if(key == null)
+			try {
+				key = get0(name);
+			}catch(Exception e) {
+				throw new WrappedException(e);
+			}
 		return key;
 	}
-
+	
 	public ResourceLocation getResources() {
 		return resources;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -58,11 +59,12 @@ public class KeyResourceAssetLocation implements AssetLocation {
 		builder.append("]");
 		return builder.toString();
 	}
-
+	
 	private AssetKey get0(String name) throws ClassNotFoundException, IOException {
 		final var res = resources.getResource(name);
-		if(res == null) return null;
+		if(res == null)
+			return null;
 		return get(res);
 	}
-
+	
 }

@@ -27,10 +27,17 @@ public final class DefaultValue<T> extends AbstractValue<T> implements Serializa
 	}
 	
 	public static <T> Value<T> newValue(Iterable<? extends Value<T>> values) {
+		values = IteratorUtil.clone(IteratorUtil.filter(values, x->!(x.isConst() && x.isNull())));
 		if(IteratorUtil.isEmpty(values))
 			throw new IllegalArgumentException();
 		if(IteratorUtil.size(values) == 1)
 			return values.iterator().next();
+		for(var v : values) {
+			if(!v.isConst())
+				break;
+			if(!v.isNull())
+				return v;
+		}
 		return new DefaultValue<>(values);
 	}
 	
@@ -47,9 +54,16 @@ public final class DefaultValue<T> extends AbstractValue<T> implements Serializa
 		return result.get();
 	}
 	
-	private void init() {
-		if(lcs != null)
+	@Override
+	public void close() {
+		if(lcs != null) {
 			lcs.close();
+			lcs = null;
+		}
+	}
+	
+	private void init() {
+		close();
 		trim();
 		
 		final var lcs = new ArrayList<ListenerCloser>();
@@ -58,30 +72,25 @@ public final class DefaultValue<T> extends AbstractValue<T> implements Serializa
 			init();
 		};
 		
-		var nullOffset = 0;
-		Value<? extends T> value;
-		do {
-			value = values.get(nullOffset++);
-			final ListenerCloser lc = value.observer().addListener(l);
+		for(var v : values) {
+			final var lc = v.observer().addListener(l);
 			lcs.add(lc);
-			if(!value.isNull()) {
-				result.set(value.get());
-				break;
-			}
-		}while(true);
+		}
 		
-		this.lcs = ListenerCloser.merge(lcs);
+		for(var v : values)
+			if(!v.isNull()) {
+				result.set(v.get());
+				this.lcs = ListenerCloser.merge(lcs);
+				return;
+			}
+		ListenerCloser.merge(lcs).close();
+		result.set(null);
 	}
 	
 	
 	private void trim() {
 		for(var v : values)
 			v.get();
-	}
-	
-	@Override
-	public boolean isNull() {
-		return result.isNull();
 	}
 	
 	@Override

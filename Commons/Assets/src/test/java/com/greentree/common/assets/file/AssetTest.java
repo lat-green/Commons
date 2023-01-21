@@ -29,6 +29,7 @@ import com.greentree.commons.util.cortege.Pair;
 public class AssetTest {
 	
 	
+	private static final long TIMEOUT = 38;
 	private AssetManager manager;
 	
 	static Stream<Pair<KeyLoadRequestImpl<?>, ?>> map_requests() {
@@ -58,7 +59,7 @@ public class AssetTest {
 		assertTrue(manager.canLoad(request.loadType(), request.key()));
 	}
 	
-	@Timeout(value = 150, unit = TimeUnit.MILLISECONDS)
+	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
 	@MethodSource("requests")
 	@ParameterizedTest
 	<T> void AssetManager_canLoad_after_load(
@@ -71,7 +72,7 @@ public class AssetTest {
 		assertTrue(manager.canLoad(request.loadType(), request.key()));
 	}
 	
-	@Timeout(value = 150, unit = TimeUnit.MILLISECONDS)
+	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
 	@MethodSource("requests")
 	@ParameterizedTest
 	<T> void AssetManager_double_load(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -88,7 +89,7 @@ public class AssetTest {
 		assertEquals(res2.get(), result);
 	}
 	
-	@Timeout(value = 150, unit = TimeUnit.MILLISECONDS)
+	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
 	@MethodSource("requests")
 	@ParameterizedTest
 	<T> void AssetManager_double_loadAsync(
@@ -115,7 +116,7 @@ public class AssetTest {
 		assertTrue(manager.isDeepValid(request.loadType(), request.key()));
 	}
 	
-	@Timeout(value = 150, unit = TimeUnit.MILLISECONDS)
+	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
 	@MethodSource("requests")
 	@ParameterizedTest
 	<T> void AssetManager_isDeepValid_after_load(
@@ -163,7 +164,7 @@ public class AssetTest {
 		assertEquals(res.get(), result);
 	}
 	
-	@Timeout(value = 150, unit = TimeUnit.MILLISECONDS)
+	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
 	@MethodSource("requests")
 	@ParameterizedTest
 	<T> void AssetManager_load_with_Default(
@@ -179,7 +180,7 @@ public class AssetTest {
 	}
 	
 	
-	@Timeout(value = 150, unit = TimeUnit.MILLISECONDS)
+	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
 	@MethodSource("requests")
 	@ParameterizedTest
 	<T> void AssetManager_loadAsync(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -192,7 +193,7 @@ public class AssetTest {
 		assertEquals(res.get(), result);
 	}
 	
-	@Timeout(value = 150, unit = TimeUnit.MILLISECONDS)
+	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
 	@MethodSource("requests")
 	@ParameterizedTest
 	<T> void AssetManager_loadAsync_with_Default(
@@ -207,7 +208,7 @@ public class AssetTest {
 	}
 	
 	
-	@Timeout(value = 150, unit = TimeUnit.MILLISECONDS)
+	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
 	@MethodSource("map_requests")
 	@ParameterizedTest
 	<T> void AssetManager_map_load(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -275,7 +276,7 @@ public class AssetTest {
 		@Override
 		public Value<String> load(LoadContext context, AssetKey key) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(20);
 			}catch(InterruptedException e) {
 				e.printStackTrace();
 			}
