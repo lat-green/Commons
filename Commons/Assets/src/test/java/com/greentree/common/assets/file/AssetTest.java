@@ -50,7 +50,7 @@ public class AssetTest {
 		return res.stream();
 	}
 	
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_canLoad(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
 		final var request = pair.first;
@@ -60,7 +60,7 @@ public class AssetTest {
 	}
 	
 	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_canLoad_after_load(
 			Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -73,7 +73,7 @@ public class AssetTest {
 	}
 	
 	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_double_load(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
 		final var request = pair.first;
@@ -90,7 +90,7 @@ public class AssetTest {
 	}
 	
 	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_double_loadAsync(
 			Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -107,7 +107,7 @@ public class AssetTest {
 		assertEquals(res2.get(), result);
 	}
 	
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_isDeepValid(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
 		final var request = pair.first;
@@ -117,7 +117,7 @@ public class AssetTest {
 	}
 	
 	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_isDeepValid_after_load(
 			Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -129,7 +129,7 @@ public class AssetTest {
 		assertTrue(manager.isDeepValid(request.loadType(), request.key()));
 	}
 	
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_isValid(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
 		final var request = pair.first;
@@ -139,7 +139,7 @@ public class AssetTest {
 	}
 	
 	
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_isValid_after_load(
 			Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -152,7 +152,7 @@ public class AssetTest {
 	}
 	
 	
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_load(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
 		final var request = pair.first;
@@ -165,7 +165,7 @@ public class AssetTest {
 	}
 	
 	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_load_with_Default(
 			Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -181,7 +181,7 @@ public class AssetTest {
 	
 	
 	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_loadAsync(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
 		final var request = pair.first;
@@ -194,7 +194,7 @@ public class AssetTest {
 	}
 	
 	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
-	@MethodSource("requests")
+	@MethodSource(value = "requests")
 	@ParameterizedTest
 	<T> void AssetManager_loadAsync_with_Default(
 			Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
@@ -209,7 +209,7 @@ public class AssetTest {
 	
 	
 	@Timeout(value = TIMEOUT, unit = TimeUnit.MILLISECONDS)
-	@MethodSource("map_requests")
+	@MethodSource(value = "map_requests")
 	@ParameterizedTest
 	<T> void AssetManager_map_load(Pair<KeyLoadRequestImpl<? extends T>, ? extends T> pair) {
 		manager.addSerializator(new StringAssetSerializator(null));

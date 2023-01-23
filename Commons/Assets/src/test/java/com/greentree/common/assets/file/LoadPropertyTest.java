@@ -14,13 +14,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.greentree.commons.assets.serializator.LoadProperty;
 
 public class LoadPropertyTest {
-
+	
 	static Stream<Array<LoadProperty>> arrays() {
 		final var properties = Arrays.asList(LoadProperty.values());
 		final var result = getBoolean(properties);
-		return result.stream().map(arr -> new Array<>(arr.toArray(new LoadProperty[arr.size()])));
+		return result.stream().map(arr->new Array<>(arr.toArray(new LoadProperty[arr.size()])));
 	}
-
+	
 	private static <T> Collection<List<T>> getBoolean(Collection<T> collection) {
 		final var list = new ArrayList<>(collection);
 		return switch(list.size()) {
@@ -45,7 +45,8 @@ public class LoadPropertyTest {
 	void LoadProperty_has(Array<LoadProperty> propertiesArray) {
 		final var properties = propertiesArray.array;
 		final var mask = LoadProperty.getMask(properties);
-		for(var p : properties) assertTrue(LoadProperty.has(mask, p), mask +" not has "+ p);
+		for(var p : properties)
+			assertTrue(LoadProperty.has(mask, p), mask + " not has " + p);
 	}
 	
 	@MethodSource("arrays")
@@ -53,19 +54,19 @@ public class LoadPropertyTest {
 	void LoadProperty_not_has(Array<LoadProperty> propertiesArray) {
 		final var properties = propertiesArray.array;
 		final var mask = LoadProperty.getMask(properties);
-		final var not_mask = ~mask; 
+		final var not_mask = ~mask;
 		for(var p : properties)
-			assertFalse(LoadProperty.has(not_mask, p), mask +" has "+ p);
+			assertFalse(LoadProperty.has(not_mask, p), mask + " has " + p);
 	}
-
+	
 	private static final class Array<T> {
-
+		
 		public final T[] array;
-
+		
 		public Array(T[] array) {
 			this.array = array;
 		}
-
+		
 	}
-
+	
 }

@@ -37,7 +37,7 @@ public class MutableValueTest {
 			
 			assertEquals(v1.get(), TEXT);
 			
-			try(final var count = new ExecuteCounter(0)) {
+			try(final var count = new ExecuteCounter(1)) {
 				try(final var lc = v1.observer().addListener(count);) {
 					v1.set(TEXT);
 				}

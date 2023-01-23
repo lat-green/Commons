@@ -3,7 +3,6 @@ package com.greentree.commons.assets.serializator.manager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,9 +18,7 @@ import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.AssetSerializatorContainer.AssetSerializatorInfo;
 import com.greentree.commons.assets.value.ConstValue;
 import com.greentree.commons.assets.value.DefaultValue;
-import com.greentree.commons.assets.value.MutableValue;
 import com.greentree.commons.assets.value.MutableWrapedValue;
-import com.greentree.commons.assets.value.NullValue;
 import com.greentree.commons.assets.value.Value;
 import com.greentree.commons.data.resource.location.ResourceLocation;
 import com.greentree.commons.util.classes.info.TypeInfo;
@@ -142,29 +139,8 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 			return AssetManager.this.canLoad(type, key);
 		}
 		
-		@Override
-		public boolean equals(Object obj) {
-			if(this == obj)
-				return true;
-			if(obj == null || getClass() != obj.getClass())
-				return false;
-			var other = (LoadContextImpl) obj;
-			if(!getEnclosingInstance().equals(other.getEnclosingInstance()))
-				return false;
-			return properties == other.properties;
-		}
-		
 		public boolean has(LoadProperty property) {
 			return LoadProperty.has(properties, property);
-		}
-		
-		@Override
-		public int hashCode() {
-			final var prime = 31;
-			var result = 1;
-			result = prime * result + getEnclosingInstance().hashCode();
-			result = prime * result + Objects.hash(properties);
-			return result;
 		}
 		
 		@Override
@@ -200,10 +176,6 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 			return "PropWrapAssetLoader " + Arrays.toString(LoadProperty.getArray(properties));
 		}
 		
-		private AssetManager getEnclosingInstance() {
-			return AssetManager.this;
-		}
-		
 		private <T> Value<T> loadForward(TypeInfo<T> type, AssetKey key, T def) {
 			final var info = get(type);
 			try {
@@ -228,10 +200,10 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 				else
 					def = in_def;
 				
+				
 				if(def != null || has(LoadProperty.NULLABLE)) {
-					final var async_result = new MutableWrapedValue<>(ConstValue.newValue(def),
-							new MutableValue<>());
-					executor.submit(()-> {
+					final var async_result = MutableWrapedValue.newValue(ConstValue.newValue(def));
+					executor.execute(()-> {
 						try {
 							final var v = loadForward(type, key, def);
 							if(v == null)
@@ -273,8 +245,7 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 			
 			@Override
 			public <T> Value<T> load(TypeInfo<T> type, AssetKey key, T def) {
-				final var result = new MutableWrapedValue<>(NullValue.instance(),
-						new MutableValue<T>());
+				final var result = MutableWrapedValue.<T>newValue();
 				final var task = executor.submit(()-> {
 					final var v = LoadContextImpl.this.load(type, key, def);
 					result.set(v);
