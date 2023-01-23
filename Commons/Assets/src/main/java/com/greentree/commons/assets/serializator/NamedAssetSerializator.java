@@ -5,7 +5,7 @@ import com.greentree.commons.assets.key.NamedAssetKey;
 import com.greentree.commons.assets.location.AssetLocation;
 import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
-import com.greentree.commons.assets.value.Value;
+import com.greentree.commons.assets.source.Source;
 import com.greentree.commons.util.classes.info.TypeInfo;
 
 
@@ -29,7 +29,7 @@ public class NamedAssetSerializator<T> implements AssetSerializator<T> {
 	}
 	
 	@Override
-	public Value<T> load(LoadContext context, AssetKey ckey) {
+	public Source<T> load(LoadContext context, AssetKey ckey) {
 		if(ckey instanceof NamedAssetKey key) {
 			final var real_key = location.getKey(key.name());
 			return context.load(TYPE, real_key);

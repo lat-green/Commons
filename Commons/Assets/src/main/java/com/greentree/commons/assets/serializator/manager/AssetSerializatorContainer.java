@@ -19,8 +19,7 @@ import com.greentree.commons.assets.serializator.ResourceAssetSerializator;
 import com.greentree.commons.assets.serializator.ResultSerializator;
 import com.greentree.commons.assets.serializator.TypedAssetSerializator;
 import com.greentree.commons.assets.serializator.context.LoadContext;
-import com.greentree.commons.assets.value.ProxyValue;
-import com.greentree.commons.assets.value.Value;
+import com.greentree.commons.assets.source.Source;
 import com.greentree.commons.data.resource.location.ResourceLocation;
 import com.greentree.commons.util.classes.info.TypeInfo;
 import com.greentree.commons.util.classes.info.TypeUtil;
@@ -105,7 +104,7 @@ final class AssetSerializatorContainer {
 		private final AssetSerializator<T> serializator = new MultiAssetSerializator<>(
 				IteratorUtil.union(serializators, serializatorInfos));
 		
-		private final Ceche<AssetKey, SharedValue<T>> cache = new Ceche<>();
+		private final Ceche<AssetKey, Source<T>> cache = new Ceche<>();
 		
 		public AssetSerializatorInfo(TypeInfo<T> type) {
 			super(type);
@@ -139,15 +138,14 @@ final class AssetSerializatorContainer {
 		}
 		
 		@Override
-		public Value<T> load(LoadContext context, AssetKey key) {
+		public Source<T> load(LoadContext context, AssetKey key) {
 			final var v = cache.set(key, ()-> {
 				try {
-					return new SharedValue<>(serializator.load(context, key));
+					return serializator.load(context, key);
 				}catch(Exception e) {
 					throw new IllegalArgumentException("type:" + TYPE + " key:" + key, e);
 				}
 			});
-			v.refCount++;
 			return v;
 		}
 		
@@ -159,25 +157,6 @@ final class AssetSerializatorContainer {
 		@Override
 		public String toString() {
 			return "AssetSerializatorInfo [" + TYPE + "]";
-		}
-		
-		private static final class SharedValue<T> extends ProxyValue<T> implements Value<T> {
-			
-			private static final long serialVersionUID = 1L;
-			
-			private int refCount;
-			
-			public SharedValue(Value<T> source) {
-				super(source);
-			}
-			
-			@Override
-			public void close() {
-				refCount--;
-				if(refCount == 0)
-					super.close();
-			}
-			
 		}
 		
 	}

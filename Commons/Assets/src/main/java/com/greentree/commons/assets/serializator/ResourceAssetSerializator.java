@@ -7,6 +7,7 @@ import com.greentree.commons.assets.key.ResourceAssetKey;
 import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
 import com.greentree.commons.assets.serializator.manager.DeepValidAssetManagerBase;
+import com.greentree.commons.assets.source.mapper.AbstractMapSource;
 import com.greentree.commons.assets.value.ConstWrappedValue;
 import com.greentree.commons.assets.value.MutableValue;
 import com.greentree.commons.assets.value.Value;
@@ -42,7 +43,7 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 	}
 	
 	@Override
-	public Value<Resource> load(LoadContext context, AssetKey ckey) {
+	public Source<Resource> load(LoadContext context, AssetKey ckey) {
 		if(ckey instanceof ResourceAssetKey key) {
 			final var name = context.load(String.class, key.resourceName());
 			return ConstWrappedValue.newValue(name, new ResourceAsset());
@@ -50,40 +51,7 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 		return null;
 	}
 	
-	public final class NotMutableResourceAsset implements Value<Resource> {
-		
-		private static final long serialVersionUID = 1L;
-		private final MutableValue<Resource> resource;
-		
-		private transient ListenerCloser lc;
-		
-		public NotMutableResourceAsset(Resource resource) {
-			this.resource = new MutableValue<>(resource);
-			lc = resource.getAction().getOnModify().addListener(()-> {
-				this.resource.event();
-			});
-		}
-		
-		@Override
-		public void close() {
-			lc.close();
-			resource.close();
-			Value.super.close();
-		}
-		
-		@Override
-		public Resource get() {
-			return resource.get();
-		}
-		
-		@Override
-		public ObjectObservable<Resource> observer() {
-			return resource.observer();
-		}
-		
-	}
-	
-	private final class ResourceAsset extends AbstractMapValue<String, Resource> {
+	private final class ResourceAsset extends AbstractMapSource<String, Resource> {
 		
 		private static final long serialVersionUID = 1L;
 		
@@ -109,13 +77,6 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 				result_event();
 			});
 			return res;
-		}
-		
-		@Override
-		public Value<Resource> toNotMutable() {
-			final var res = get();
-			close();
-			return new NotMutableResourceAsset(res);
 		}
 		
 		@Override
