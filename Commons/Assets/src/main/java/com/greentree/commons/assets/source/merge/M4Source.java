@@ -2,6 +2,7 @@ package com.greentree.commons.assets.source.merge;
 
 import com.greentree.commons.assets.source.Source;
 import com.greentree.commons.assets.source.provider.SourceProvider;
+import com.greentree.commons.assets.value.merge.Group4;
 
 public final class M4Source<T1, T2, T3, T4> implements Source<Group4<T1, T2, T3, T4>> {
 	

@@ -31,7 +31,7 @@ public final class MapIterableAssetSerializator<T, R> implements AssetSerializat
 	}
 	
 	@Override
-	public Source<Iterable<R>> load(LoadContext context, AssetKey ckey) {
+	public Value<Iterable<R>> load(LoadContext context, AssetKey ckey) {
 		if(context.canLoad(T_ITER_TYPE, ckey)) {
 			final var t_iter = context.load(T_ITER_TYPE, ckey);
 			final var rv_iter = IteratorUtil.clone(IteratorUtil.map(t_iter.get(), t-> {

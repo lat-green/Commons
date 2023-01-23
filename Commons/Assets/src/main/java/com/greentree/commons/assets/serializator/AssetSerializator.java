@@ -7,7 +7,7 @@ import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
 import com.greentree.commons.assets.serializator.manager.DeepValidAssetManagerBase;
 import com.greentree.commons.assets.serializator.manager.DefaultAssetManager;
 import com.greentree.commons.assets.serializator.manager.ValidAssetManagerBase;
-import com.greentree.commons.assets.source.Source;
+import com.greentree.commons.assets.value.Value;
 import com.greentree.commons.util.classes.info.TypeInfo;
 import com.greentree.commons.util.classes.info.TypeUtil;
 
@@ -44,7 +44,7 @@ public interface AssetSerializator<T> {
 	
 	boolean canLoad(CanLoadAssetManager manager, AssetKey key);
 	
-	Source<T> load(LoadContext context, AssetKey key);
+	Value<T> load(LoadContext context, AssetKey key);
 	
 	default T loadDefault(DefaultAssetManager manager, AssetKeyType type) {
 		return null;

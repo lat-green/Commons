@@ -21,9 +21,9 @@ import com.greentree.commons.assets.serializator.manager.AssetManager;
 import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
 import com.greentree.commons.assets.serializator.manager.DefaultAssetManager;
 import com.greentree.commons.assets.serializator.request.KeyLoadRequestImpl;
-import com.greentree.commons.assets.source.function.Source1Function;
 import com.greentree.commons.assets.value.ConstValue;
 import com.greentree.commons.assets.value.Value;
+import com.greentree.commons.assets.value.function.Value1Function;
 import com.greentree.commons.util.cortege.Pair;
 
 public class AssetTest {
@@ -308,7 +308,7 @@ public class AssetTest {
 			return null;
 		}
 		
-		private static final class StringToInt implements Source1Function<String, Integer> {
+		private static final class StringToInt implements Value1Function<String, Integer> {
 			
 			private static final long serialVersionUID = 1L;
 			

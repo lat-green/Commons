@@ -2,7 +2,7 @@ package com.greentree.commons.assets.source;
 
 import java.util.Objects;
 
-import com.greentree.commons.assets.source.mapper.Mapper;
+import com.greentree.commons.assets.mapper.Mapper;
 import com.greentree.commons.assets.source.provider.SourceProvider;
 
 public final class MutableSource<T> implements Mapper<T, T> {

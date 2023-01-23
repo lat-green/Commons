@@ -2,6 +2,7 @@ package com.greentree.commons.assets.source.merge;
 
 import com.greentree.commons.assets.source.Source;
 import com.greentree.commons.assets.source.provider.SourceProvider;
+import com.greentree.commons.assets.value.merge.Group5;
 
 
 public final class M5Provider<T1, T2, T3, T4, T5>

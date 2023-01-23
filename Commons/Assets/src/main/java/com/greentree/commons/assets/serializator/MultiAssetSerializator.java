@@ -9,7 +9,7 @@ import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
 import com.greentree.commons.assets.serializator.manager.DeepValidAssetManagerBase;
 import com.greentree.commons.assets.serializator.manager.DefaultAssetManager;
 import com.greentree.commons.assets.serializator.manager.ValidAssetManagerBase;
-import com.greentree.commons.assets.source.Source;
+import com.greentree.commons.assets.value.Value;
 import com.greentree.commons.util.classes.info.TypeInfo;
 import com.greentree.commons.util.classes.info.TypeUtil;
 import com.greentree.commons.util.iterator.IteratorUtil;
@@ -39,7 +39,7 @@ public final class MultiAssetSerializator<T> implements AssetSerializator<T> {
 	}
 	
 	@Override
-	public final Source<T> load(LoadContext context, AssetKey key) {
+	public final Value<T> load(LoadContext context, AssetKey key) {
 		for(var serializator : iterable)
 			if(serializator.canLoad(context, key)) {
 				final var v = serializator.load(context, key);

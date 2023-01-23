@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.commons.assets.source.merge.Group2;
 import com.greentree.commons.assets.value.MutableValue;
 import com.greentree.commons.assets.value.Values;
+import com.greentree.commons.assets.value.merge.Group2;
 import com.greentree.commons.tests.ExecuteCounter;
 
 public class MergeTest {

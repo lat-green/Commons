@@ -6,7 +6,7 @@ open module commons.assets {
 	exports com.greentree.commons.assets.value;
 	exports com.greentree.commons.assets.value.map;
 	exports com.greentree.commons.assets.value.merge;
-	exports com.greentree.commons.assets.source.function;
+	exports com.greentree.commons.assets.value.function;
 	
 	exports com.greentree.commons.assets.key;
 	exports com.greentree.commons.assets.location;
