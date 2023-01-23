@@ -1,10 +1,11 @@
 package com.greentree.commons.assets.value.map;
 
 import com.greentree.commons.action.observable.ObjectObservable;
+import com.greentree.commons.assets.value.AbstractValue;
 import com.greentree.commons.assets.value.MutableValue;
 
 
-public final class LazyValue<T, R> implements MapValue<T, R> {
+public final class LazyValue<T, R> extends AbstractValue<R> implements SerializableMapValue<T, R> {
 	
 	private static final long serialVersionUID = 1L;
 	

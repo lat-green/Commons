@@ -53,7 +53,7 @@ public class DefaultValueTest {
 		
 		assertEquals(m.get(), TEXT1);
 		
-		try(final var count = new ExecuteCounter(1)) {
+		try(final var count = new ExecuteCounter(0)) {
 			try(final var lc = m.observer().addListener(count);) {
 				v1.set(TEXT1);
 				v2.set(TEXT2);

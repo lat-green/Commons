@@ -4,7 +4,7 @@ import java.io.ObjectStreamException;
 
 import com.greentree.commons.action.observable.ObjectObservable;
 
-public final class NullValue<T> implements Value<T> {
+public final class NullValue<T> extends AbstractValue<T> implements SerializableValue<T> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -15,6 +15,16 @@ public final class NullValue<T> implements Value<T> {
 	}
 	
 	private NullValue() {
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof NullValue;
 	}
 	
 	@SuppressWarnings("unchecked")

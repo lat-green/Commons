@@ -12,8 +12,17 @@ import org.junit.jupiter.api.Test;
 
 import com.greentree.commons.assets.value.MutableValue;
 import com.greentree.commons.assets.value.NullValue;
+import com.greentree.commons.assets.value.Value;
 
 public class ValueSerializableTest {
+	
+	private int checkClone(Value<?> obj) throws ClassNotFoundException, IOException {
+		final var ser = ser(obj);
+		final var c = (Value<?>) deser(ser);
+		assertEquals(obj, c);
+		assertEquals(obj.get(), c.get());
+		return ser.length;
+	}
 	
 	@SuppressWarnings("unchecked")
 	private <T> T deser(byte[] ser) throws IOException, ClassNotFoundException {
@@ -37,9 +46,9 @@ public class ValueSerializableTest {
 	void MutableValue_after_Serialization() throws ClassNotFoundException, IOException {
 		final var str = "Hello World";
 		final var strv = new MutableValue<>(str);
-		@SuppressWarnings("unchecked")
-		final var c = (MutableValue<String>) deser(ser(strv));
-		assertEquals(strv.get(), c.get());
+		final var c = deser(ser(strv));
+		assertEquals(strv, c);
+		checkClone(strv);
 	}
 	
 	@Test

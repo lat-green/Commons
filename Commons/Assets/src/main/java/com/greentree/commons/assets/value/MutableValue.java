@@ -2,9 +2,9 @@ package com.greentree.commons.assets.value;
 
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.action.observer.object.EventAction;
-import com.greentree.commons.assets.value.map.MapValue;
+import com.greentree.commons.assets.value.map.SerializableMapValue;
 
-public final class MutableValue<T> implements MapValue<T, T> {
+public final class MutableValue<T> extends AbstractValue<T> implements SerializableMapValue<T, T> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -12,11 +12,6 @@ public final class MutableValue<T> implements MapValue<T, T> {
 	private final EventAction<T> action = new EventAction<>();
 	
 	public MutableValue() {
-	}
-	
-	@Override
-	public void close() {
-		value = null;
 	}
 	
 	public MutableValue(T value) {

@@ -2,7 +2,7 @@ package com.greentree.commons.assets.value;
 
 import com.greentree.commons.action.observable.ObjectObservable;
 
-public final class ConstValue<T> implements Value<T> {
+public final class ConstValue<T> extends AbstractValue<T> implements SerializableValue<T> {
 	
 	private static final long serialVersionUID = 1L;
 	

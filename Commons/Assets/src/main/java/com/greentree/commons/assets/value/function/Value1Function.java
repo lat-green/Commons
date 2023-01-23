@@ -12,4 +12,8 @@ public interface Value1Function<T, R> extends Function<T, R>, Serializable {
 		return apply(value);
 	}
 	
+	default boolean isNull(T value) {
+		return apply(value) == null;
+	}
+	
 }

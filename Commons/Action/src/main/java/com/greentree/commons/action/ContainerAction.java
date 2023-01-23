@@ -28,8 +28,4 @@ public abstract class ContainerAction<L, LC extends ListenerContainer<L>> {
 		return listeners.size();
 	}
 	
-	public void clear() {
-		listeners.clear();
-	}
-	
 }

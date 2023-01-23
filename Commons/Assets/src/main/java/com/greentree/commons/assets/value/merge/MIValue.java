@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.action.observable.ObjectObservable;
+import com.greentree.commons.assets.value.AbstractValue;
 import com.greentree.commons.assets.value.MutableValue;
+import com.greentree.commons.assets.value.SerializableValue;
 import com.greentree.commons.assets.value.Value;
 import com.greentree.commons.util.iterator.IteratorUtil;
 
-public final class MIValue<T> implements Value<Iterable<T>> {
+public final class MIValue<T> extends AbstractValue<Iterable<T>>
+		implements SerializableValue<Iterable<T>> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -44,7 +47,7 @@ public final class MIValue<T> implements Value<Iterable<T>> {
 	
 	@Override
 	public boolean isConst() {
-		return IteratorUtil.all(values, Value::isConst);
+		return IteratorUtil.all(values, v->v.isConst());
 	}
 	
 	

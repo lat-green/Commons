@@ -7,7 +7,7 @@ import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.util.iterator.IteratorUtil;
 
-public final class DefaultValue<T> implements Value<T> {
+public final class DefaultValue<T> extends AbstractValue<T> implements SerializableValue<T> {
 	
 	private static final long serialVersionUID = 1L;
 	private final List<? extends Value<? extends T>> values;
@@ -31,17 +31,17 @@ public final class DefaultValue<T> implements Value<T> {
 		for(var v : values)
 			if(!(v.isConst() && v.isNull()))
 				list.add(v);
-		if(list.isEmpty())
-			return NullValue.instance();
-		if(list.size() == 1)
-			return list.iterator().next();
 		for(var v : list) {
 			if(!v.isConst())
 				break;
 			if(!v.isNull())
 				return v;
 		}
-		return new DefaultValue<>(list);
+		if(list.isEmpty())
+			return NullValue.instance();
+		if(list.size() == 1)
+			return list.iterator().next();
+		return new DefaultValue<>(values);
 	}
 	
 	private static <T> List<T> toList(Iterable<? extends T> values) {
@@ -78,12 +78,14 @@ public final class DefaultValue<T> implements Value<T> {
 		for(var v : values) {
 			final var lc = v.observer().addListener(l);
 			lcs.add(lc);
+		}
+		
+		for(var v : values)
 			if(!v.isNull()) {
 				result.set(v.get());
 				this.lcs = ListenerCloser.merge(lcs);
 				return;
 			}
-		}
 		ListenerCloser.merge(lcs).close();
 		result.set(null);
 	}

@@ -8,7 +8,7 @@ import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.assets.value.map.MapValue;
 
-public final class MutableWrapedValue<T, R> implements Value<R>
+public final class MutableWrapedValue<T, R> extends AbstractValue<R> implements SerializableValue<R>
 
 {
 	
@@ -23,14 +23,6 @@ public final class MutableWrapedValue<T, R> implements Value<R>
 		set0(value);
 	}
 	
-	public static <T> MutableWrapedValue<T, T> newValue() {
-		return newValue(NullValue.instance());
-	}
-	
-	public static <T> MutableWrapedValue<T, T> newValue(Value<? extends T> value) {
-		return new MutableWrapedValue<>(value, new MutableValue<>());
-	}
-	
 	@Override
 	public void close() {
 		if(lc != null) {
@@ -38,7 +30,6 @@ public final class MutableWrapedValue<T, R> implements Value<R>
 			lc = null;
 		}
 		source.close();
-		result.close();
 	}
 	
 	@Override

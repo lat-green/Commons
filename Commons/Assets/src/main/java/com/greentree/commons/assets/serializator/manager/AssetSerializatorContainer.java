@@ -5,7 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.greentree.commons.assets.key.AssetKey;
 import com.greentree.commons.assets.key.AssetKeyType;
@@ -19,7 +23,6 @@ import com.greentree.commons.assets.serializator.ResourceAssetSerializator;
 import com.greentree.commons.assets.serializator.ResultSerializator;
 import com.greentree.commons.assets.serializator.TypedAssetSerializator;
 import com.greentree.commons.assets.serializator.context.LoadContext;
-import com.greentree.commons.assets.value.ProxyValue;
 import com.greentree.commons.assets.value.Value;
 import com.greentree.commons.data.resource.location.ResourceLocation;
 import com.greentree.commons.util.classes.info.TypeInfo;
@@ -27,7 +30,6 @@ import com.greentree.commons.util.classes.info.TypeUtil;
 import com.greentree.commons.util.iterator.IteratorUtil;
 
 final class AssetSerializatorContainer {
-	
 	
 	private final Map<TypeInfo<?>, AssetSerializatorInfo<?>> serializators = new HashMap<>();
 	
@@ -105,7 +107,7 @@ final class AssetSerializatorContainer {
 		private final AssetSerializator<T> serializator = new MultiAssetSerializator<>(
 				IteratorUtil.union(serializators, serializatorInfos));
 		
-		private final Ceche<AssetKey, SharedValue<T>> cache = new Ceche<>();
+		private final Ceche<AssetKey, Value<T>> cache = new Ceche<>();
 		
 		public AssetSerializatorInfo(TypeInfo<T> type) {
 			super(type);
@@ -140,15 +142,13 @@ final class AssetSerializatorContainer {
 		
 		@Override
 		public Value<T> load(LoadContext context, AssetKey key) {
-			final var v = cache.set(key, ()-> {
+			return cache.set(key, ()-> {
 				try {
-					return new SharedValue<>(serializator.load(context, key));
+					return serializator.load(context, key);
 				}catch(Exception e) {
 					throw new IllegalArgumentException("type:" + TYPE + " key:" + key, e);
 				}
 			});
-			v.refCount++;
-			return v;
 		}
 		
 		@Override
@@ -161,23 +161,66 @@ final class AssetSerializatorContainer {
 			return "AssetSerializatorInfo [" + TYPE + "]";
 		}
 		
-		private static final class SharedValue<T> extends ProxyValue<T> implements Value<T> {
-			
-			private static final long serialVersionUID = 1L;
-			
-			private int refCount;
-			
-			public SharedValue(Value<T> source) {
-				super(source);
+	}
+	
+	private static final class CachedValue<T> {
+		
+		private T value;
+		
+		public void set(Supplier<? extends T> value) {
+			synchronized(this) {
+				this.value = value.get();
 			}
-			
-			@Override
-			public void close() {
-				refCount--;
-				if(refCount == 0)
-					super.close();
+		}
+		
+		public T get() {
+			synchronized(this) {
+				return value;
 			}
-			
+		}
+		
+	}
+	
+	private static final class Ceche<K, T> {
+		
+		private final ReadWriteLock lock = new ReentrantReadWriteLock();
+		private final Map<K, CachedValue<T>> cache = new ConcurrentHashMap<>();
+		
+		public T get(K key) {
+			lock.readLock().lock();
+			try {
+				final var value = cache.get(key);
+				if(value != null)
+					return value.get();
+				return null;
+			}finally {
+				lock.readLock().unlock();
+			}
+		}
+		
+		public boolean has(K key) {
+			return get(key) != null;
+		}
+		
+		public T set(K key, Supplier<T> supplier) {
+			lock.writeLock().lock();
+			try {
+				CachedValue<T> value = null;
+				value = cache.get(key);
+				if(value == null) {
+					value = new CachedValue<>();
+					cache.put(key, value);
+					try {
+						value.set(supplier);
+					}catch(Exception e) {
+						cache.remove(key);
+						throw e;
+					}
+				}
+				return value.get();
+			}finally {
+				lock.writeLock().unlock();
+			}
 		}
 		
 	}

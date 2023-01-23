@@ -2,12 +2,14 @@ package com.greentree.commons.assets.value;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Objects;
 
 import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.assets.value.map.MapValue;
 
-public final class ConstWrappedValue<T, R> implements Value<R> {
+public final class ConstWrappedValue<T, R> extends AbstractValue<R>
+		implements SerializableValue<R> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -25,7 +27,7 @@ public final class ConstWrappedValue<T, R> implements Value<R> {
 			MapValue<? super T, R> result) {
 		if(value.isConst()) {
 			result.set(value.get());
-			return result.toNotMutable();
+			return result;
 		}
 		return new ConstWrappedValue<>(value, result);
 	}
@@ -36,14 +38,27 @@ public final class ConstWrappedValue<T, R> implements Value<R> {
 			lc.close();
 			lc = null;
 		}
-		source.close();
-		result.close();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if(obj == null || getClass() != obj.getClass())
+			return false;
+		ConstWrappedValue<?, ?> other = (ConstWrappedValue<?, ?>) obj;
+		return Objects.equals(result, other.result);
 	}
 	
 	@Override
 	public R get() {
 		trim();
 		return result.get();
+	}
+	
+	@Override
+	public int hashCode() {
+		return result.hashCode();
 	}
 	
 	@Override
