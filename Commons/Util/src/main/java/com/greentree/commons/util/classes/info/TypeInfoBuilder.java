@@ -96,6 +96,15 @@ public abstract class TypeInfoBuilder {
 		return getTypeInfo(type, types);
 	}
 	
+	public static <C> TypeInfo<C> getTypeInfo(Class<?> type, TypeInfo<?>... parameteris) {
+		final var types = new Type[parameteris.length];
+		for(int i = 0; i < parameteris.length; i++) {
+			final var p = parameteris[i];
+			types[i] = ((TypeInfo<?>) p).getType();
+		}
+		return getTypeInfo(type, types);
+	}
+	
 	public static <C> TypeInfo<C> getTypeInfo(Class<?> type, Type... parameteris) {
 		return getTypeInfo(GenericType.build(type, parameteris));
 	}

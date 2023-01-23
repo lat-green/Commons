@@ -15,7 +15,7 @@ public final class MutableWrapedValue<T, R> extends AbstractValue<R> implements 
 	private static final long serialVersionUID = 1L;
 	
 	private final MapValue<T, R> result;
-	private Value<? extends T> value;
+	private Value<? extends T> source;
 	private transient ListenerCloser lc;
 	
 	public MutableWrapedValue(Value<? extends T> value, MapValue<T, R> result) {
@@ -29,6 +29,7 @@ public final class MutableWrapedValue<T, R> extends AbstractValue<R> implements 
 			lc.close();
 			lc = null;
 		}
+		source.close();
 	}
 	
 	@Override
@@ -69,23 +70,23 @@ public final class MutableWrapedValue<T, R> extends AbstractValue<R> implements 
 	
 	@Override
 	public String toString() {
-		return "MutableWrapedValue [" + value + ", " + result + "]";
+		return "MutableWrapedValue [" + source + ", " + result + "]";
 	}
 	
 	@java.io.Serial
 	private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
 		s.defaultReadObject();
-		set0(value);
+		set0(source);
 	}
 	
 	private void set0(Value<? extends T> value) {
 		Objects.requireNonNull(value);
-		this.value = value;
+		this.source = value;
 		lc = Values.set(value, result);
 	}
 	
 	private void trim() {
-		value.get();
+		source.get();
 	}
 	
 }

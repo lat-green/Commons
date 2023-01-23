@@ -35,6 +35,8 @@ public final class MIValue<T> extends AbstractValue<Iterable<T>>
 		if(lcs != null)
 			lcs.close();
 		lcs = null;
+		for(var v : values)
+			v.close();
 	}
 	
 	@Override

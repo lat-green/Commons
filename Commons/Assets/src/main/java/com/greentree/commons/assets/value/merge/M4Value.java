@@ -35,6 +35,10 @@ public final class M4Value<T1, T2, T3, T4> extends AbstractValue<Group4<T1, T2, 
 		if(lcs != null)
 			lcs.close();
 		lcs = null;
+		value1.close();
+		value2.close();
+		value3.close();
+		value4.close();
 	}
 	
 	@Override

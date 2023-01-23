@@ -2,6 +2,7 @@ package com.greentree.commons.assets.value;
 
 import java.util.Objects;
 
+@Deprecated
 public abstract class AbstractValue<T> implements Value<T> {
 	
 	@Override

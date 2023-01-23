@@ -1,7 +1,6 @@
-package com.greentree.commons.assets.value;
+package com.greentree.commons.assets.value.map;
 
 import com.greentree.commons.assets.value.function.Value1Function;
-import com.greentree.commons.assets.value.map.MapValueImpl;
 
 public final class ValueFuncMapValue<T, R> extends MapValueImpl<T, R> {
 	
@@ -9,18 +8,13 @@ public final class ValueFuncMapValue<T, R> extends MapValueImpl<T, R> {
 	
 	private final Value1Function<? super T, R> mapFunc;
 	
-	ValueFuncMapValue(Value1Function<? super T, R> mapFunc) {
+	public ValueFuncMapValue(Value1Function<? super T, R> mapFunc) {
 		this.mapFunc = mapFunc;
 	}
 	
 	@Override
 	public boolean isNull() {
 		return super.isNull() || mapFunc.isNull(source());
-	}
-	
-	@Override
-	public String toString() {
-		return "ValueFunc [" + mapFunc.getClass().getSimpleName() + "] " + super.toString();
 	}
 	
 	@Override

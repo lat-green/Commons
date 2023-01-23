@@ -308,21 +308,24 @@ public final class ClassUtil {
 		return getFields(clazz.getSuperclass(), field);
 	}
 	
-	public static Class<?> getNotPrimitive(Class<?> type) {
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> getNotPrimitive(Class<T> type) {
 		if(type == float.class)
-			return Float.class;
+			return (Class<T>) Float.class;
 		if(type == int.class)
-			return Integer.class;
+			return (Class<T>) Integer.class;
 		if(type == double.class)
-			return Double.class;
+			return (Class<T>) Double.class;
 		if(type == char.class)
-			return Character.class;
+			return (Class<T>) Character.class;
 		if(type == byte.class)
-			return Byte.class;
+			return (Class<T>) Byte.class;
 		if(type == short.class)
-			return Short.class;
+			return (Class<T>) Short.class;
 		if(type == boolean.class)
-			return Boolean.class;
+			return (Class<T>) Boolean.class;
+		if(type == long.class)
+			return (Class<T>) Long.class;
 		return type; // not primitive
 	}
 	

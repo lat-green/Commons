@@ -45,7 +45,8 @@ public final class MultiAssetSerializator<T> implements AssetSerializator<T> {
 				final var v = serializator.load(context, key);
 				return Objects.requireNonNull(v);
 			}
-		return null;
+		throw new IllegalArgumentException(
+				"no one serializator can not load " + key + " " + IteratorUtil.toString(iterable));
 	}
 	
 	@Override

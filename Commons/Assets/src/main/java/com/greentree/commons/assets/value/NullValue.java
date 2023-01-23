@@ -57,4 +57,9 @@ public final class NullValue<T> extends AbstractValue<T> implements Serializable
 		return this;
 	}
 	
+	@Override
+	public Value<T> toLazy() {
+		return this;
+	}
+	
 }

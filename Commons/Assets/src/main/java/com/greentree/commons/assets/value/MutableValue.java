@@ -1,7 +1,5 @@
 package com.greentree.commons.assets.value;
 
-import java.util.Objects;
-
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.action.observer.object.EventAction;
 import com.greentree.commons.assets.value.map.SerializableMapValue;
@@ -36,10 +34,8 @@ public final class MutableValue<T> extends AbstractValue<T> implements Serializa
 	
 	@Override
 	public void set(T value) {
-		if(!Objects.equals(value, this.value)) {
-			this.value = value;
-			event();
-		}
+		this.value = value;
+		event();
 	}
 	
 	@Override

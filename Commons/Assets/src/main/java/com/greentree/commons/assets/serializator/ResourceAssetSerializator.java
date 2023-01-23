@@ -42,7 +42,7 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 	@Override
 	public Value<Resource> load(LoadContext context, AssetKey ckey) {
 		if(ckey instanceof ResourceAssetKey key) {
-			final var name = context.load(String.class).set(key.resourceName()).load();
+			final var name = context.load(String.class, key.resourceName());
 			return ConstWrappedValue.newValue(name, new ResourceAsset());
 		}
 		return null;
@@ -68,17 +68,16 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 		
 		@Override
 		public Resource map(String name) {
+			if(name == null)
+				return null;
 			final var res = resources.getResource(name);
 			if(res == null)
 				throw new IllegalArgumentException("resource not found " + name);
-			
 			if(lc != null)
 				lc.close();
-			
 			lc = res.getAction().getOnModify().addListener(()-> {
 				result_event();
 			});
-			
 			return res;
 		}
 		

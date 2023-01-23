@@ -48,4 +48,9 @@ public final class ConstValue<T> extends AbstractValue<T> implements Serializabl
 		return this;
 	}
 	
+	@Override
+	public Value<T> toLazy() {
+		return this;
+	}
+	
 }

@@ -6,7 +6,6 @@ import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
 import com.greentree.commons.assets.serializator.manager.DeepValidAssetManagerBase;
 import com.greentree.commons.assets.serializator.manager.ValidAssetManagerBase;
-import com.greentree.commons.assets.serializator.request.KeyLoadRequestImpl;
 import com.greentree.commons.assets.value.DefaultValue;
 import com.greentree.commons.assets.value.Value;
 import com.greentree.commons.util.classes.info.TypeInfo;
@@ -52,15 +51,11 @@ public final class DefaultSerializator<T> extends TypedAssetSerializator<T> {
 		return false;
 	}
 	
-	private KeyLoadRequestImpl<T> request(AssetKey key) {
-		return new KeyLoadRequestImpl<>(TYPE, key);
-	}
-	
 	@Override
 	public Value<T> load(LoadContext context, AssetKey key) {
 		if(key instanceof DefaultAssetKey ks) {
-			final var keys = IteratorUtil.filter(ks.keys(), k->context.isValid(TYPE, k));
-			final var values = IteratorUtil.map(keys, k->context.load(request(k)));
+			final var keys = ks.keys();
+			final var values = IteratorUtil.map(keys, k->context.load(TYPE, k));
 			return DefaultValue.newValue(values);
 		}
 		return null;

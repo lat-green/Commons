@@ -32,9 +32,9 @@ public final class ClassInfo<C> implements TypeInfo<C> {
 	}
 	
 	@Override
-	public TypeInfo<?> getBoxing() {
+	public TypeInfo<C> getBoxing() {
 		if(isPrimitive())
-			return TypeInfoBuilder.getTypeInfo(ClassUtil.getNotPrimitive(cls));
+			return INSTANCIES.get(ClassUtil.getNotPrimitive(cls));
 		return this;
 	}
 	

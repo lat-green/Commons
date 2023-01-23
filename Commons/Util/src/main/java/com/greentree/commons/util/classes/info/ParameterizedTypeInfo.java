@@ -93,7 +93,7 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
 	}
 	
 	@Override
-	public TypeInfo<?> getBoxing() {
+	public TypeInfo<C> getBoxing() {
 		return this;
 	}
 	
@@ -199,7 +199,7 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
 	}
 	
 	private static final class ParameterizedTypeInfoSingletonFactory
-	extends AbstractSaveFunction<ParameterizedType, ParameterizedTypeInfo<?>> {
+			extends AbstractSaveFunction<ParameterizedType, ParameterizedTypeInfo<?>> {
 		
 		
 		private static final long serialVersionUID = 1L;
@@ -211,8 +211,9 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
 		
 		@Override
 		protected ParameterizedTypeInfo<?> create(ParameterizedType type) {
-			final var args = IteratorUtil.clone(
-					IteratorUtil.map(IteratorUtil.iterable(type.getActualTypeArguments()), TypeInfoBuilder::getTypeInfo));
+			final var args = IteratorUtil
+					.clone(IteratorUtil.map(IteratorUtil.iterable(type.getActualTypeArguments()),
+							TypeInfoBuilder::getTypeInfo));
 			if(IteratorUtil.all(args, i->i != null))
 				return new ParameterizedTypeInfo<>(type);
 			throw new IllegalArgumentException("" + type);

@@ -2,7 +2,6 @@ package com.greentree.commons.assets.value;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.Objects;
 
 import com.greentree.commons.action.ListenerCloser;
@@ -15,11 +14,11 @@ public final class ConstWrappedValue<T, R> extends AbstractValue<R>
 	private static final long serialVersionUID = 1L;
 	
 	private final MapValue<T, R> result;
-	private final Value<? extends T> value;
+	private final Value<? extends T> source;
 	private transient ListenerCloser lc;
 	
 	private ConstWrappedValue(Value<? extends T> value, MapValue<T, R> result) {
-		this.value = value;
+		this.source = value;
 		this.result = result;
 		init();
 	}
@@ -28,7 +27,7 @@ public final class ConstWrappedValue<T, R> extends AbstractValue<R>
 			MapValue<? super T, R> result) {
 		if(value.isConst()) {
 			result.set(value.get());
-			return result.toConst();
+			return result;
 		}
 		return new ConstWrappedValue<>(value, result);
 	}
@@ -64,7 +63,7 @@ public final class ConstWrappedValue<T, R> extends AbstractValue<R>
 	
 	@Override
 	public boolean isConst() {
-		return value.isConst();
+		return source.isConst();
 	}
 	
 	@Override
@@ -74,11 +73,11 @@ public final class ConstWrappedValue<T, R> extends AbstractValue<R>
 	
 	@Override
 	public String toString() {
-		return "ConstWrappedValue [" + value + ", " + result + "]";
+		return "ConstWrappedValue [" + source + ", " + result + "]";
 	}
 	
 	private void init() {
-		lc = Values.set(value, result);
+		lc = Values.set(source, result);
 	}
 	
 	@java.io.Serial
@@ -88,13 +87,7 @@ public final class ConstWrappedValue<T, R> extends AbstractValue<R>
 	}
 	
 	private void trim() {
-		value.get();
-	}
-	
-	@Override
-	public Serializable toSerializable() {
-		// TODO Auto-generated method stub
-		return null;
+		source.get();
 	}
 	
 }

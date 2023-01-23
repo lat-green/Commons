@@ -28,6 +28,8 @@ public final class M2Value<T1, T2> extends AbstractValue<Group2<T1, T2>>
 		if(lcs != null)
 			lcs.close();
 		lcs = null;
+		value1.close();
+		value2.close();
 	}
 	
 	@Override

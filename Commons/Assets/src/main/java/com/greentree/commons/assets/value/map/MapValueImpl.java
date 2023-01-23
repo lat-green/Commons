@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serial;
-import java.util.Objects;
 
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.assets.value.AbstractValue;
@@ -37,7 +36,6 @@ public abstract class MapValueImpl<T, R> extends AbstractValue<R>
 	
 	@Override
 	public final void set(T source) {
-		Objects.requireNonNull(source);
 		synchronized(this) {
 			this.source = source;
 			reset();
@@ -46,7 +44,7 @@ public abstract class MapValueImpl<T, R> extends AbstractValue<R>
 	
 	@Override
 	public String toString() {
-		return "MapValue [" + source + ", " + result.get() + "]";
+		return "MapValue [" + result.get() + "]";
 	}
 	
 	@Serial
@@ -74,14 +72,14 @@ public abstract class MapValueImpl<T, R> extends AbstractValue<R>
 		try {
 			if(oldValue == null)
 				newValue = map(source);
-			else
+			else {
 				newValue = map(source, oldValue);
+			}
 		}catch(RuntimeException e) {
 			e.printStackTrace();
 			return;
 		}
-		if(newValue != null)
-			result.set(newValue);
+		result.set(newValue);
 	}
 	
 	protected final void result_event() {

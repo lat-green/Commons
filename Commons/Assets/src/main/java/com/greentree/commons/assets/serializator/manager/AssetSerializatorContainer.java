@@ -28,7 +28,6 @@ import com.greentree.commons.data.resource.location.ResourceLocation;
 import com.greentree.commons.util.classes.info.TypeInfo;
 import com.greentree.commons.util.classes.info.TypeUtil;
 import com.greentree.commons.util.iterator.IteratorUtil;
-import com.greentree.commons.util.iterator.MergeIterator;
 
 final class AssetSerializatorContainer {
 	
@@ -101,21 +100,12 @@ final class AssetSerializatorContainer {
 			addSerializator(s);
 	}
 	
-	private static <T> Iterable<T> merge(Iterable<? extends Iterable<? extends T>> iterable) {
-		return ()->new MergeIterator<>(IteratorUtil.map(iterable, i->i.iterator()));
-	}
-	
-	@SafeVarargs
-	private static <T> Iterable<T> merge(Iterable<? extends T>... iterable) {
-		return merge(IteratorUtil.iterable(iterable));
-	}
-	
 	public final class AssetSerializatorInfo<T> extends TypedAssetSerializator<T> {
 		
 		private final List<AssetSerializatorInfo<T>> serializatorInfos = new ArrayList<>();
 		private final List<AssetSerializator<T>> serializators = new ArrayList<>();
 		private final AssetSerializator<T> serializator = new MultiAssetSerializator<>(
-				merge(serializators, serializatorInfos));
+				IteratorUtil.union(serializators, serializatorInfos));
 		
 		private final Ceche<AssetKey, Value<T>> cache = new Ceche<>();
 		

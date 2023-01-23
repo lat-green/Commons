@@ -32,6 +32,9 @@ public final class M3Value<T1, T2, T3> extends AbstractValue<Group3<T1, T2, T3>>
 			lcs.close();
 			lcs = null;
 		}
+		value1.close();
+		value2.close();
+		value3.close();
 	}
 	
 	@Override

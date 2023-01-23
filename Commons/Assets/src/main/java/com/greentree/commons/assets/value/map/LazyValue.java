@@ -3,11 +3,9 @@ package com.greentree.commons.assets.value.map;
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.assets.value.AbstractValue;
 import com.greentree.commons.assets.value.MutableValue;
-import com.greentree.commons.assets.value.SerializableValue;
 
 
-public final class LazyValue<T, R> extends AbstractValue<R>
-		implements MapValue<T, R>, SerializableValue<R> {
+public final class LazyValue<T, R> extends AbstractValue<R> implements SerializableMapValue<T, R> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -37,8 +35,8 @@ public final class LazyValue<T, R> extends AbstractValue<R>
 	public R get() {
 		synchronized(this) {
 			if(setFlag) {
-				value.set(nextValue);
 				setFlag = false;
+				value.set(nextValue);
 				nextValue = null;
 			}
 			return value.get();
@@ -66,8 +64,8 @@ public final class LazyValue<T, R> extends AbstractValue<R>
 	@Override
 	public String toString() {
 		if(setFlag)
-			return "LazyValue [nextValue=" + nextValue + ", " + value + "]";
-		return "LazyValue [" + value + "]";
+			return "Lazy [nextValue=" + nextValue + ", " + value + "]";
+		return "Lazy [" + value + "]";
 	}
 	
 }

@@ -8,7 +8,7 @@ public interface TypeInfo<C> extends Serializable {
 	TypeInfo<?>[] getTypeArguments();
 	
 	TypeInfo<? super C>[] getInterfaces();
-	TypeInfo<?> getBoxing();
+	TypeInfo<C> getBoxing();
 	TypeInfo<? super C> getSuperType();
 	
 	Class<C> toClass();

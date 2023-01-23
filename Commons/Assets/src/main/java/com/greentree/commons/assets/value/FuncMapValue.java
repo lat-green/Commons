@@ -25,9 +25,4 @@ public final class FuncMapValue<T, R> extends MapValueImpl<T, R> {
 		return map(value);
 	}
 	
-	@Override
-	public String toString() {
-		return "Func [" + mapFunc + "]" + super.toString();
-	}
-	
 }

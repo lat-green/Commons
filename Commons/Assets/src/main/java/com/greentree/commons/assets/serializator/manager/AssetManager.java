@@ -40,9 +40,9 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 	
 	public AssetManager() {
 		executor = Executors.newSingleThreadExecutor(r-> {
-			final var thread = new Thread("AssetManager");
+			final var thread = new Thread(r, "AssetManager");
 			thread.setDaemon(true);
-			thread.setPriority(6);
+			thread.setPriority(Thread.MAX_PRIORITY);
 			return thread;
 		});
 	}

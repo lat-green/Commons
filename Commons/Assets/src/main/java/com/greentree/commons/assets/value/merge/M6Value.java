@@ -40,6 +40,12 @@ public final class M6Value<T1, T2, T3, T4, T5, T6>
 		if(lcs != null)
 			lcs.close();
 		lcs = null;
+		value1.close();
+		value2.close();
+		value3.close();
+		value4.close();
+		value5.close();
+		value6.close();
 	}
 	
 	@Override

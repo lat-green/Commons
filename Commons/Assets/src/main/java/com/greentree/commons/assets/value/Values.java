@@ -7,6 +7,7 @@ import java.util.function.Function;
 import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.assets.value.function.Value1Function;
 import com.greentree.commons.assets.value.map.MapValue;
+import com.greentree.commons.assets.value.map.ValueFuncMapValue;
 import com.greentree.commons.assets.value.merge.Group2;
 import com.greentree.commons.assets.value.merge.Group3;
 import com.greentree.commons.assets.value.merge.Group4;
