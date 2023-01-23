@@ -1,19 +1,22 @@
 package com.greentree.commons.assets.serializator;
 
 import com.greentree.commons.action.ListenerCloser;
+import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.assets.key.AssetKey;
 import com.greentree.commons.assets.key.ResourceAssetKey;
 import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
 import com.greentree.commons.assets.serializator.manager.DeepValidAssetManagerBase;
 import com.greentree.commons.assets.value.ConstWrappedValue;
+import com.greentree.commons.assets.value.MutableValue;
 import com.greentree.commons.assets.value.Value;
-import com.greentree.commons.assets.value.map.MapValueImpl;
+import com.greentree.commons.assets.value.map.AbstractMapValue;
 import com.greentree.commons.data.resource.Resource;
 import com.greentree.commons.data.resource.location.ResourceLocation;
 
 
 public class ResourceAssetSerializator implements AssetSerializator<Resource> {
+	
 	
 	private final ResourceLocation resources;
 	
@@ -23,9 +26,8 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 	
 	@Override
 	public boolean canLoad(CanLoadAssetManager manager, AssetKey key) {
-		if(key instanceof ResourceAssetKey k) {
+		if(key instanceof ResourceAssetKey k)
 			return manager.canLoad(String.class, k.resourceName());
-		}
 		return false;
 	}
 	
@@ -48,14 +50,42 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 		return null;
 	}
 	
-	private final class ResourceAsset extends MapValueImpl<String, Resource> {
+	public final class NotMutableResourceAsset implements Value<Resource> {
 		
 		private static final long serialVersionUID = 1L;
+		private final MutableValue<Resource> resource;
+		
+		private transient ListenerCloser lc;
+		
+		public NotMutableResourceAsset(Resource resource) {
+			this.resource = new MutableValue<>(resource);
+			lc = resource.getAction().getOnModify().addListener(()-> {
+				this.resource.event();
+			});
+		}
 		
 		@Override
-		public String toString() {
-			return "Resource [" + source() + "]";
+		public void close() {
+			lc.close();
+			resource.close();
+			Value.super.close();
 		}
+		
+		@Override
+		public Resource get() {
+			return resource.get();
+		}
+		
+		@Override
+		public ObjectObservable<Resource> observer() {
+			return resource.observer();
+		}
+		
+	}
+	
+	private final class ResourceAsset extends AbstractMapValue<String, Resource> {
+		
+		private static final long serialVersionUID = 1L;
 		
 		private transient ListenerCloser lc;
 		
@@ -79,6 +109,13 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 				result_event();
 			});
 			return res;
+		}
+		
+		@Override
+		public Value<Resource> toNotMutable() {
+			final var res = get();
+			close();
+			return new NotMutableResourceAsset(res);
 		}
 		
 		@Override

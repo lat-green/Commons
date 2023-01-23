@@ -2,7 +2,7 @@ package com.greentree.commons.assets.value.map;
 
 import com.greentree.commons.assets.value.function.Value1Function;
 
-public final class ValueFuncMapValue<T, R> extends MapValueImpl<T, R> {
+public final class ValueFuncMapValue<T, R> extends AbstractMapValue<T, R> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -10,11 +10,6 @@ public final class ValueFuncMapValue<T, R> extends MapValueImpl<T, R> {
 	
 	public ValueFuncMapValue(Value1Function<? super T, R> mapFunc) {
 		this.mapFunc = mapFunc;
-	}
-	
-	@Override
-	public boolean isNull() {
-		return super.isNull() || mapFunc.isNull(source());
 	}
 	
 	@Override
@@ -26,4 +21,12 @@ public final class ValueFuncMapValue<T, R> extends MapValueImpl<T, R> {
 	protected R map(T value, R dest) {
 		return mapFunc.applyWithDest(value, dest);
 	}
+	
+	@Override
+	public String toString() {
+		return "ValueFuncMapValue [" + mapFunc + "] " + super.toString();
+	}
+	
+	
+	
 }

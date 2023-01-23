@@ -2,7 +2,8 @@ package com.greentree.commons.assets.value.function;
 
 import com.greentree.commons.assets.value.merge.Group2;
 
-public interface Value2Function<T1, T2, R> extends Value1Function<Group2<? extends T1, ? extends T2>, R> {
+public interface Value2Function<T1, T2, R>
+		extends Value1Function<Group2<? extends T1, ? extends T2>, R> {
 	
 	@Override
 	default R apply(Group2<? extends T1, ? extends T2> value) {
@@ -17,10 +18,6 @@ public interface Value2Function<T1, T2, R> extends Value1Function<Group2<? exten
 	
 	default R applyWithDest(T1 value1, T2 value2, R dest) {
 		return apply(value1, value2);
-	}
-	
-	default boolean isNull(T1 value1, T2 value2) {
-		return apply(value1, value2) == null;
 	}
 	
 }

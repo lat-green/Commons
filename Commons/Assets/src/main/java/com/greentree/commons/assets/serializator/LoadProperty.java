@@ -7,7 +7,6 @@ public enum LoadProperty {
 	NULLABLE      (false),
 	LOAD_CONST    (true),
 	LOAD_ASYNC    (true, LOAD_CONST),
-	LOAD_ON_DEMAND(true),
 	NOT_SERIALIZABLE(true),
 	;
 	

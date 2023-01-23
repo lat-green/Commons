@@ -2,13 +2,10 @@ package com.greentree.commons.assets.value.merge;
 
 import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.action.observable.ObjectObservable;
-import com.greentree.commons.assets.value.AbstractValue;
 import com.greentree.commons.assets.value.MutableValue;
-import com.greentree.commons.assets.value.SerializableValue;
 import com.greentree.commons.assets.value.Value;
 
-public final class M5Value<T1, T2, T3, T4, T5> extends AbstractValue<Group5<T1, T2, T3, T4, T5>>
-		implements SerializableValue<Group5<T1, T2, T3, T4, T5>> {
+public final class M5Value<T1, T2, T3, T4, T5> implements Value<Group5<T1, T2, T3, T4, T5>> {
 	
 	private static final long serialVersionUID = 1L;
 	
