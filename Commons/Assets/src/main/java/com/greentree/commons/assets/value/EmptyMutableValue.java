@@ -4,19 +4,14 @@ import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.action.observer.object.EventAction;
 import com.greentree.commons.assets.value.map.MapValue;
 
-public final class MutableValue<T> implements MapValue<T, T> {
+public final class EmptyMutableValue<T> implements MapValue<T, T> {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private T value;
+	private transient T value;
 	private final EventAction<T> action = new EventAction<>();
 	
-	public MutableValue() {
-	}
-	
-	@Override
-	public MutableValue<T> copy() {
-		return new MutableValue<>(value);
+	public EmptyMutableValue() {
 	}
 	
 	@Override
@@ -24,7 +19,7 @@ public final class MutableValue<T> implements MapValue<T, T> {
 		value = null;
 	}
 	
-	public MutableValue(T value) {
+	public EmptyMutableValue(T value) {
 		this.value = value;
 	}
 	

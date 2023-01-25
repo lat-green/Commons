@@ -9,12 +9,34 @@ import com.greentree.commons.tests.ExecuteCounter;
 
 public class MutableValueTest {
 	
-	private static final String TEXT = "A";
+	private static final String TEXT1 = "A";
+	private static final String TEXT2 = "B";
 	
 	@Test
-	void test_NEW() {
-		try(final var v1 = new MutableValue<>(TEXT);) {
-			assertEquals(v1.get(), TEXT);
+	void copy() {
+		try(final var value = new MutableValue<>(TEXT1);) {
+			assertEquals(value.get(), TEXT1);
+			try(final var copy = value.copy()) {
+				assertEquals(copy.get(), TEXT1);
+				assertEquals(value.get(), TEXT1);
+				copy.set(TEXT2);
+				assertEquals(copy.get(), TEXT2);
+				assertEquals(value.get(), TEXT1);
+			}
+			try(final var copy = value.copy()) {
+				assertEquals(copy.get(), TEXT1);
+				assertEquals(value.get(), TEXT1);
+				value.set(TEXT2);
+				assertEquals(copy.get(), TEXT1);
+				assertEquals(value.get(), TEXT2);
+			}
+		}
+	}
+	
+	@Test
+	void newValue() {
+		try(final var v1 = new MutableValue<>(TEXT1);) {
+			assertEquals(v1.get(), TEXT1);
 			
 			assertFalse(v1.isConst());
 			assertFalse(v1.isNull());
@@ -31,15 +53,15 @@ public class MutableValueTest {
 			
 			try(final var count = new ExecuteCounter(1)) {
 				try(final var lc = v1.observer().addListener(count);) {
-					v1.set(TEXT);
+					v1.set(TEXT1);
 				}
 			}
 			
-			assertEquals(v1.get(), TEXT);
+			assertEquals(v1.get(), TEXT1);
 			
 			try(final var count = new ExecuteCounter(1)) {
 				try(final var lc = v1.observer().addListener(count);) {
-					v1.set(TEXT);
+					v1.set(TEXT1);
 				}
 			}
 		}

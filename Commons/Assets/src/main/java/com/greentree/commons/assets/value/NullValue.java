@@ -33,6 +33,11 @@ public final class NullValue<T> implements Value<T> {
 	}
 	
 	@Override
+	public NullValue<T> copy() {
+		return this;
+	}
+	
+	@Override
 	public boolean isConst() {
 		return true;
 	}

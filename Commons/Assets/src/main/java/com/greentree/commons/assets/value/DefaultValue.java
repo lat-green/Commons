@@ -11,7 +11,7 @@ public final class DefaultValue<T> implements Value<T> {
 	
 	private static final long serialVersionUID = 1L;
 	private final List<? extends Value<? extends T>> values;
-	private final MutableValue<T> result = new MutableValue<>();
+	private final EmptyMutableValue<T> result = new EmptyMutableValue<>();
 	
 	private transient ListenerCloser lcs;
 	
@@ -98,7 +98,5 @@ public final class DefaultValue<T> implements Value<T> {
 	public ObjectObservable<T> observer() {
 		return result.observer();
 	}
-	
-	
 	
 }

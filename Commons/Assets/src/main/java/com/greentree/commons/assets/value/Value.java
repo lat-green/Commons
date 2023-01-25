@@ -32,4 +32,10 @@ public interface Value<T> extends AutoCloseable, Serializable {
 		return ConstWrappedValue.newValue(this, LazyValue.newValue());
 	}
 	
+	default Value<T> copy() {
+		if(isConst())
+			return this;
+		throw new UnsupportedOperationException();
+	}
+	
 }

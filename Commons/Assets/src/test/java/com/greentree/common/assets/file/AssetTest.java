@@ -3,8 +3,6 @@ package com.greentree.common.assets.file;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -13,17 +11,8 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.greentree.commons.assets.key.AssetKey;
-import com.greentree.commons.assets.key.AssetKeyType;
-import com.greentree.commons.assets.serializator.AssetSerializator;
-import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.AssetManager;
-import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
-import com.greentree.commons.assets.serializator.manager.DefaultAssetManager;
 import com.greentree.commons.assets.serializator.request.KeyLoadRequestImpl;
-import com.greentree.commons.assets.value.ConstValue;
-import com.greentree.commons.assets.value.Value;
-import com.greentree.commons.assets.value.function.Value1Function;
 import com.greentree.commons.util.cortege.Pair;
 
 public class AssetTest {
@@ -223,106 +212,6 @@ public class AssetTest {
 	@BeforeEach
 	void setup() {
 		manager = new AssetManager(new NullExecutorService());
-	}
-	
-	public static final class NullExecutorService extends AbstractExecutorService {
-		
-		@Override
-		public void shutdown() {
-			
-		}
-		
-		@Override
-		public List<Runnable> shutdownNow() {
-			return new ArrayList<>();
-		}
-		
-		@Override
-		public boolean isShutdown() {
-			return false;
-		}
-		
-		@Override
-		public boolean isTerminated() {
-			return false;
-		}
-		
-		@Override
-		public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-			return true;
-		}
-		
-		@Override
-		public void execute(Runnable command) {
-		}
-		
-		
-		
-	}
-	
-	public static final class StringAssetSerializator implements AssetSerializator<String> {
-		
-		private final String DEF_STR;
-		
-		public StringAssetSerializator(String dEF_STR) {
-			DEF_STR = dEF_STR;
-		}
-		
-		@Override
-		public boolean canLoad(CanLoadAssetManager manager, AssetKey key) {
-			return key instanceof StringAssetKey;
-		}
-		
-		@Override
-		public Value<String> load(LoadContext context, AssetKey key) {
-			try {
-				Thread.sleep(20);
-			}catch(InterruptedException e) {
-				e.printStackTrace();
-			}
-			if(key instanceof StringAssetKey obj)
-				return ConstValue.newValue(obj.value());
-			return null;
-		}
-		
-		@Override
-		public String loadDefault(DefaultAssetManager manager, AssetKeyType type) {
-			return DEF_STR;
-		}
-		
-	}
-	
-	public static final class StringToIntAssetSerializator implements AssetSerializator<Integer> {
-		
-		@Override
-		public boolean canLoad(CanLoadAssetManager manager, AssetKey key) {
-			return manager.canLoad(String.class, key);
-		}
-		
-		@Override
-		public Value<Integer> load(LoadContext context, AssetKey key) {
-			if(context.canLoad(String.class, key)) {
-				final var str = context.load(String.class, key);
-				return context.map(str, new StringToInt());
-			}
-			return null;
-		}
-		
-		private static final class StringToInt implements Value1Function<String, Integer> {
-			
-			private static final long serialVersionUID = 1L;
-			
-			@Override
-			public Integer apply(String value) {
-				return Integer.parseInt(value);
-			}
-			
-		}
-		
-	}
-	
-	public record StringAssetKey(String value) implements AssetKey {
-		
 	}
 	
 }

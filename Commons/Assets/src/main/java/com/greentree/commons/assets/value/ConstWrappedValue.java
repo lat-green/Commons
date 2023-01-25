@@ -21,6 +21,15 @@ public final class ConstWrappedValue<T, R> implements Value<R> {
 		init();
 	}
 	
+	@Override
+	public Value<R> copy() {
+		if(source.isConst()) {
+			result.set(source.get());
+			return result.toNotMutable();
+		}
+		return new ConstWrappedValue<>(source.copy(), result.copy());
+	}
+	
 	public static <T, R> Value<R> newValue(Value<? extends T> value,
 			MapValue<? super T, R> result) {
 		if(value.isConst()) {

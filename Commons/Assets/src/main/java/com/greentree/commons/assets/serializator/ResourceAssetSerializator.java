@@ -90,13 +90,6 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 		private transient ListenerCloser lc;
 		
 		@Override
-		public void close() {
-			if(lc != null)
-				lc.close();
-			super.close();
-		}
-		
-		@Override
 		public Resource map(String name) {
 			if(name == null)
 				return null;
@@ -121,6 +114,12 @@ public class ResourceAssetSerializator implements AssetSerializator<Resource> {
 		@Override
 		protected Resource map(String name, Resource dest) {
 			return map(name);
+		}
+		
+		@Override
+		protected void clear(Resource value) {
+			if(lc != null)
+				lc.close();
 		}
 		
 	}

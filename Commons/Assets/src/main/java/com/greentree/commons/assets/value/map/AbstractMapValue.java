@@ -11,13 +11,14 @@ public abstract class AbstractMapValue<T, R> implements MapValue<T, R> {
 	
 	@Override
 	public final R get() {
-		synchronized(this) {
-			return result.get();
-		}
+		return result.get();
 	}
 	
 	@Override
-	public void close() {
+	public final void close() {
+		var value = result.get();
+		if(value != null)
+			clear(value);
 		result.close();
 	}
 	
@@ -28,16 +29,14 @@ public abstract class AbstractMapValue<T, R> implements MapValue<T, R> {
 	
 	@Override
 	public final void set(T source) {
-		synchronized(this) {
-			var value = result.get();
-			try {
-				value = map0(source, value);
-			}catch(RuntimeException e) {
-				e.printStackTrace();
-				return;
-			}
-			result.set(value);
+		var value = result.get();
+		try {
+			value = map0(source, value);
+		}catch(RuntimeException e) {
+			e.printStackTrace();
+			return;
 		}
+		result.set(value);
 	}
 	
 	@Override
@@ -52,9 +51,12 @@ public abstract class AbstractMapValue<T, R> implements MapValue<T, R> {
 			return map(source, oldValue);
 	}
 	
-	protected abstract R map(T source);
+	protected void clear(R value) {
+	}
 	
+	protected abstract R map(T source);
 	protected abstract R map(T source, R oldValue);
+	
 	
 	protected final void result_event() {
 		result.event();

@@ -19,6 +19,11 @@ public final class ConstValue<T> implements Value<T> {
 	}
 	
 	@Override
+	public ConstValue<T> copy() {
+		return this;
+	}
+	
+	@Override
 	public T get() {
 		return value;
 	}

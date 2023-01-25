@@ -6,10 +6,14 @@ import java.util.function.Function;
 public interface Value1Function<T, R> extends Function<T, R>, Serializable {
 	
 	@Override
-	R apply(T value);
+	R apply(T input);
 	
-	default R applyWithDest(T value, R dest) {
-		return apply(value);
+	default R applyWithDest(T input, R dest) {
+		return apply(input);
+	}
+	
+	default void clear(R value) {
+		
 	}
 	
 }
