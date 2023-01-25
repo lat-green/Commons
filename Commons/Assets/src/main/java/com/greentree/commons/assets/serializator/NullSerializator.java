@@ -5,8 +5,8 @@ import com.greentree.commons.assets.key.NullAssetKey;
 import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
 import com.greentree.commons.assets.serializator.manager.ValidAssetManagerBase;
-import com.greentree.commons.assets.value.NullValue;
-import com.greentree.commons.assets.value.Value;
+import com.greentree.commons.assets.source.NullSource;
+import com.greentree.commons.assets.source.Source;
 import com.greentree.commons.util.classes.info.TypeInfo;
 
 public final class NullSerializator<T> extends TypedAssetSerializator<T> {
@@ -32,9 +32,9 @@ public final class NullSerializator<T> extends TypedAssetSerializator<T> {
 	}
 	
 	@Override
-	public Value<T> load(LoadContext context, AssetKey key) {
+	public Source<T> load(LoadContext context, AssetKey key) {
 		if(key instanceof NullAssetKey)
-			return NullValue.instance();
+			return NullSource.instance();
 		return null;
 	}
 	

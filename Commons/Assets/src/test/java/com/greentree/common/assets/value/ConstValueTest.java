@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.commons.assets.value.ConstValue;
-import com.greentree.commons.tests.ExecuteCounter;
+import com.greentree.commons.assets.source.ConstSource;
 
 public class ConstValueTest {
 	
@@ -13,19 +12,12 @@ public class ConstValueTest {
 	
 	@Test
 	void test_NEW() {
-		final var v1 = ConstValue.newValue(TEXT);
+		final var v1 = ConstSource.newValue(TEXT);
 		
 		assertEquals(v1.get(), TEXT);
 		
-		assertTrue(v1.isConst());
+		assertTrue(v1.hasConst());
 		assertFalse(v1.isNull());
-		
-		assertTrue(v1 == v1.toConst());
-		
-		try(final var count = new ExecuteCounter(0)) {
-			try(final var lc = v1.observer().addListener(count);) {
-			}
-		}
 	}
 	
 }

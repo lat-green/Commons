@@ -3,10 +3,12 @@ open module commons.assets {
 	requires transitive commons.data;
 	requires transitive commons.action;
 	
-	exports com.greentree.commons.assets.value;
-	exports com.greentree.commons.assets.value.map;
-	exports com.greentree.commons.assets.value.merge;
-	exports com.greentree.commons.assets.value.function;
+	exports com.greentree.commons.assets.source;
+	exports com.greentree.commons.assets.source.merge;
+	exports com.greentree.commons.assets.source.store;
+	exports com.greentree.commons.assets.source.mapper;
+	exports com.greentree.commons.assets.source.provider;
+	exports com.greentree.commons.assets.source.function;
 	
 	exports com.greentree.commons.assets.key;
 	exports com.greentree.commons.assets.location;

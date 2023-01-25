@@ -16,10 +16,11 @@ import com.greentree.commons.assets.serializator.AssetSerializator;
 import com.greentree.commons.assets.serializator.LoadProperty;
 import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.AssetSerializatorContainer.AssetSerializatorInfo;
-import com.greentree.commons.assets.value.ConstValue;
-import com.greentree.commons.assets.value.DefaultValue;
-import com.greentree.commons.assets.value.MutableWrapedValue;
-import com.greentree.commons.assets.value.Value;
+import com.greentree.commons.assets.source.ConstSource;
+import com.greentree.commons.assets.source.DefaultSource;
+import com.greentree.commons.assets.source.NullSource;
+import com.greentree.commons.assets.source.ReduceSource;
+import com.greentree.commons.assets.source.Source;
 import com.greentree.commons.data.resource.location.ResourceLocation;
 import com.greentree.commons.util.classes.info.TypeInfo;
 
@@ -84,23 +85,23 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 	}
 	
 	@Override
-	public <T> Value<T> load(TypeInfo<T> type, AssetKey key, T def) {
+	public <T> Source<T> load(TypeInfo<T> type, AssetKey key, T def) {
 		return load(type, key, def, 0);
 	}
 	
-	public <T> Value<T> load(TypeInfo<T> type, AssetKey key, T def, int properties) {
+	public <T> Source<T> load(TypeInfo<T> type, AssetKey key, T def, int properties) {
 		final var wrapper = new LoadContextImpl(properties);
 		final var result = wrapper.load(type, key, def);
 		return result;
 	}
 	
-	public <T> Value<T> load(TypeInfo<T> type, AssetKey key, T def, LoadProperty... properties) {
+	public <T> Source<T> load(TypeInfo<T> type, AssetKey key, T def, LoadProperty... properties) {
 		final var mask = LoadProperty.getMask(properties);
 		return load(type, key, def, mask);
 	}
 	
 	@Override
-	public <T> Value<T> loadAsync(TypeInfo<T> type, AssetKey key, T def) {
+	public <T> Source<T> loadAsync(TypeInfo<T> type, AssetKey key, T def) {
 		return load(type, key, def, LoadProperty.LOAD_ASYNC);
 	}
 	
@@ -154,11 +155,11 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 		}
 		
 		@Override
-		public <T> Value<T> load(TypeInfo<T> type, AssetKey key, T def) {
+		public <T> Source<T> load(TypeInfo<T> type, AssetKey key, T def) {
 			final var result = tryLoadAsync(type, key, def);
 			if(def == null)
 				return result;
-			return DefaultValue.newValue(result, ConstValue.newValue(def));
+			return DefaultSource.newValue(result, ConstSource.newValue(def));
 		}
 		
 		@Override
@@ -176,7 +177,7 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 			return "PropWrapAssetLoader " + Arrays.toString(LoadProperty.getArray(properties));
 		}
 		
-		private <T> Value<T> loadForward(TypeInfo<T> type, AssetKey key, T def) {
+		private <T> Source<T> loadForward(TypeInfo<T> type, AssetKey key, T def) {
 			final var info = get(type);
 			try {
 				final var v = info.load(parent, key);
@@ -184,13 +185,13 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 			}catch(Exception e) {
 				if(def != null) {
 					e.printStackTrace();
-					return ConstValue.newValue(def);
+					return ConstSource.newValue(def);
 				}
 				throw e;
 			}
 		}
 		
-		private <T> Value<T> tryLoadAsync(TypeInfo<T> type, AssetKey key, T in_def) {
+		private <T> Source<T> tryLoadAsync(TypeInfo<T> type, AssetKey key, T in_def) {
 			if(has(LoadProperty.LOAD_ASYNC)) {
 				final var info = get(type);
 				
@@ -202,7 +203,7 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 				
 				
 				if(def != null || has(LoadProperty.NULLABLE)) {
-					final var async_result = MutableWrapedValue.newValue(ConstValue.newValue(def));
+					final var async_result = new ReduceSource<>(ConstSource.newValue(def));
 					executor.execute(()-> {
 						try {
 							final var v = loadForward(type, key, def);
@@ -244,8 +245,8 @@ public final class AssetManager implements AssetManagerBase, AsyncAssetManager,
 			}
 			
 			@Override
-			public <T> Value<T> load(TypeInfo<T> type, AssetKey key, T def) {
-				final var result = MutableWrapedValue.<T>newValue();
+			public <T> Source<T> load(TypeInfo<T> type, AssetKey key, T def) {
+				final var result = new ReduceSource<>(NullSource.<T>instance());
 				final var task = executor.submit(()-> {
 					final var v = LoadContextImpl.this.load(type, key, def);
 					result.set(v);

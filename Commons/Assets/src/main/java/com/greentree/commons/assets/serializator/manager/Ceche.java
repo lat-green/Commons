@@ -2,84 +2,51 @@ package com.greentree.commons.assets.serializator.manager;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 
 public final class Ceche<K, T> {
 	
+	private static final class CachedValue<T> {
+		
+		private T value;
+		
+		public T get() {
+			return value;
+		}
+		
+		public void set(T value) {
+			this.value = value;
+		}
+		
+	}
 	
 	private final Map<K, CachedValue<T>> cache = new HashMap<>();
 	
-	public T get(K key) {
+	public synchronized T get(K key) {
 		final var value = cache.get(key);
 		if(value != null)
 			return value.get();
 		return null;
 	}
 	
-	public boolean has(K key) {
-		return cache.containsKey(key);
+	public synchronized boolean has(K key) {
+		return get(key) != null;
 	}
 	
-	public T set(K key, Function<Context, T> supplier) {
+	public synchronized T set(K key, Supplier<T> supplier) {
 		var value = cache.get(key);
 		if(value == null) {
-			final var v = supplier.apply(closer(key));
-			value = new CachedValue<>(v);
+			value = new CachedValue<>();
 			cache.put(key, value);
+			try {
+				value.set(supplier.get());
+			}catch(Exception e) {
+				cache.remove(key);
+				throw e;
+			}
 		}
-		value.use();
 		return value.get();
-	}
-	
-	private Context closer(K key) {
-		return new Context() {
-			
-			@Override
-			public boolean remove() {
-				if(cache.get(key).remove()) {
-					cache.remove(key);
-					return true;
-				}
-				return false;
-			}
-			
-			@Override
-			public void use() {
-				cache.get(key).use();
-			}
-		};
-	}
-	
-	public interface Context {
-		
-		boolean remove();
-		void use();
-		
-	}
-	
-	private static final class CachedValue<T> {
-		
-		private final T value;
-		private int refCount;
-		
-		public CachedValue(T value) {
-			this.value = value;
-		}
-		
-		public T get() {
-			return value;
-		}
-		
-		public boolean remove() {
-			refCount--;
-			return refCount <= 0;
-		}
-		
-		public void use() {
-			refCount++;
-		}
-		
 	}
 	
 }

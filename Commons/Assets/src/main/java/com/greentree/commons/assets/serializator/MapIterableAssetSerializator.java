@@ -3,8 +3,8 @@ package com.greentree.commons.assets.serializator;
 import com.greentree.commons.assets.key.AssetKey;
 import com.greentree.commons.assets.serializator.context.LoadContext;
 import com.greentree.commons.assets.serializator.manager.CanLoadAssetManager;
-import com.greentree.commons.assets.value.Value;
-import com.greentree.commons.assets.value.merge.MIValue;
+import com.greentree.commons.assets.source.Source;
+import com.greentree.commons.assets.source.merge.MISource;
 import com.greentree.commons.util.classes.info.TypeInfo;
 import com.greentree.commons.util.classes.info.TypeInfoBuilder;
 import com.greentree.commons.util.iterator.IteratorUtil;
@@ -31,13 +31,13 @@ public final class MapIterableAssetSerializator<T, R> implements AssetSerializat
 	}
 	
 	@Override
-	public Value<Iterable<R>> load(LoadContext context, AssetKey ckey) {
+	public Source<Iterable<R>> load(LoadContext context, AssetKey ckey) {
 		if(context.canLoad(T_ITER_TYPE, ckey)) {
 			final var t_iter = context.load(T_ITER_TYPE, ckey);
 			final var rv_iter = IteratorUtil.clone(IteratorUtil.map(t_iter.get(), t-> {
 				return context.load(R_TYPE, t);
 			}));
-			return new MIValue<>(rv_iter);
+			return new MISource<>(rv_iter);
 		}
 		return null;
 	}

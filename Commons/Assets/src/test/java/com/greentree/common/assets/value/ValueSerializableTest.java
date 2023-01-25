@@ -10,8 +10,8 @@ import java.io.ObjectOutputStream;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.commons.assets.value.MutableValue;
-import com.greentree.commons.assets.value.NullValue;
+import com.greentree.commons.assets.source.MutableSource;
+import com.greentree.commons.assets.source.NullSource;
 
 public class ValueSerializableTest {
 	
@@ -36,15 +36,15 @@ public class ValueSerializableTest {
 	@Test
 	void MutableValue_after_Serialization() throws ClassNotFoundException, IOException {
 		final var str = "Hello World";
-		final var strv = new MutableValue<>(str);
+		final var strv = new MutableSource<>(str);
 		@SuppressWarnings("unchecked")
-		final var c = (MutableValue<String>) deser(ser(strv));
+		final var c = (MutableSource<String>) deser(ser(strv));
 		assertEquals(strv.get(), c.get());
 	}
 	
 	@Test
 	void NullValue_Serialization() throws ClassNotFoundException, IOException {
-		final var v1 = NullValue.instance();
+		final var v1 = NullSource.instance();
 		final var v2 = deser(ser(v1));
 		assertEquals(v1, v2);
 		assertTrue(v1 == v2);

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.assets.key.AssetKey;
 import com.greentree.commons.assets.key.AssetKeyType;
 import com.greentree.commons.assets.location.AssetLocation;
@@ -20,15 +19,13 @@ import com.greentree.commons.assets.serializator.ResourceAssetSerializator;
 import com.greentree.commons.assets.serializator.ResultSerializator;
 import com.greentree.commons.assets.serializator.TypedAssetSerializator;
 import com.greentree.commons.assets.serializator.context.LoadContext;
-import com.greentree.commons.assets.serializator.manager.Ceche.Context;
-import com.greentree.commons.assets.value.Value;
+import com.greentree.commons.assets.source.Source;
 import com.greentree.commons.data.resource.location.ResourceLocation;
 import com.greentree.commons.util.classes.info.TypeInfo;
 import com.greentree.commons.util.classes.info.TypeUtil;
 import com.greentree.commons.util.iterator.IteratorUtil;
 
 final class AssetSerializatorContainer {
-	
 	
 	
 	private final Map<TypeInfo<?>, AssetSerializatorInfo<?>> serializators = new HashMap<>();
@@ -107,7 +104,7 @@ final class AssetSerializatorContainer {
 		private final AssetSerializator<T> serializator = new MultiAssetSerializator<>(
 				IteratorUtil.union(serializators, serializatorInfos));
 		
-		private final Ceche<AssetKey, Value<T>> cache = new Ceche<>();
+		private final Ceche<AssetKey, Source<T>> cache = new Ceche<>();
 		
 		public AssetSerializatorInfo(TypeInfo<T> type) {
 			super(type);
@@ -141,14 +138,15 @@ final class AssetSerializatorContainer {
 		}
 		
 		@Override
-		public Value<T> load(LoadContext context, AssetKey key) {
-			return cache.set(key, c-> {
+		public Source<T> load(LoadContext context, AssetKey key) {
+			final var v = cache.set(key, ()-> {
 				try {
-					return new CacheValue<>(serializator.load(context, key), c);
+					return serializator.load(context, key);
 				}catch(Exception e) {
 					throw new IllegalArgumentException("type:" + TYPE + " key:" + key, e);
 				}
 			});
+			return v;
 		}
 		
 		@Override
@@ -159,51 +157,6 @@ final class AssetSerializatorContainer {
 		@Override
 		public String toString() {
 			return "AssetSerializatorInfo [" + TYPE + "]";
-		}
-		
-	}
-	
-	private static final class CacheValue<T> implements Value<T> {
-		
-		private static final long serialVersionUID = 1L;
-		
-		private final Value<T> source;
-		private transient final Ceche.Context context;
-		
-		public CacheValue(Value<T> source, Context context) {
-			this.source = source;
-			this.context = context;
-		}
-		
-		@Override
-		public void close() {
-			if(context != null) {
-				if(context.remove())
-					source.close();
-			}else
-				source.close();
-		}
-		
-		@Override
-		public Value<T> copy() {
-			if(context != null)
-				context.use();
-			return new CacheValue<>(source.copy(), context);
-		}
-		
-		@Override
-		public T get() {
-			return source.get();
-		}
-		
-		@Override
-		public ObjectObservable<T> observer() {
-			return source.observer();
-		}
-		
-		@Override
-		public String toString() {
-			return source.toString();
 		}
 		
 	}
