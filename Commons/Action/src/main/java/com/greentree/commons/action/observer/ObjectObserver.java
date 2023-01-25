@@ -1,9 +1,7 @@
 package com.greentree.commons.action.observer;
 
-import java.io.Serializable;
-
-public interface ObjectObserver<T> extends Serializable {
-
+public interface ObjectObserver<T> extends Observer {
+	
 	void event(T t);
 	
 }

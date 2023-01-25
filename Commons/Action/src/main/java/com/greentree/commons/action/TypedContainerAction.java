@@ -11,6 +11,10 @@ public abstract class TypedContainerAction<T, L, LC extends TypedListenerContain
 		this.listeners = container;
 	}
 	
+	public void clear() {
+		listeners.clear();
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -19,7 +23,6 @@ public abstract class TypedContainerAction<T, L, LC extends TypedListenerContain
 		builder.append("]");
 		return builder.toString();
 	}
-	
 	
 	public ListenerCloser addListener(T t, L listener) {
 		return listeners.add(t, listener);

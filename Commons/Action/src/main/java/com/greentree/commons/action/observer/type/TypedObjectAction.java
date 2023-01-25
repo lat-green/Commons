@@ -2,6 +2,7 @@ package com.greentree.commons.action.observer.type;
 
 import java.util.function.Consumer;
 
+import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.action.TypedMultiAction;
 
 public class TypedObjectAction<T, E> extends TypedMultiAction<T, Consumer<? super E>>

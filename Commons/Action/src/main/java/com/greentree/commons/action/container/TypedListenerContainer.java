@@ -16,4 +16,7 @@ public interface TypedListenerContainer<T, L> extends Serializable {
 	default int size(T type) {
 		return IteratorUtil.size(listeners(type));
 	}
+	
+	void clear();
+	
 }

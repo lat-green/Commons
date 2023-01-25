@@ -35,4 +35,12 @@ public class TypedMultiContainer<T, L> implements TypedListenerContainer<T, L> {
 		return notype_listeners.size() + type_containers.size();
 	}
 	
+	@Override
+	public void clear() {
+		notype_listeners.clear();
+		for(var c : type_containers.values())
+			c.clear();
+		type_containers.clear();
+	}
+	
 }
