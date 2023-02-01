@@ -61,13 +61,13 @@ public final class ClassUtil {
 	public static <T> T clone(T t) {
 		if(t == null)
 			return null;
-		Class<T> type = (Class<T>) t.getClass();
+		var type = (Class<T>) t.getClass();
 		if(!isMutable(t))
 			return t;
 		if(type.isArray()) {
 			final var len = Array.getLength(t);
 			final var arr = (T) Array.newInstance(type.componentType(), len);
-			for(int i = 0; i < len; i++) {
+			for(var i = 0; i < len; i++) {
 				final var e = Array.get(arr, i);
 				final var c = clone(e);
 				Array.set(arr, i, c);
@@ -115,11 +115,11 @@ public final class ClassUtil {
 	
 	public static <T> void copyAllFieldsTo(T t, T dest) throws Exception {
 		for(Field f : ClassUtil.getAllFields(t.getClass())) {
-			int m = f.getModifiers();
+			var m = f.getModifiers();
 			if(!(isStatic(m) | isTransient(m)))
 				try {
 					
-					boolean flag = f.canAccess(t);
+					var flag = f.canAccess(t);
 					f.setAccessible(true);
 					f.set(dest, f.get(t));
 					f.setAccessible(flag);
@@ -134,7 +134,7 @@ public final class ClassUtil {
 		if(superClass.isInterface()) {
 			
 		}else {
-			int res = 0;
+			var res = 0;
 			while(clazz != null) {
 				if(superClass == clazz)
 					return res;
@@ -151,11 +151,11 @@ public final class ClassUtil {
 		if(clazz == null || clazz.equals(Object.class) || annotationClass == null)
 			return res;
 		for(final Class<?> c : clazz.getInterfaces()) {
-			final A annotation = c.getDeclaredAnnotation(annotationClass);
+			final var annotation = c.getDeclaredAnnotation(annotationClass);
 			if(annotation != null)
 				res.add(annotation);
 		}
-		final A annotation = clazz.getDeclaredAnnotation(annotationClass);
+		final var annotation = clazz.getDeclaredAnnotation(annotationClass);
 		if(annotation != null)
 			res.add(annotation);
 		res.addAll(ClassUtil.getAllAnnotations(clazz.getSuperclass(), annotationClass));
@@ -171,7 +171,7 @@ public final class ClassUtil {
 	
 	public static <A extends Annotation> List<Field> getAllFieldsHasAnnotation(final Class<?> clazz,
 			final Class<A> annotation) {
-		final List<Field> list = ClassUtil.getAllFields(clazz);
+		final var list = ClassUtil.getAllFields(clazz);
 		list.removeIf(a->a.getAnnotation(annotation) == null);
 		return list;
 	}
@@ -283,7 +283,7 @@ public final class ClassUtil {
 	
 	public static Object getField(Object object, Field field)
 			throws IllegalArgumentException, IllegalAccessException {
-		boolean accessible = field.canAccess(object);
+		var accessible = field.canAccess(object);
 		field.setAccessible(true);
 		
 		try {
@@ -300,7 +300,7 @@ public final class ClassUtil {
 		if(clazz == null)
 			return null;
 		try {
-			Field f = clazz.getDeclaredField(field);
+			var f = clazz.getDeclaredField(field);
 			if(f != null)
 				return f;
 		}catch(NoSuchFieldException | SecurityException e) {
@@ -330,7 +330,7 @@ public final class ClassUtil {
 	}
 	
 	public static List<Field> getSerializableFields(Class<?> clazz) {
-		final List<Field> list = getAllFields(clazz);
+		final var list = getAllFields(clazz);
 		list.removeIf(SerializationVerifier::isSerializabeField);
 		return list;
 	}
@@ -461,6 +461,35 @@ public final class ClassUtil {
 		return res;
 	}
 	
+	public static Class<?> loadClass(Class<?> baseClass, String className,
+			Iterable<String> packageNames) throws ClassNotFoundException {
+		if(packageNames == null)
+			throw new NullPointerException("packageNames is null");
+		if(className == null)
+			throw new NullPointerException("className is null");
+		if(className.isBlank())
+			throw new NullPointerException("className is blank");
+		
+		final var loader = classLoader;
+		
+		try {
+			final var cls = loader.loadClass(className);
+			if(isExtends(baseClass, cls))
+				return cls;
+		}catch(final ClassNotFoundException e1) {
+		}
+		for(final String packageName : packageNames)
+			if(packageName != null)
+				try {
+					final var cls = loader.loadClass(packageName + "." + className);
+					if(isExtends(baseClass, cls))
+						return cls;
+				}catch(final ClassNotFoundException e2) {
+				}
+		throw new ClassNotFoundException(
+				"class \"" + className + "\" not found in " + packageNames);
+	}
+	
 	public static Class<?> loadClass(String className) throws ClassNotFoundException {
 		if(className == null)
 			throw new NullPointerException("className is null");
@@ -469,26 +498,12 @@ public final class ClassUtil {
 	
 	public static Class<?> loadClass(String className, Iterable<String> packageNames)
 			throws ClassNotFoundException {
-		if(packageNames == null)
-			throw new NullPointerException("packageNames is null");
-		if(className == null)
-			throw new NullPointerException("className is null");
-		if(className.isBlank())
-			throw new NullPointerException("className is blank");
-		
-		try {
-			return ClassUtil.class.getClassLoader().loadClass(className);
-		}catch(final ClassNotFoundException e1) {
-		}
-		for(final String packageName : packageNames)
-			if(packageName != null)
-				try {
-					return ClassUtil.class.getClassLoader()
-							.loadClass(packageName + "." + className);
-				}catch(final ClassNotFoundException e2) {
-				}
-		throw new ClassNotFoundException(
-				"class \"" + className + "\" not found in " + packageNames);
+		return loadClass(Object.class, className, packageNames);
+	}
+	
+	public static Class<?> loadClassInAllPackages(Class<?> baseClass, String className)
+			throws ClassNotFoundException {
+		return loadClass(baseClass, className, packages);
 	}
 	
 	public static Class<?> loadClassInAllPackages(String className) throws ClassNotFoundException {
@@ -508,10 +523,10 @@ public final class ClassUtil {
 			return null;
 		
 		var minC = cl.get(0);
-		int minD = extendsDepth(clazz, minC);
+		var minD = extendsDepth(clazz, minC);
 		
 		for(var c : cl) {
-			int d = extendsDepth(clazz, c);
+			var d = extendsDepth(clazz, c);
 			if(d < minD) {
 				minD = d;
 				minC = c;
@@ -525,7 +540,7 @@ public final class ClassUtil {
 			throws NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		final Constructor<T> constructor = getConstructor(clazz, getClasses(args));
-		boolean flag = constructor.canAccess(null);
+		var flag = constructor.canAccess(null);
 		constructor.setAccessible(true);
 		try {
 			return constructor.newInstance(args);
@@ -547,7 +562,7 @@ public final class ClassUtil {
 		for(Field f : fs) {
 			if(isStatic(f.getModifiers()))
 				continue;
-			Object fobj = read(in, f.getType());
+			var fobj = read(in, f.getType());
 			try {
 				setField(obj, f, fobj);
 			}catch(IllegalArgumentException | IllegalAccessException e) {
@@ -559,7 +574,7 @@ public final class ClassUtil {
 	
 	public static void setField(Object object, Field field, Object value)
 			throws IllegalArgumentException, IllegalAccessException {
-		boolean accessible = field.canAccess(object);
+		var accessible = field.canAccess(object);
 		field.setAccessible(true);
 		
 		try {
@@ -631,8 +646,8 @@ public final class ClassUtil {
 	}
 	
 	private static Class<?>[] getClasses(Object... objects) {
-		Class<?>[] classes = new Class<?>[objects.length];
-		for(int i = 0; i < objects.length; i++)
+		var classes = new Class<?>[objects.length];
+		for(var i = 0; i < objects.length; i++)
 			if(objects[i] != null)
 				classes[i] = objects[i].getClass();
 		return classes;
@@ -641,13 +656,13 @@ public final class ClassUtil {
 	@SuppressWarnings("unchecked")
 	private static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>[] classes)
 			throws NoSuchMethodException {
-		final int len = classes.length;
+		final var len = classes.length;
 		A :
 		for(var c : clazz.getConstructors()) {
 			if(c.getParameterCount() != len)
 				continue A;
 			final var params = c.getParameters();
-			for(int i = 0; i < len; i++) {
+			for(var i = 0; i < len; i++) {
 				
 				final var ci = classes[i];
 				final var pi = params[i].getType();
