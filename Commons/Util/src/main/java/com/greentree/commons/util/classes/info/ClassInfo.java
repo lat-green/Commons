@@ -104,7 +104,7 @@ public final class ClassInfo<C> implements TypeInfo<C> {
 	
 	@Override
 	public String toString() {
-		return "ClassInfo [" + cls + "]";
+		return cls.toString();
 	}
 	
 	private static final class ClassInfoSingletonFactory
