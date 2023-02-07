@@ -2,20 +2,20 @@ package com.greentree.commons.util.time;
 
 /** @author Arseny Latyshev */
 public class DeltaTimer {
-
-	private float delta, last;
-
+	
+	private long delta, last;
+	
 	public float getDelta() {
-		return delta;
+		return delta / 1_000_000_000f;
 	}
-
+	
 	public void step() {
-		final float t = getTime();
+		final var t = getTime();
 		delta = t - last;
 		last = t;
 	}
-
-	private float getTime() {
-		return System.nanoTime() / 1_000_000_000f;
+	
+	private long getTime() {
+		return System.nanoTime();
 	}
 }
