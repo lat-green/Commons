@@ -8,7 +8,7 @@ public final class WrappedException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public <T extends Throwable> WrappedException(Throwable cause) {
+	public WrappedException(Throwable cause) {
 		super(null, cause, true, false);
 	}
 	
