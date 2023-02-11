@@ -40,13 +40,14 @@ public class RootFileResourceLocation implements NamedResourceLocation, IOResour
 	@Override
 	public IOResource createResource(String name) {
 		final var f = new File(root, name);
-		if(!f.exists())
+		if(!f.exists()) {
+			f.getParentFile().mkdirs();
 			try {
 				f.createNewFile();
 			}catch(IOException e) {
 				e.printStackTrace();
 			}
-		else
+		}else
 			checkFile(f);
 		return new FileResource(f);
 	}
@@ -54,9 +55,14 @@ public class RootFileResourceLocation implements NamedResourceLocation, IOResour
 	@Override
 	public IOResource createNewResource(String name) {
 		final var f = new File(root, name);
-		checkFile(f);
 		if(f.exists())
 			throw new RuntimeException(f + "");
+		f.getParentFile().mkdirs();
+		try {
+			f.createNewFile();
+		}catch(IOException e) {
+			throw new RuntimeException("file:" + f, e);
+		}
 		return new FileResource(f);
 	}
 	
