@@ -6,32 +6,43 @@ import java.util.function.Consumer;
 import com.greentree.commons.util.exception.WrappedException;
 
 @FunctionalInterface
-public interface CheckedConsumer<T> {
+public interface CheckedConsumer<T> extends Consumer<T> {
 	
-	void accept(T t) throws Exception;
+	@SuppressWarnings("unchecked")
+	static <T> CheckedConsumer<T> build(Consumer<? super T> consumer) {
+		if(consumer instanceof CheckedConsumer)
+			return (CheckedConsumer<T>) consumer;
+		return t->consumer.accept(t);
+	}
 	
+	@Override
+	default void accept(T t) {
+		try {
+			checkedAccept(t);
+		}catch(Exception e) {
+			throw new WrappedException(e);
+		}
+	}
+	
+	void checkedAccept(T t) throws Exception;
+	
+	@Deprecated
 	default Consumer<T> toNonCheked() {
-		return t-> {
-			try {
-				accept(t);
-			}catch(Exception e) {
-				throw new WrappedException(e);
-			}
-		};
+		return this;
 	}
 	
 	default CheckedConsumer<T> andThen(CheckedConsumer<? super T> after) {
 		Objects.requireNonNull(after);
 		return (T t)-> {
-			accept(t);
-			after.accept(t);
+			checkedAccept(t);
+			after.checkedAccept(t);
 		};
 	}
 	
 	default CheckedConsumer<T> andThen(Consumer<? super T> after) {
 		Objects.requireNonNull(after);
 		return (T t)-> {
-			accept(t);
+			checkedAccept(t);
 			after.accept(t);
 		};
 	}

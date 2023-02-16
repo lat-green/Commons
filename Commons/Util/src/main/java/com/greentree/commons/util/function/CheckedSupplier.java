@@ -5,18 +5,30 @@ import java.util.function.Supplier;
 import com.greentree.commons.util.exception.WrappedException;
 
 @FunctionalInterface
-public interface CheckedSupplier<T> {
-
-	T get() throws Exception;
-
-	default Supplier<T> toNonCheked() {
-		return () -> {
-			try {
-				return get();
-			}catch(Exception e) {
-				throw new WrappedException(e);
-			}
-		};
+public interface CheckedSupplier<T> extends Supplier<T> {
+	
+	
+	@SuppressWarnings("unchecked")
+	static <T> CheckedSupplier<T> build(Supplier<? extends T> supplier) {
+		if(supplier instanceof CheckedSupplier)
+			return (CheckedSupplier<T>) supplier;
+		return ()->supplier.get();
 	}
-
+	
+	T checkedGet() throws Exception;
+	
+	@Override
+	default T get() {
+		try {
+			return checkedGet();
+		}catch(Exception e) {
+			throw new WrappedException(e);
+		}
+	}
+	
+	@Deprecated
+	default Supplier<T> toNonCheked() {
+		return this;
+	}
+	
 }
