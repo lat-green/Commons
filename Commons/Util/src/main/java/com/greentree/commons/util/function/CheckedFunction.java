@@ -34,7 +34,7 @@ public interface CheckedFunction<T, R> extends Function<T, R> {
 	@Override
 	default R apply(T t) {
 		try {
-			return apply(t);
+			return checkedApply(t);
 		}catch(Exception e) {
 			throw new WrappedException(e);
 		}
