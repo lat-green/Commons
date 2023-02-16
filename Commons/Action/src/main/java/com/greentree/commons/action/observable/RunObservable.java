@@ -5,10 +5,11 @@ import java.io.Serializable;
 import com.greentree.commons.action.ListenerCloser;
 
 public interface RunObservable extends Serializable {
-
+	
 	RunObservable NULL = new RunObservable() {
+		
 		private static final long serialVersionUID = 1L;
-
+		
 		@Override
 		public int listenerSize() {
 			return 0;
@@ -21,7 +22,10 @@ public interface RunObservable extends Serializable {
 	};
 	
 	ListenerCloser addListener(Runnable listener);
-	int listenerSize();
+	
+	default int listenerSize() {
+		throw new UnsupportedOperationException();
+	}
 	
 	default boolean isEmpty() {
 		return listenerSize() == 0;
