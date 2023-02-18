@@ -19,6 +19,14 @@ import com.greentree.commons.util.iterator.IteratorUtil;
 
 public interface Graph<V> extends Iterable<V>, Serializable {
 	
+	
+	default boolean contains(Object v) {
+		for(var e : this)
+			if(v.equals(e))
+				return true;
+		return false;
+	}
+	
 	default PathFinder<V> getConstMinPathFinder() {
 		return new MiddleMinPathFinder<>(this);
 	}
