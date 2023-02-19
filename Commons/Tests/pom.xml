@@ -17,6 +17,10 @@
 		    <artifactId>junit-jupiter</artifactId>
 		    <version>${junit.version}</version>
 	    </dependency>
+        <dependency>
+			<groupId>com.greentree.commons</groupId>
+			<artifactId>util</artifactId>
+	    </dependency>
 	</dependencies>
 	
 </project>
