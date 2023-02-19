@@ -15,13 +15,13 @@ public interface CheckedSupplier<T> extends Supplier<T> {
 		return ()->supplier.get();
 	}
 	
-	T checkedGet() throws Exception;
+	T checkedGet() throws Throwable;
 	
 	@Override
 	default T get() {
 		try {
 			return checkedGet();
-		}catch(Exception e) {
+		}catch(Throwable e) {
 			throw new WrappedException(e);
 		}
 	}

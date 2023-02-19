@@ -16,12 +16,12 @@ public interface CheckedRunnable extends Runnable {
 	default void run() {
 		try {
 			checkedRun();
-		}catch(Exception e) {
+		}catch(Throwable e) {
 			throw new WrappedException(e);
 		}
 	}
 	
-	void checkedRun() throws Exception;
+	void checkedRun() throws Throwable;
 	
 	@Deprecated
 	default Runnable toNonCheked() {

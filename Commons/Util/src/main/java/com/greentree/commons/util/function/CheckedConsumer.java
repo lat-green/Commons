@@ -19,12 +19,12 @@ public interface CheckedConsumer<T> extends Consumer<T> {
 	default void accept(T t) {
 		try {
 			checkedAccept(t);
-		}catch(Exception e) {
+		}catch(Throwable e) {
 			throw new WrappedException(e);
 		}
 	}
 	
-	void checkedAccept(T t) throws Exception;
+	void checkedAccept(T t) throws Throwable;
 	
 	@Deprecated
 	default Consumer<T> toNonCheked() {

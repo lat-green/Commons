@@ -26,12 +26,12 @@ public interface CheckedBiFunction<T1, T2, R> extends BiFunction<T1, T2, R> {
 	default R apply(T1 t1, T2 t2) {
 		try {
 			return checkedApply(t1, t2);
-		}catch(Exception e) {
+		}catch(Throwable e) {
 			throw new WrappedException(e);
 		}
 	}
 	
-	R checkedApply(T1 t1, T2 t2) throws Exception;
+	R checkedApply(T1 t1, T2 t2) throws Throwable;
 	
 	@Deprecated
 	default BiFunction<T1, T2, R> toNonCheked() {

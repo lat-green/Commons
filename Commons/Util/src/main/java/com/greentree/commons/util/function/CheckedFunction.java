@@ -35,12 +35,12 @@ public interface CheckedFunction<T, R> extends Function<T, R> {
 	default R apply(T t) {
 		try {
 			return checkedApply(t);
-		}catch(Exception e) {
+		}catch(Throwable e) {
 			throw new WrappedException(e);
 		}
 	}
 	
-	R checkedApply(T t) throws Exception;
+	R checkedApply(T t) throws Throwable;
 	
 	default <V> CheckedFunction<V, R> compose(CheckedFunction<? super V, ? extends T> before) {
 		Objects.requireNonNull(before);
