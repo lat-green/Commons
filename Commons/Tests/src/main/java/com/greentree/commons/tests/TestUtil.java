@@ -29,7 +29,6 @@ public class TestUtil {
 			ts.add(t);
 		final var threadThrows = new CopyOnWriteArrayList<Throwable>();
 		ts = ts.stream().map(x->run(x, threadThrows)).toList();
-		ts = ts.stream().map(x->run(x, threadThrows)).toList();
 		for(var t : ts)
 			t.run();
 		tryThrow(threadThrows);
@@ -42,13 +41,17 @@ public class TestUtil {
 	}
 	
 	private static CheckedRunnable run(CheckedRunnable task, Collection<Throwable> threadThrows) {
+		return run("", task, threadThrows);
+	}
+	
+	private static CheckedRunnable run(String name, CheckedRunnable task, Collection<Throwable> threadThrows) {
 		final var thread = new Thread(()-> {
 			try {
 				task.run();
 			}catch(Throwable e) {
 				threadThrows.add(e);
 			}
-		}, "Task");
+		}, "Task " + name);
 		thread.start();
 		return ()-> {
 			tryThrow(threadThrows);
