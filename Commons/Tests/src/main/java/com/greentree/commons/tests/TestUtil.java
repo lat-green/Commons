@@ -11,12 +11,6 @@ import com.greentree.commons.util.iterator.IteratorUtil;
 
 public class TestUtil {
 	
-	
-	
-	
-	
-	
-	
 	public static TaskBuilder builder() {
 		return new TaskBuilder();
 	}
