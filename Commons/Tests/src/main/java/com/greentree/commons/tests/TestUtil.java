@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import com.greentree.commons.util.exception.WrappedException;
 import com.greentree.commons.util.function.CheckedRunnable;
 import com.greentree.commons.util.iterator.IteratorUtil;
 
@@ -83,15 +84,15 @@ public class TestUtil {
 		return ()-> {
 			while(runned[0]) {
 				if(end_timeout < System.currentTimeMillis()) {
-					callback.callbackShy(
-							new RuntimeException("timeout " + (System.currentTimeMillis() - end_timeout) + " millis"));
+					callback.callbackShy(new RuntimeException(
+							"Task " + name + " timeout " + (System.currentTimeMillis() - end_timeout) + " millis"));
 					return;
 				}
 				Thread.yield();
 			}
 			thread.join();
 			if(taskThrow[0] != null)
-				callback.callback(taskThrow[0]);
+				callback.callback("execution exception Task " + name, taskThrow[0]);
 		};
 	}
 	
@@ -202,6 +203,11 @@ public class TestUtil {
 	private interface ThrowCallBack {
 		
 		void callback(Throwable e);
+		
+		default void callback(String text, Throwable throwable) {
+			callback(new RuntimeException(text, throwable));
+		}
+		
 		void callbackShy(Throwable e);
 		
 		void print() throws Throwable;
