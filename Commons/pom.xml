@@ -110,6 +110,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 			</dependency>
 			<dependency>
 				<groupId>com.greentree.commons</groupId>
+				<artifactId>property</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.greentree.commons</groupId>
 				<artifactId>tests</artifactId>
 				<version>${project.version}</version>
 				<scope>test</scope>
