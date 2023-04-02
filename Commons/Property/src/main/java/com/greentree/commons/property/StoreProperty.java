@@ -8,7 +8,7 @@ import com.greentree.commons.action.observer.object.EventAction;
 
 final class StoreProperty<T> implements Property<T> {
 	
-	public static final int CHARACTERISTICS = CACHE | NOT_BE_CONST;
+	public static final int CHARACTERISTICS = CACHED | NOT_BE_CONST;
 	
 	private T value;
 	

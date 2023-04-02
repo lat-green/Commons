@@ -8,7 +8,7 @@ import com.greentree.commons.action.ListenerCloser;
 
 final class MapProperty<T, R> implements Property<R> {
 	
-	private static final int CHARACTERISTICS = 0;
+	private static final int CHARACTERISTICS = CACHED;
 	
 	private final Property<? extends T> source;
 	private final Function<? super T, ? extends R> mapFunction;
@@ -35,7 +35,7 @@ final class MapProperty<T, R> implements Property<R> {
 	
 	@Override
 	public int characteristics() {
-		return CHARACTERISTICS;
+		return source.characteristics() | CHARACTERISTICS;
 	}
 	
 	@Override
