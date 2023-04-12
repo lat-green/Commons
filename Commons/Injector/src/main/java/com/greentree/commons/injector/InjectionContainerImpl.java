@@ -3,6 +3,7 @@ package com.greentree.commons.injector;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.greentree.commons.util.classes.ClassUtil;
@@ -10,23 +11,23 @@ import com.greentree.commons.util.classes.ClassUtil;
 public final class InjectionContainerImpl implements ConfigInjectionContainer {
 	
 	
-	private final Collection<Source<?>> beans = new ArrayList<>();
+	private final Collection<Source<Object>> beans = new ArrayList<>();
 	
 	@Override
-	public <T> T get(Class<T> cls) {
+	public <T> Optional<T> get(Class<T> cls) {
 		var all = getAll(cls);
-		return all.map(x -> x.value).findAny().orElse(null);
+		return all.map(x -> x.value).findAny();
 	}
 	
 	@Override
-	public Object get(String name) {
-		return beans.stream().filter(x -> name.equals(x.name)).map(x -> x.value).findAny().orElse(null);
+	public Optional<Object> get(String name) {
+		return beans.stream().filter(x -> name.equals(x.name)).map(x -> x.value).findAny();
 	}
 	
 	@Override
-	public <T> T get(String name, Class<T> cls) {
+	public <T> Optional<T> get(String name, Class<T> cls) {
 		var all = getAll(cls);
-		return all.filter(x -> name.equals(x.name)).map(x -> x.value).findAny().orElse(null);
+		return all.filter(x -> name.equals(x.name)).map(x -> x.value).findAny();
 	}
 	
 	@Override

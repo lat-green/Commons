@@ -8,15 +8,15 @@ import com.greentree.commons.util.classes.ClassUtil;
 public class AllFieldDependencyScanner implements DependencyScanner {
 	
 	@Override
-	public Stream<? extends Dependency> scan(Object object) {
-		return ClassUtil.getAllFields(object.getClass()).stream().filter(x -> {
+	public Stream<? extends Dependency> scan(Class<?> cls) {
+		return ClassUtil.getAllFields(cls).stream().filter(x -> {
 			var mod = x.getModifiers();
 			if(Modifier.isStatic(mod))
 				return false;
 			if(Modifier.isFinal(mod))
 				return false;
 			return true;
-		}).map(x -> new FieldDependency(object, x));
+		}).map(x -> new FieldDependency(x));
 	}
 	
 }

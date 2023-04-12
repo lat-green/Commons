@@ -4,6 +4,6 @@ import java.util.stream.Stream;
 
 public interface DependencyScanner {
 	
-	Stream<? extends Dependency> scan(Object object);
+	Stream<? extends Dependency> scan(Class<?> cls);
 	
 }

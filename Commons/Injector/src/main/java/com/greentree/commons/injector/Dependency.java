@@ -3,6 +3,6 @@ package com.greentree.commons.injector;
 
 public interface Dependency {
 	
-	void set(InjectionContainer container);
+	void set(Object host, InjectionContainer container);
 	
 }

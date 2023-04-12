@@ -1,8 +1,6 @@
 package com.greentree.commons.util.classes;
 
-import static java.lang.reflect.Modifier.isFinal;
-import static java.lang.reflect.Modifier.isStatic;
-import static java.lang.reflect.Modifier.isTransient;
+import static java.lang.reflect.Modifier.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -461,7 +459,8 @@ public final class ClassUtil {
 		return res;
 	}
 	
-	public static Class<?> loadClass(Class<?> baseClass, String className,
+	@SuppressWarnings("unchecked")
+	public static <T> Class<? extends T> loadClass(Class<T> baseClass, String className,
 			Iterable<String> packageNames) throws ClassNotFoundException {
 		if(packageNames == null)
 			throw new NullPointerException("packageNames is null");
@@ -475,7 +474,7 @@ public final class ClassUtil {
 		try {
 			final var cls = loader.loadClass(className);
 			if(isExtends(baseClass, cls))
-				return cls;
+				return (Class<? extends T>) cls;
 		}catch(final ClassNotFoundException e1) {
 		}
 		for(final String packageName : packageNames)
@@ -483,7 +482,7 @@ public final class ClassUtil {
 				try {
 					final var cls = loader.loadClass(packageName + "." + className);
 					if(isExtends(baseClass, cls))
-						return cls;
+						return (Class<? extends T>) cls;
 				}catch(final ClassNotFoundException e2) {
 				}
 		throw new ClassNotFoundException(
@@ -501,7 +500,7 @@ public final class ClassUtil {
 		return loadClass(Object.class, className, packageNames);
 	}
 	
-	public static Class<?> loadClassInAllPackages(Class<?> baseClass, String className)
+	public static <T> Class<? extends T> loadClassInAllPackages(Class<T> baseClass, String className)
 			throws ClassNotFoundException {
 		return loadClass(baseClass, className, packages);
 	}

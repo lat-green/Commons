@@ -11,15 +11,26 @@ public record Injector(InjectionContainer container, DependencyScanner scanner) 
 	}
 	
 	public void inject(Object obj) {
-		var deps = scanner.scan(obj);
-		deps.forEach(x -> x.set(container));
+		var deps = scanner.scan(obj.getClass());
+		deps.forEach(x -> x.set(obj, container));
 	}
 	
-	public <T> T newInstace(Class<T> cls) throws NoSuchMethodException, SecurityException, InstantiationException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public <T> Constructor<T> newInstace(Class<T> cls) throws NoSuchMethodException, SecurityException,
+			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		var inst = ClassUtil.newInstance(cls);
-		inject(inst);
-		return inst;
+		
+		return new Constructor<>() {
+			
+			@Override
+			public T value() {
+				return inst;
+			}
+			
+			@Override
+			public void inject() {
+				Injector.this.inject(inst);
+			}
+		};
 	}
 	
 }
