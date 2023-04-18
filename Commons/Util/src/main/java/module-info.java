@@ -9,6 +9,7 @@ open module commons.util {
 	exports com.greentree.commons.util.time;
 	exports com.greentree.commons.util.cortege;
 	exports com.greentree.commons.util.array;
+	exports com.greentree.commons.util.array.proxy;
 	exports com.greentree.commons.util.collection;
 	exports com.greentree.commons.util.concurent;
 	exports com.greentree.commons.util.pool;

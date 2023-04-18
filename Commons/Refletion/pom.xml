@@ -14,6 +14,10 @@
 			<groupId>com.greentree.commons</groupId>
 			<artifactId>util</artifactId>
         </dependency>
+        <dependency>
+			<groupId>com.greentree.commons</groupId>
+			<artifactId>graph</artifactId>
+        </dependency>
 	</dependencies>
 	
 </project>

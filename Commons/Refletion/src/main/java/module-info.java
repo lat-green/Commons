@@ -1,5 +1,5 @@
 open module commons.reflection {
 	
-	requires transitive commons.util;
+	requires transitive commons.graph;
 	
 }

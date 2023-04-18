@@ -5,7 +5,6 @@ import java.util.function.BiFunction;
 
 import com.greentree.commons.graph.Graph;
 import com.greentree.commons.graph.algorithm.walk.DFSWalker;
-import com.greentree.commons.graph.algorithm.walk.GraphVisitor;
 import com.greentree.commons.graph.algorithm.walk.GraphWalker;
 
 public class MinPathFinder<V> implements PathFinder<V> {
@@ -57,56 +56,39 @@ public class MinPathFinder<V> implements PathFinder<V> {
 	}
 	
 	
-	public class Visitor implements GraphVisitor<V> {
+	public class Visitor extends AbstractPathVistor<V> {
 		
 		private List<? extends V> result;
 		private double result_length = Double.MAX_VALUE;
 		
-		private final GraphVisitor<V> visitor;
 		private double path_length;
 		
 		
 		public Visitor(V end) {
-			visitor = new AbstractPathVistor<>(end) {
-				
-				@Override
-				protected boolean add(List<V> path) {
-					setResult(path);
-					return true;
-				}
-				
-			};
-		}
-		
-		@Override
-		public void endVisit(V v) {
-			visitor.endVisit(v);
+			super(end);
 		}
 		
 		@Override
 		public void endVisit(V parent, V v) {
-			visitor.endVisit(v);
+			super.endVisit(parent, v);
 			final var l = arc_len.apply(parent, v).doubleValue();
 			path_length -= l;
-		}
-		
-		public void setResult(List<? extends V> path) {
-			if(result == null || path_length < result_length) {
-				result_length = path_length;
-				result = path;
-			}
-		}
-		
-		@Override
-		public boolean startVisit(V v) {
-			return visitor.startVisit(v);
 		}
 		
 		@Override
 		public boolean startVisit(V parent, V v) {
 			final var l = arc_len.apply(parent, v).doubleValue();
 			path_length += l;
-			return visitor.startVisit(v) && path_length < result_length;
+			return super.startVisit(parent, v) && path_length < result_length;
+		}
+		
+		@Override
+		protected boolean add(List<V> path) {
+			if(result == null || path_length < result_length) {
+				result_length = path_length;
+				result = path;
+			}
+			return true;
 		}
 		
 	}
