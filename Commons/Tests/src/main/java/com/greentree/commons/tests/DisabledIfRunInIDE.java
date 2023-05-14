@@ -1,17 +1,18 @@
 package com.greentree.commons.tests;
 
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class DisabledIfRunInIDE implements ExecutionCondition {
-	
-	@Override
-	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		if(System.getProperty("localRepository") != null) // only on Maven
-			return ConditionEvaluationResult.enabled("used Maven");
-		
-		return ConditionEvaluationResult.disabled("run id IDE");
-	}
+import org.junit.jupiter.api.extension.ExtendWith;
+
+
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@ExtendWith(DisabledIfRunInIDECondition.class)
+public @interface DisabledIfRunInIDE{
 	
 }
