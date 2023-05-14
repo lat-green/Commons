@@ -7,21 +7,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class MinExecuteCounter implements Runnable, AutoCloseable {
 	
 	private final int minCount;
-	private AtomicInteger count;
+	private AtomicInteger incrementCount;
 	
-	public MinExecuteCounter(int maxCount) {
-		this.minCount = maxCount;
-		this.count = new AtomicInteger();
+	public MinExecuteCounter(int minCount) {
+		this.minCount = minCount;
+		this.incrementCount = new AtomicInteger();
 	}
 	
 	@Override
 	public void run() {
-		count.getAndIncrement();
+		incrementCount.getAndIncrement();
 	}
 	
 	@Override
 	public void close() {
-		final var v = count.get();
+		final var v = incrementCount.get();
 		if(minCount > v)
 			fail("min run: " + minCount + ", but run: " + v);
 	}

@@ -6,22 +6,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ExecuteCounter implements Runnable, AutoCloseable {
 	
-	private final int maxCount;
-	private AtomicInteger count;
+	private final int count;
+	private AtomicInteger incrementCount;
 	
-	public ExecuteCounter(int maxCount) {
-		this.maxCount = maxCount;
-		this.count = new AtomicInteger();
+	public ExecuteCounter(int count) {
+		this.count = count;
+		this.incrementCount = new AtomicInteger();
 	}
 	
 	@Override
 	public void run() {
-		assertTrue(maxCount > count.getAndIncrement(), ()->"maxCount:" + maxCount);
+		assertTrue(count > incrementCount.getAndIncrement(), () -> "count:" + count);
 	}
 	
 	@Override
 	public void close() {
-		assertEquals(maxCount, count.get());
+		assertEquals(count, incrementCount.get());
 	}
 	
 }

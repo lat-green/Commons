@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import org.joml.Matrix3f;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -65,12 +64,6 @@ public class BoxTest {
 	@ParameterizedTest
 	void model_min_point(Pair<Pair<Matrix3f, AbstractVector2f>, AbstractVector2f> p) {
 		assertEquals(b.min(p.first.first, p.first.seconde), p.seconde);
-	}
-	
-	@Test
-	void getProjection() {
-		System.out.println(b.getProjection(new Matrix3f(10, 0, 0, 0, 1, 0, 0, 0, 1),
-				new Vector2f(1, 1).normalize()));
 	}
 	
 }
