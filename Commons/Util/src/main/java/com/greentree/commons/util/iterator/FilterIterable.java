@@ -6,7 +6,7 @@ import java.util.Spliterator;
 import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
-public class FilterIterable<T> implements SizedIterable<T>, Serializable {
+public class FilterIterable<T> implements Iterable<T>, Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -41,11 +41,6 @@ public class FilterIterable<T> implements SizedIterable<T>, Serializable {
 	@Override
 	public FilterIterator<T> iterator() {
 		return new FilterIterator<>(source.iterator(), filter);
-	}
-	
-	@Override
-	public int size() {
-		return IteratorUtil.size(source);
 	}
 	
 	@Override
