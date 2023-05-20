@@ -11,11 +11,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 	<name>Graph</name>
 	
    	<artifactId>graph</artifactId>
+	<version>0.3.3.1</version>
 	
 	<dependencies>
 		<dependency>
 			<groupId>com.greentree.commons</groupId>
 			<artifactId>util</artifactId>
+			<version>0.3.3</version>
 		</dependency>
 	</dependencies>
 	

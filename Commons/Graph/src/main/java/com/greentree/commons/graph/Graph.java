@@ -2,6 +2,7 @@ package com.greentree.commons.graph;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.greentree.commons.graph.algorithm.brige.BridgeFinder;
@@ -19,6 +20,15 @@ import com.greentree.commons.util.iterator.IteratorUtil;
 
 public interface Graph<V> extends Iterable<V>, Serializable {
 	
+	default Graph<V> inverse(Graph<? extends V> graph) {
+		final var result = new DirectedGraph<V>();
+		for(var v : graph)
+			result.add(v);
+		for(var v : graph)
+			for(var to : graph.getJoints(v))
+				result.add(to, v);
+		return result;
+	}
 	
 	default boolean contains(Object v) {
 		for(var e : this)
@@ -64,12 +74,28 @@ public interface Graph<V> extends Iterable<V>, Serializable {
 	}
 	
 	default <L extends List<? super V>> L getTopologicalSort(L result) {
-		return GraphUtil.getTopologicalSort(this, result);
+		final var buffer = new LinkedList<V>();
+		for(var v : this)
+			buffer.add(v);
+		while(!buffer.isEmpty())
+			getTopologicalSort_DFS(this, buffer.peek(), buffer, result);
+		return result;
+	}
+	
+	private static <V> void getTopologicalSort_DFS(Graph<? extends V> graph, V e, LinkedList<? extends V> buffer,
+			List<? super V> dest) {
+		buffer.remove(e);
+		for(var to : graph.getJoints(e)) {
+			final var index = buffer.indexOf(to);
+			if(index != -1)
+				getTopologicalSort_DFS(graph, to, buffer, dest);
+		}
+		dest.add(e);
 	}
 	
 	/** @return is v the vertex of this graph */
 	default boolean has(Object v) {
-		return GraphUtil.contains(this, v);
+		return IteratorUtil.contains(this, v);
 	}
 	
 	
@@ -77,7 +103,7 @@ public interface Graph<V> extends Iterable<V>, Serializable {
 	default boolean has(Object from, Object to) {
 		if(!has(from))
 			return false;
-		return GraphUtil.contains(getJoints(from), to);
+		return IteratorUtil.contains(getJoints(from), to);
 	}
 	
 	default boolean isEmpty() {

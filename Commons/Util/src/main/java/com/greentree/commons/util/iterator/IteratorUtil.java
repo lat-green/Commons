@@ -514,4 +514,13 @@ public class IteratorUtil {
 		return new MergeIterator<>(ts);
 	}
 	
+	public static boolean contains(Iterable<?> iterable, Object object) {
+		if(iterable instanceof Collection)
+			return ((Collection<?>) iterable).contains(object);
+		for(var e : iterable)
+			if(object.equals(e))
+				return true;
+		return false;
+	}
+	
 }

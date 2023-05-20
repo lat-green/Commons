@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
 import org.junit.jupiter.api.Test;
 
 import com.greentree.commons.graph.DirectedGraph;
@@ -29,9 +30,8 @@ public class TaskTest {
 		final var finder = new MinPathFinder<>(new BFSWalker<>(graph));
 		
 		final var solve = finder.getPath(start, finish);
-		assertEquals(solve,
-				List.of(new State(0, 0), new State(5, 0), new State(2, 3), new State(2, 0),
-						new State(0, 2), new State(5, 2), new State(4, 3), new State(4, 0)));
+		assertEquals(solve, List.of(new State(0, 0), new State(5, 0), new State(2, 3), new State(2, 0), new State(0, 2),
+				new State(5, 2), new State(4, 3), new State(4, 0)));
 	}
 	
 	@Test

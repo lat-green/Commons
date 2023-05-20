@@ -8,13 +8,13 @@ import com.greentree.commons.graph.DirectedArc;
 import com.greentree.commons.graph.Graph;
 import com.greentree.commons.util.collection.AutoGenerateMap;
 import com.greentree.commons.util.collection.FunctionAutoGenerateMap;
-import com.greentree.commons.util.function.LambdaSaveFunction;
-import com.greentree.commons.util.function.SaveFunction;
 
 public class BridgeFinderImpl<V> implements BridgeFinder<V> {
 	
 	private final Graph<V> graph;
 	private Map<V, Collection<V>> res = new AutoGenerateMap<>() {
+		
+		private static final long serialVersionUID = 1L;
 		
 		@Override
 		protected Collection<V> generate(V k) {
@@ -40,6 +40,7 @@ public class BridgeFinderImpl<V> implements BridgeFinder<V> {
 		return new BridgeFinderImpl<>(graph).getBridges();
 	}
 	
+	@Override
 	public Iterable<? extends DirectedArc<V>> getBridges() {
 		final var result = new ArrayList<DirectedArc<V>>();
 		
