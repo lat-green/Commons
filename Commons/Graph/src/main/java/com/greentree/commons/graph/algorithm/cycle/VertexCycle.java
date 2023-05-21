@@ -21,22 +21,32 @@ public class VertexCycle<E> extends ArrayList<E> {
 		super(cycle);
 	}
 
-	private static <E> boolean equals(VertexCycle<E> a, VertexCycle<E> b, int s) {
-		int offset = b.indexOf(a.get(0));
+	private boolean cycleEquals(VertexCycle<? extends E> other) {
+		int offset = other.indexOf(get(0));
 		if(offset == -1)return false;
 
-		for(int i = 0; i < s; i++)
-			if(!a.get(i).equals(b.get((i + offset) % s))) return false;
+		var size = size();
+		if(size != other.size())
+			return false;
+		
+		for(int i = 0; i < size; i++)
+			if(!get(i).equals(other.get((i + offset) % size)))
+				return false;
 
 		return true;
 	}
 
-	private static <E> boolean inverseEquals(VertexCycle<E> a, VertexCycle<E> b, int s) {
-		int offset = b.indexOf(a.get(0));
+	private boolean cycleEqualsInverse(VertexCycle<? extends E> other) {
+		int offset = other.indexOf(get(0));
 		if(offset == -1)return false;
 
-		for(int i = 0; i < s; i++)
-			if(!a.get(i).equals(b.get((s-i + offset) % s))) return false;
+		var size = size();
+		if(size != other.size())
+			return false;
+		
+		for(int i = 0; i < size; i++)
+			if(!get(i).equals(other.get((size - i + offset) % size)))
+				return false;
 
 		return true;
 
@@ -48,12 +58,9 @@ public class VertexCycle<E> extends ArrayList<E> {
 		if (this == obj) return true;
 		if (getClass() != obj.getClass()) return false;
 
-		VertexCycle<E> other = (VertexCycle<E>) obj;
+		var other = (VertexCycle<E>) obj;
 
-		int s = size();
-		if(s != other.size()) return false;
-
-		return equals(this, other, s) || inverseEquals(this, other, s);
+		return cycleEquals(other) || cycleEqualsInverse(other);
 	}
 
 	@Override

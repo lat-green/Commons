@@ -55,7 +55,7 @@ public final class OneUseDFSWalker<V> implements GraphWalker<V> {
 		if(used_all.size() >= graph.size())
 			return;
 		used.add(v);
-		for(var to : graph.getJoints(v))
+		for(var to : graph.getAdjacencyIterable(v))
 			if(!used.contains(to))
 				dfs(used, used_all, visitor, v, to);
 		used.remove(v);

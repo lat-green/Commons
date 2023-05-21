@@ -61,7 +61,7 @@ public final class BFSWalker<V> implements GraphWalker<V> {
 		{
 			final var v = info.vertex();
 			var deadlock = true;
-			for(var to : graph.getJoints(v))
+			for(var to : graph.getAdjacencyIterable(v))
 				if(!info.contains(to)) {
 					final var to_info = new BFSWalkInfo<>(info, to);
 					queue.add(to_info);
@@ -70,7 +70,7 @@ public final class BFSWalker<V> implements GraphWalker<V> {
 			if(!deadlock)
 				return;
 		}
-		GraphWalker.visitPath(info.path.iterator(), visitor);
+		visitor.visitPath(info.path.iterator());
 	}
 	
 }

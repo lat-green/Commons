@@ -1,7 +1,24 @@
 package com.greentree.commons.graph.algorithm.walk;
 
+import java.util.Iterator;
 
 public interface GraphVisitor<V> {
+	
+	default void visitPath(Iterator<? extends V> path, V p) {
+		if(!path.hasNext())
+			return;
+		final var v = path.next();
+		if(startVisit(p, v))
+			visitPath(path, v);
+		endVisit(p, v);
+	}
+	
+	default void visitPath(Iterator<? extends V> path) {
+		final var v = path.next();
+		if(startVisit(v))
+			visitPath(path, v);
+		endVisit(v);
+	}
 	
 	default void endVisit(V v) {
 	}
@@ -15,6 +32,5 @@ public interface GraphVisitor<V> {
 	default boolean startVisit(V parent, V v) {
 		return startVisit(v);
 	}
-	
 	
 }

@@ -35,10 +35,6 @@ public class CycleFinderImpl<V> implements CycleFinder<V> {
 		}
 	}
 	
-	public static <V> Collection<VertexCycle<V>> get(Graph<V> abstractGraph) {
-		return new CycleFinderImpl<>(abstractGraph).res;
-	}
-	
 	public Collection<VertexCycle<V>> get() {
 		return res;
 	}
@@ -50,7 +46,7 @@ public class CycleFinderImpl<V> implements CycleFinder<V> {
 	
 	private void dfsFirst(V v) {
 		path.push(v);
-		for(V to : graph.getJoints(v))
+		for(V to : graph.getAdjacencyIterable(v))
 			if((to == start || hasPath(to, start)) && !usedVertex.contains(to)) {
 				var p = new Pair<>(v, to);
 				//        		System.out.println(used + " " + p);
@@ -75,7 +71,7 @@ public class CycleFinderImpl<V> implements CycleFinder<V> {
 	}
 	
 	@Override
-	public Iterable<? extends VertexCycle<V>> getCycles() {
+	public Collection<? extends VertexCycle<V>> getCycles() {
 		return res;
 	}
 }

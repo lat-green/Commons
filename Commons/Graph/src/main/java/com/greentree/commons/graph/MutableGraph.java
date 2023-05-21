@@ -15,7 +15,7 @@ public interface MutableGraph<V> extends Graph<V> {
 	default void addAll(Graph<? extends V> graph) {
 		for(var v : graph) {
 			add(v);
-			for(var to : graph.getJoints(v)) {
+			for(var to : graph.getAdjacencyIterable(v)) {
 				add(v, to);
 			}
 		}

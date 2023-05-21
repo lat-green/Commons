@@ -58,7 +58,7 @@ public class MultiGraph<V> implements MutableGraph<V> {
 	}
 	
 	@Override
-	public Collection<? extends V> getJoints(Object v) {
+	public Collection<? extends V> getAdjacencyIterable(Object v) {
 		if(all_arcs.containsKey(v))
 			return all_arcs.get(v);
 		throw new IllegalArgumentException("not vertex v:" + v);

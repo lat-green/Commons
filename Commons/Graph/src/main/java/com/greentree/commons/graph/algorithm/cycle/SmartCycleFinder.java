@@ -28,7 +28,7 @@ public class SmartCycleFinder<V> {
 	
 	private void dfs(Graph<V> graph, Map<V, V> parent, Map<V, Boolean> color, V v) {
 		color.put(v, true);
-		for(V to : graph.getJoints(v))
+		for(V to : graph.getAdjacencyIterable(v))
 			if(!color.get(to)) {
 				parent.put(to, v);
 				dfs(graph, parent, color, to);

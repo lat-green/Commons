@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.greentree.commons.graph.Graph;
-import com.greentree.commons.graph.algorithm.walk.DFSWalker;
 import com.greentree.commons.graph.algorithm.walk.GraphWalker;
 
 public final class AllPathFinder<V> {
@@ -16,12 +15,8 @@ public final class AllPathFinder<V> {
 		this.walker = walker;
 	}
 	
-	public static <V> Collection<List<? extends V>> get(GraphWalker<V> walker, V begin, V end) {
-		return new AllPathFinder<>(walker).get(begin, end);
-	}
-	
-	public static <V> Collection<List<? extends V>> get(Graph<? extends V> graph, V begin, V end) {
-		return get(new DFSWalker<>(graph), begin, end);
+	public AllPathFinder(Graph<V> graph) {
+		this(graph.walker());
 	}
 	
 	public Collection<List<? extends V>> get(V begin, V end) {

@@ -16,7 +16,7 @@ public class SmartAllPathFinder<V> {
 	public SmartAllPathFinder(Graph<V> graph) {
 		this.graph = graph;
 		for(var a : graph)
-			for(var b : graph.getJoints(a))
+			for(var b : graph.getAdjacencyIterable(a))
 				path.get(b).put(a, true);
 			
 		for(var b : graph)
@@ -27,8 +27,7 @@ public class SmartAllPathFinder<V> {
 	}
 	
 	public Collection<List<? extends V>> get(V from, V to) {
-		//		return AllPathFinder.get(graph, from, to, path.get(to));
-		return AllPathFinder.get(graph, from, to);
+		return new AllPathFinder<>(graph).get(from, to);
 	}
 	
 }

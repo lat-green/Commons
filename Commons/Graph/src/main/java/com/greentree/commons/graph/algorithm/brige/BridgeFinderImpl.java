@@ -6,21 +6,12 @@ import java.util.Map;
 
 import com.greentree.commons.graph.DirectedArc;
 import com.greentree.commons.graph.Graph;
-import com.greentree.commons.util.collection.AutoGenerateMap;
 import com.greentree.commons.util.collection.FunctionAutoGenerateMap;
 
 public class BridgeFinderImpl<V> implements BridgeFinder<V> {
 	
 	private final Graph<V> graph;
-	private Map<V, Collection<V>> res = new AutoGenerateMap<>() {
-		
-		private static final long serialVersionUID = 1L;
-		
-		@Override
-		protected Collection<V> generate(V k) {
-			return new ArrayList<>();
-		}
-	};
+	private Map<V, Collection<V>> res = new FunctionAutoGenerateMap<>(() -> new ArrayList<>());
 	
 	private int timer;
 	
@@ -36,10 +27,6 @@ public class BridgeFinderImpl<V> implements BridgeFinder<V> {
 				dfs(v);
 	}
 	
-	public static <V> Iterable<? extends DirectedArc<V>> getBridges(Graph<V> graph) {
-		return new BridgeFinderImpl<>(graph).getBridges();
-	}
-	
 	@Override
 	public Iterable<? extends DirectedArc<V>> getBridges() {
 		final var result = new ArrayList<DirectedArc<V>>();
@@ -51,25 +38,19 @@ public class BridgeFinderImpl<V> implements BridgeFinder<V> {
 		return result;
 	}
 	
-	private static Integer min(Integer a, Integer b) {
-		if(a > b)
-			return b;
-		return a;
-	}
-	
 	private void dfs(V v, V p) {
 		used.put(v, true);
 		tin.put(v, timer);
 		fup.put(v, timer);
 		timer++;
-		for(var to : graph.getJoints(v)) {
+		for(var to : graph.getAdjacencyIterable(v)) {
 			if(to == p)
 				continue;
 			if(used.get(to))
-				fup.put(v, min(fup.get(v), tin.get(to)));
+				fup.put(v, Math.min(fup.get(v), tin.get(to)));
 			else {
 				dfs(to, v);
-				fup.put(v, min(fup.get(v), fup.get(to)));
+				fup.put(v, Math.min(fup.get(v), fup.get(to)));
 				if(fup.get(to) > tin.get(v))
 					res.get(v).add(to);
 			}

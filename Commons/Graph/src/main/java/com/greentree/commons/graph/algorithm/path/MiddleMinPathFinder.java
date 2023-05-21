@@ -27,12 +27,12 @@ public class MiddleMinPathFinder<V> implements MiddlePathFinder<V> {
 			distances.put(a, a_distance);
 			for(V b : graph)
 				a_distance.put(b, Double.MAX_VALUE);
-			for(V b : graph.getJoints(a))
+			for(V b : graph.getAdjacencyIterable(a))
 				a_distance.put(b, arc_len.apply(a, b).doubleValue());
 		}
 		for(V a : graph) {
 			final var a_middle = middle.get(a);
-			for(V b : graph.getJoints(a))
+			for(V b : graph.getAdjacencyIterable(a))
 				a_middle.put(b, a);
 		}
 		for(V k : graph) {

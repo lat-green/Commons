@@ -1,7 +1,9 @@
 package com.greentree.commons.graph.algorithm.cycle;
 
+import java.util.Collection;
+
 public interface CycleFinder<V> {
 	
-	Iterable<? extends VertexCycle<V>> getCycles();
+	Collection<? extends VertexCycle<V>> getCycles();
 	
 }

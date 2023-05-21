@@ -13,14 +13,14 @@ public class FullGraph<V> implements HasPath<V> {
 	
 	public FullGraph(Graph<V> graph) {
 		for(var a : graph)
-			for(var b : graph.getJoints(a))
+			for(var b : graph.getAdjacencyIterable(a))
 				path.get(b).put(a, true);
 			
 		for(var b : graph) {
 			var b_map = path.get(b);
 			for(var a : graph)
 				if(!b_map.get(a))
-					for(var k : graph.getJoints(a)) {
+					for(var k : graph.getAdjacencyIterable(a)) {
 						var k_map = path.get(k);
 						if(b_map.get(k) && k_map.get(a)) {
 							b_map.put(a, true);

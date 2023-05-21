@@ -17,11 +17,7 @@ public class ConnectivityComponentsFinderImpl<V> implements ConnectivityComponen
 		this.graph = graph;
 	}
 	
-	public static <V> Collection<? extends Collection<V>> getConnectivityComponents(
-			Graph<V> graph) {
-		return new ConnectivityComponentsFinderImpl<>(graph).getComponents();
-	}
-	
+	@Override
 	public List<? extends Collection<V>> getComponents() {
 		final var walker = new DFSWalker<V>(graph);
 		final var all = new HashSet<V>();

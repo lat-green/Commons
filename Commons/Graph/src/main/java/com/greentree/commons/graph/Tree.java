@@ -8,6 +8,7 @@ import com.greentree.commons.graph.algorithm.brige.BridgeFinder;
 import com.greentree.commons.graph.algorithm.component.ConnectivityComponentsFinder;
 import com.greentree.commons.graph.algorithm.cycle.CycleFinder;
 import com.greentree.commons.graph.algorithm.cycle.VertexCycle;
+import com.greentree.commons.util.collection.EmptyCollection;
 import com.greentree.commons.util.iterator.IteratorUtil;
 
 public interface Tree<V> extends Graph<V>, CycleFinder<V>, BridgeFinder<V> {
@@ -18,8 +19,8 @@ public interface Tree<V> extends Graph<V>, CycleFinder<V>, BridgeFinder<V> {
 	}
 	
 	@Override
-	default Iterable<? extends VertexCycle<V>> getCycles() {
-		return IteratorUtil.empty();
+	default Collection<? extends VertexCycle<V>> getCycles() {
+		return new EmptyCollection<>();
 	}
 	
 	@Override

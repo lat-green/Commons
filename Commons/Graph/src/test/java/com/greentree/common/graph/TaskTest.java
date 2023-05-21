@@ -96,7 +96,7 @@ public class TaskTest {
 		private static final long serialVersionUID = 1L;
 		
 		@Override
-		public Iterable<? extends State> getJoints(Object v) {
+		public Iterable<? extends State> getAdjacencyIterable(Object v) {
 			final var s = (State) v;
 			final var result = new HashSet<State>();
 			

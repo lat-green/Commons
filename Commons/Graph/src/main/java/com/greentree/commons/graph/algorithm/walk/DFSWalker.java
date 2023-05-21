@@ -34,7 +34,7 @@ public final class DFSWalker<V> implements GraphWalker<V> {
 	
 	private void visit(Collection<? super V> used, GraphVisitor<? super V> visitor, V v) {
 		used.add(v);
-		for(var to : graph.getJoints(v))
+		for(var to : graph.getAdjacencyIterable(v))
 			if(!used.contains(to))
 				dfs(used, visitor, v, to);
 		used.remove(v);

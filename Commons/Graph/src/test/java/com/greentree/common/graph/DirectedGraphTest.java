@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Timeout;
 
 import com.greentree.commons.graph.DirectedArc;
 import com.greentree.commons.graph.DirectedGraph;
-import com.greentree.commons.graph.algorithm.brige.BridgeFinderImpl;
-import com.greentree.commons.graph.algorithm.cycle.CycleFinderImpl;
 import com.greentree.commons.graph.algorithm.path.AllPathFinder;
 import com.greentree.commons.graph.algorithm.path.MinPathFinder;
 import com.greentree.commons.graph.algorithm.path.SmartAllPathFinder;
@@ -97,7 +95,7 @@ public class DirectedGraphTest {
 		graph.add(4, 5);
 		graph.add(5, 2);
 		
-		var res = AllPathFinder.get(graph, 0, 2);
+		var res = new AllPathFinder<>(graph).get(0, 2);
 		assertEquals(res.size(), 2, res.toString());
 		assertTrue(res.contains(Arrays.asList(0, 1, 2)), res.toString());
 		assertTrue(res.contains(Arrays.asList(0, 3, 4, 5, 2)), res.toString());
@@ -109,7 +107,7 @@ public class DirectedGraphTest {
 		
 		graph.add(0);
 		
-		var res = AllPathFinder.get(graph, 0, 0);
+		var res = new AllPathFinder<>(graph).get(0, 0);
 		assertEquals(res.size(), 1, res.toString());
 		assertTrue(res.contains(Arrays.asList(0)), res.toString());
 	}
@@ -123,7 +121,7 @@ public class DirectedGraphTest {
 		graph.add(2, 0);
 		graph.add(2, 3);
 		
-		var res = BridgeFinderImpl.getBridges(graph);
+		var res = graph.getBridgeFinder().getBridges();
 		assertEquals(res, List.of(new DirectedArc<>(2, 3)));
 	}
 	
@@ -135,7 +133,7 @@ public class DirectedGraphTest {
 		graph.add(1, 2);
 		graph.add(2, 3);
 		
-		var res = CycleFinderImpl.get(graph);
+		var res = graph.getCycleFinder().getCycles();
 		assertEquals(res.size(), 0, res.toString());
 	}
 	
@@ -147,7 +145,7 @@ public class DirectedGraphTest {
 		graph.add(1, 2);
 		graph.add(2, 0);
 		
-		var res = CycleFinderImpl.get(graph);
+		var res = graph.getCycleFinder().getCycles();
 		assertEquals(res.size(), 1, res.toString());
 	}
 	
@@ -256,13 +254,13 @@ public class DirectedGraphTest {
 		
 		@Test
 		void equalsResultSpeedTest() {
-			assertEquals(finder.get(0, 1), AllPathFinder.get(graph, 0, 1));
+			assertEquals(finder.get(0, 1), new AllPathFinder<>(graph).get(0, 1));
 		}
 		
 		@RepeatedTest(10)
 		@Timeout(1)
 		void getAllPaths() {
-			AllPathFinder.get(graph, 0, 1);
+			new AllPathFinder<>(graph).get(0, 1);
 		}
 		
 		@RepeatedTest(10)

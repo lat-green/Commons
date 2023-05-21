@@ -13,11 +13,11 @@ public class ConstCecheGraph<V> implements Graph<V> {
 	}
 	
 	@Override
-	public Iterable<? extends V> getJoints(Object v) {
+	public Iterable<? extends V> getAdjacencyIterable(Object v) {
 		if(ceche.containsKey(v))
 			return ceche.get(v);
 		System.out.println(v);
-		var result = base.getJoints(v);
+		var result = base.getAdjacencyIterable(v);
 		ceche.put(v, result);
 		return result;
 	}

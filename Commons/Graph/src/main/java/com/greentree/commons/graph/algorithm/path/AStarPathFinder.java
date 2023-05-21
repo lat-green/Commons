@@ -43,7 +43,7 @@ public class AStarPathFinder {
 			}
 			if(cur_d > dis_to_start.get(v))
 				continue;
-			for(V to : g.getJoints(v)) {
+			for(V to : g.getAdjacencyIterable(v)) {
 				var len = arc_length.apply(v, to).doubleValue();
 				var dis = len + approximate_dis_to_end.apply(to).doubleValue()
 						+ dis_to_start.get(v);

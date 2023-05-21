@@ -1,26 +1,8 @@
 package com.greentree.commons.graph.algorithm.walk;
 
-import java.util.Iterator;
-
 import com.greentree.commons.graph.Graph;
 
 public interface GraphWalker<V> {
-	
-	private static <V> void dfs(Iterator<? extends V> path, V p, GraphVisitor<? super V> visitor) {
-		if(!path.hasNext())
-			return;
-		final var v = path.next();
-		if(visitor.startVisit(p, v))
-			dfs(path, v, visitor);
-		visitor.endVisit(p, v);
-	}
-	
-	static <V> void visitPath(Iterator<? extends V> path, GraphVisitor<? super V> visitor) {
-		final var v = path.next();
-		if(visitor.startVisit(v))
-			dfs(path, v, visitor);
-		visitor.endVisit(v);
-	}
 	
 	Graph<? extends V> graph();
 	

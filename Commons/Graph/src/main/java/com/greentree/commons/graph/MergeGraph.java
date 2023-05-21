@@ -19,8 +19,8 @@ public final class MergeGraph<V> implements Graph<V> {
 	}
 	
 	@Override
-	public Iterable<? extends V> getJoints(Object v) {
-		return IteratorUtil.union(IteratorUtil.map(base, g->g.getJoints(v)));
+	public Iterable<? extends V> getAdjacencyIterable(Object v) {
+		return IteratorUtil.union(IteratorUtil.map(base, g->g.getAdjacencyIterable(v)));
 	}
 	
 	@Override

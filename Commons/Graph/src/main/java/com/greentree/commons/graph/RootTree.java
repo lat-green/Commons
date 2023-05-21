@@ -68,7 +68,7 @@ public interface RootTree<V> extends Tree<V> {
 	}
 	
 	@Override
-	default Iterable<? extends V> getJoints(Object v) {
+	default Iterable<? extends V> getAdjacencyIterable(Object v) {
 		return IteratorUtil.union(getChildren(v), IteratorUtil.iterable(getParent(v)));
 	}
 	

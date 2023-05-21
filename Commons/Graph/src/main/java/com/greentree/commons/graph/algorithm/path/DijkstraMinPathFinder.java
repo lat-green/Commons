@@ -39,7 +39,7 @@ public class DijkstraMinPathFinder<V> {
 			q.remove(v);
 			final var v_len = d.get(v).doubleValue();
 			
-			for(var to : graph.getJoints(v)) {
+			for(var to : graph.getAdjacencyIterable(v)) {
 				final var len = d.get(to).doubleValue();
 				final var new_len = v_len + arc_len.apply(v, to).doubleValue();
 				if(new_len < len) {
