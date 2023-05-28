@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.commons.geometry.geom2d.IMovableShape2D;
 import com.greentree.commons.geometry.geom2d.collision.strategy.dual.BruteDualCollisionStrategy;
 import com.greentree.commons.geometry.geom2d.shape.Circle2D;
 import com.greentree.commons.util.cortege.UnOrentetPair;

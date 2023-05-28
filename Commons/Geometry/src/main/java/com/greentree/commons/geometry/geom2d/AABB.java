@@ -1,6 +1,6 @@
 package com.greentree.commons.geometry.geom2d;
 
-import com.greentree.commons.math.float2;
+import com.greentree.commons.geometry.math.float2;
 
 /** @author Arseny Latyshev */
 public class AABB {

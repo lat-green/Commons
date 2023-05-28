@@ -9,11 +9,22 @@
 	</parent>
 	
   	<artifactId>geometry</artifactId>
+	<version>0.3.3.1</version>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.greentree.commons</groupId>
 		   	<artifactId>math</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.greentree.commons</groupId>
+		   	<artifactId>util</artifactId>
+			<version>0.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.greentree.commons</groupId>
+		   	<artifactId>action</artifactId>
+			<version>0.3.3</version>
 		</dependency>
 	</dependencies>
 

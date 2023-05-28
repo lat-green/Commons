@@ -1,8 +1,8 @@
 package com.greentree.commons.geometry.geom2d.atomic;
 
 import com.greentree.commons.geometry.geom2d.util.VectorGeometryUtil;
+import com.greentree.commons.geometry.math.MathLine1D;
 import com.greentree.commons.math.Mathf;
-import com.greentree.commons.math.geometry.MathLine1D;
 import com.greentree.commons.math.vector.AbstractVector2f;
 import com.greentree.commons.math.vector.FinalVector2f;
 import com.greentree.commons.math.vector.Vector2f;

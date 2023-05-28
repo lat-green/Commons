@@ -2,8 +2,8 @@ package com.greentree.commons.geometry.geom3d.face;
 
 import com.greentree.commons.geometry.geom2d.Shape2DUtil;
 import com.greentree.commons.geometry.geom3d.IShape3D;
+import com.greentree.commons.geometry.math.MathPlane3D;
 import com.greentree.commons.math.Mathf;
-import com.greentree.commons.math.geometry.MathPlane3D;
 import com.greentree.commons.math.vector.AbstractVector3f;
 import com.greentree.commons.math.vector.Vector3f;
 

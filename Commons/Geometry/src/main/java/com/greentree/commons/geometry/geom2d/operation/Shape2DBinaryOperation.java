@@ -7,7 +7,7 @@ import java.util.Set;
 import com.greentree.commons.geometry.geom2d.IShape2D;
 import com.greentree.commons.geometry.geom2d.Shape2DUtil;
 import com.greentree.commons.geometry.geom2d.collision.CollisionEvent2D;
-import com.greentree.commons.math.geometry.MathLine2D;
+import com.greentree.commons.geometry.math.MathLine2D;
 import com.greentree.commons.math.vector.AbstractVector2f;
 import com.greentree.commons.math.vector.Vector2f;
 

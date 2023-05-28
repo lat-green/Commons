@@ -2,7 +2,7 @@ package com.greentree.commons.geometry.geom3d;
 
 import java.util.function.Consumer;
 
-import com.greentree.commons.math.float3;
+import com.greentree.commons.geometry.math.float3;
 import com.greentree.commons.math.vector.AbstractVector3f;
 import com.greentree.commons.math.vector.Vector3f;
 

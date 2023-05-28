@@ -2,7 +2,6 @@ package com.greentree.commons.geometry.geom2d;
 
 import java.util.Objects;
 
-import com.greentree.commons.geometry.geom2d.IShape2D;
 import com.greentree.commons.geometry.geom2d.collision.Collidable2D;
 
 public final class WrapCollidable implements Collidable2D {

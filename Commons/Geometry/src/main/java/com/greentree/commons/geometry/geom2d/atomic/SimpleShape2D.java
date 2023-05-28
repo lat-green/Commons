@@ -3,7 +3,7 @@ package com.greentree.commons.geometry.geom2d.atomic;
 import org.joml.Matrix2f;
 import org.joml.Matrix3f;
 
-import com.greentree.commons.math.geometry.MathLine1D;
+import com.greentree.commons.geometry.math.MathLine1D;
 import com.greentree.commons.math.vector.AbstractVector2f;
 import com.greentree.commons.math.vector.Vector2f;
 import com.greentree.commons.math.vector.Vector3f;
