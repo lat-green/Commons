@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.greentree.commons.util.classes.info.TypeInfo;
-import com.greentree.commons.util.classes.info.TypeInfoBuilder;
+import com.greentree.commons.reflection.info.TypeInfo;
+import com.greentree.commons.reflection.info.TypeInfoBuilder;
 import com.greentree.commons.util.collection.FunctionAutoGenerateMap;
 import com.greentree.commons.util.cortege.Pair;
 import com.greentree.commons.util.cortege.Triple;

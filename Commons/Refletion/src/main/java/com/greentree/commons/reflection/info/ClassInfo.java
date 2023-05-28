@@ -3,7 +3,7 @@ package com.greentree.commons.reflection.info;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-import com.greentree.commons.util.classes.ClassUtil;
+import com.greentree.commons.reflection.ClassUtil;
 import com.greentree.commons.util.function.AbstractSaveFunction;
 
 public final class ClassInfo<C> implements TypeInfo<C> {
