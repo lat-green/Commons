@@ -4,7 +4,6 @@ import com.greentree.commons.geometry.math.MathLine2D;
 import com.greentree.commons.math.Mathf;
 import com.greentree.commons.math.vector.AbstractVector2f;
 import com.greentree.commons.math.vector.FinalVector2f;
-import com.greentree.commons.math.vector.Vector2f;
 
 public interface ILine2D extends IShape2D {
 	
@@ -12,7 +11,7 @@ public interface ILine2D extends IShape2D {
 		return new MathLine2D(p1(), p2());
 	}
 	
-	default Vector2f getNormal() {
+	default AbstractVector2f getNormal() {
 		return getMathLine().getNormal();
 	}
 	
@@ -20,29 +19,29 @@ public interface ILine2D extends IShape2D {
 	default AbstractVector2f minPoint(AbstractVector2f point) {
 		final var mp = getMathLine().minPoint(point);
 		
-		if(p1().x < p2().x) {
-			if(p1().x > mp.x)
+		if(p1().x() < p2().x()) {
+			if(p1().x() > mp.x())
 				return p1();
-			if(p2().x < mp.x)
+			if(p2().x() < mp.x())
 				return p2();
 		}
-		if(p1().x > p2().x) {
-			if(p1().x < mp.x)
+		if(p1().x() > p2().x()) {
+			if(p1().x() < mp.x())
 				return p1();
-			if(p2().x > mp.x)
+			if(p2().x() > mp.x())
 				return p2();
 		}
 		
-		if(p1().y < p2().y) {
-			if(p1().y > mp.y)
+		if(p1().y() < p2().y()) {
+			if(p1().y() > mp.y())
 				return p1();
-			if(p2().y < mp.y)
+			if(p2().y() < mp.y())
 				return p2();
 		}
-		if(p1().y > p2().y) {
-			if(p1().y < mp.y)
+		if(p1().y() > p2().y()) {
+			if(p1().y() < mp.y())
 				return p1();
-			if(p2().y > mp.y)
+			if(p2().y() > mp.y())
 				return p2();
 		}
 		
@@ -72,6 +71,7 @@ public interface ILine2D extends IShape2D {
 		return p1().distanceSqr(p2());
 	}
 	
+	@Override
 	default ILine2D minLine(AbstractVector2f point) {
 		return this;
 	}

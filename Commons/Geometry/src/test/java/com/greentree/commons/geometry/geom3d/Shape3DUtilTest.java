@@ -49,7 +49,7 @@ public class Shape3DUtilTest {
 		IShape3D sh1 = new Box(vec(0, 0, 0), vec(1, 1, 1));
 		IShape3D sh2 = new BasicFace(vec(1, 0, 0), vec(0, 0, 0), vec(0, 1, 0));
 		
-		final var n = new Vector3f(1, 1, 0).normalize();
+		final var n = new Vector3f(1, 1, 0).normalize(1);
 		
 		final var p1 = Shape3DUtil.getProjectionPoligon(sh1, n);
 		final var p2 = Shape3DUtil.getProjectionPoligon(sh2, n);

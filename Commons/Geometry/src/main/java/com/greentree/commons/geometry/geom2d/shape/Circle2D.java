@@ -3,6 +3,7 @@ package com.greentree.commons.geometry.geom2d.shape;
 import com.greentree.commons.geometry.geom2d.AABB;
 import com.greentree.commons.geometry.geom2d.util.VectorGeometryUtil;
 import com.greentree.commons.math.Mathf;
+import com.greentree.commons.math.vector.AbstractMutableVector2f;
 import com.greentree.commons.math.vector.AbstractVector2f;
 import com.greentree.commons.math.vector.FinalVector2f;
 import com.greentree.commons.math.vector.Vector2f;
@@ -12,7 +13,7 @@ public final class Circle2D extends Shape2D {
 	
 	public static final class CircleTransform2D implements Transform2D {
 		
-		private final AbstractVector2f position;
+		private final AbstractMutableVector2f position;
 		private float scale;
 		
 		public CircleTransform2D(float x, float y, float r) {

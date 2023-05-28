@@ -1,5 +1,7 @@
 package com.greentree.commons.geometry.geom3d.shape;
 
+import static com.greentree.commons.math.vector.AbstractVector3fKt.*;
+
 import com.greentree.commons.geometry.geom3d.IShape3D;
 import com.greentree.commons.geometry.geom3d.face.BasicFace;
 import com.greentree.commons.geometry.geom3d.face.Face;
@@ -11,14 +13,14 @@ public class Box implements IShape3D {
 	private final Face[] FACES;
 	
 	public Box(Vector3f pos, Vector3f scale) {
-		var p000 = new Vector3f(0, 0, 0).add(-.5f, -.5f, -.5f).mul(scale).add(pos);
-		var p100 = new Vector3f(1, 0, 0).add(-.5f, -.5f, -.5f).mul(scale).add(pos);
-		var p010 = new Vector3f(0, 1, 0).add(-.5f, -.5f, -.5f).mul(scale).add(pos);
-		var p110 = new Vector3f(1, 1, 0).add(-.5f, -.5f, -.5f).mul(scale).add(pos);
-		var p001 = new Vector3f(0, 0, 1).add(-.5f, -.5f, -.5f).mul(scale).add(pos);
-		var p101 = new Vector3f(1, 0, 1).add(-.5f, -.5f, -.5f).mul(scale).add(pos);
-		var p011 = new Vector3f(0, 1, 1).add(-.5f, -.5f, -.5f).mul(scale).add(pos);
-		var p111 = new Vector3f(1, 1, 1).add(-.5f, -.5f, -.5f).mul(scale).add(pos);
+		var p000 = new Vector3f(0, 0, 0).plus(vec3f(-.5f, -.5f, -.5f)).times(scale).plus(pos);
+		var p100 = new Vector3f(1, 0, 0).plus(vec3f(-.5f, -.5f, -.5f)).times(scale).plus(pos);
+		var p010 = new Vector3f(0, 1, 0).plus(vec3f(-.5f, -.5f, -.5f)).times(scale).plus(pos);
+		var p110 = new Vector3f(1, 1, 0).plus(vec3f(-.5f, -.5f, -.5f)).times(scale).plus(pos);
+		var p001 = new Vector3f(0, 0, 1).plus(vec3f(-.5f, -.5f, -.5f)).times(scale).plus(pos);
+		var p101 = new Vector3f(1, 0, 1).plus(vec3f(-.5f, -.5f, -.5f)).times(scale).plus(pos);
+		var p011 = new Vector3f(0, 1, 1).plus(vec3f(-.5f, -.5f, -.5f)).times(scale).plus(pos);
+		var p111 = new Vector3f(1, 1, 1).plus(vec3f(-.5f, -.5f, -.5f)).times(scale).plus(pos);
 		
 		FACES = new Face[12];
 		

@@ -1,5 +1,7 @@
 package com.greentree.commons.geometry.geom2d.util;
 
+import static com.greentree.commons.math.vector.AbstractVector2fKt.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -77,43 +79,41 @@ public abstract class VectorGeometryUtil {
 	
 	/** @return angle of ABC angle */
 	public static float getAngle(AbstractVector2f a, AbstractVector2f b, AbstractVector2f c) {
-		AbstractVector2f v1 = b.sub(a, new Vector2f()).normalize();
-		AbstractVector2f v2 = b.sub(c, new Vector2f()).normalize();
+		AbstractVector2f v1 = b.minus(a).normalize(1);
+		AbstractVector2f v2 = b.minus(c).normalize(1);
 		float sin = v1.cross(v2);
 		float cos = v1.dot(v2);
 		return Math.atan2(sin, cos);
 	}
 	
-	public static Vector2f getCenter(AbstractVector2f[] points) {
-		Vector2f sum = new Vector2f();
+	public static AbstractVector2f getCenter(AbstractVector2f[] points) {
+		var sum = new Vector2f();
 		for(var p : points)
-			sum.add(p);
-		sum.mul(1f / points.length);
-		return sum;
+			sum.plusAssign(p);
+		return sum.div(points.length);
 	}
 	
-	public static Vector3f getCenter(AbstractVector3f[] points) {
+	public static AbstractVector3f getCenter(AbstractVector3f[] points) {
 		var sum = new Vector3f();
 		for(var p : points)
-			sum.add(p);
-		sum.mul(1f / points.length);
-		return sum;
+			sum.plusAssign(p);
+		return sum.div(points.length);
 	}
 	
-	public static Vector2f[] getCirclePoints(final float centerx, final float centery,
+	public static AbstractVector2f[] getCirclePoints(final float centerx, final float centery,
 			final float radius) {
-		Vector2f[] vectors = new Vector2f[POINT_IN_CIRCLE];
+		AbstractVector2f[] vectors = new AbstractVector2f[POINT_IN_CIRCLE];
 		for(int i = 0; i < vectors.length; i++) {
 			var v = UNIT_CIRCLE_POINTS[i];
-			vectors[i] = new Vector2f(centerx + radius * v.x, centery + radius * v.y);
+			vectors[i] = new Vector2f(centerx + radius * v.x(), centery + radius * v.y());
 		}
 		return vectors;
 	}
 	
 	
-	public static Vector2f getCollisionNormalOnNormalProjection(IShape2D a, IShape2D b) {
-		final Vector2f n1 = getCollisionNormalOnNormalProjection0(a, b);
-		final Vector2f n2 = getCollisionNormalOnNormalProjection0(b, a).mul(-1);
+	public static AbstractVector2f getCollisionNormalOnNormalProjection(IShape2D a, IShape2D b) {
+		final var n1 = getCollisionNormalOnNormalProjection0(a, b);
+		final var n2 = getCollisionNormalOnNormalProjection0(b, a).times(-1);
 		final float o1 = getProjectionOverlay(a, b, n1);
 		final float o2 = getProjectionOverlay(a, b, n2);
 		if(o1 < o2)
@@ -122,11 +122,11 @@ public abstract class VectorGeometryUtil {
 			return n2;
 	}
 	
-	public static Vector2f getCollisionNormalOnNormalProjection0(IShape2D a, IShape2D b) {
+	public static AbstractVector2f getCollisionNormalOnNormalProjection0(IShape2D a, IShape2D b) {
 		Vector2f[] normals;
-		var rv = b.getCenter().sub(a.getCenter(), new Vector2f()).normalize();
+		var rv = b.getCenter().minus(a.getCenter()).normalize(1);
 		{
-			Collection<Vector2f> normals0;
+			Collection<AbstractVector2f> normals0;
 			if(rv.lengthSquared() > 0)
 				normals0 = a.getNormals().parallelStream().filter(n->n.dot(rv) > 0)
 						.collect(Collectors.toList());
@@ -149,9 +149,9 @@ public abstract class VectorGeometryUtil {
 				}
 			}
 		}
-		res_normal = new Vector2f(res_normal.y, -res_normal.x);
+		res_normal = new Vector2f(res_normal.y(), -res_normal.x());
 		if(res_normal.dot(rv) < 0)
-			res_normal.mul(-1);
+			return res_normal.times(-1);
 		return res_normal;
 	}
 	
@@ -182,8 +182,8 @@ public abstract class VectorGeometryUtil {
 	
 	/** @return cos of ABC angle */
 	public static float getCos(AbstractVector2f a, AbstractVector2f b, AbstractVector2f c) {
-		AbstractVector2f v1 = b.sub(a, new Vector2f());
-		AbstractVector2f v2 = b.sub(c, new Vector2f());
+		AbstractVector2f v1 = b.minus(a);
+		AbstractVector2f v2 = b.minus(c);
 		return v1.dot(v2) / v1.length() / v2.length();
 	}
 	
@@ -228,8 +228,8 @@ public abstract class VectorGeometryUtil {
 			temp.remove(v);
 			final var fv = v;
 			v = Mathf.minElement(temp, a-> {
-				var vec = a.sub(fv, new Vector2f());
-				float sin = vec.cross(new Vector2f(1, 0));
+				var vec = a.minus(fv);
+				float sin = vec.cross(vec2f(1, 0));
 				return sin;
 			});
 		}while(v != v0);
@@ -264,8 +264,8 @@ public abstract class VectorGeometryUtil {
 	
 	/** @return sin of ABC angle */
 	public static float getSin(AbstractVector2f a, AbstractVector2f b, AbstractVector2f c) {
-		AbstractVector2f v1 = b.sub(a, new Vector2f());
-		AbstractVector2f v2 = b.sub(c, new Vector2f());
+		AbstractVector2f v1 = b.minus(a);
+		AbstractVector2f v2 = b.minus(c);
 		float sin = v1.cross(v2);
 		return sin / v1.length() / v2.length();
 	}
@@ -274,13 +274,13 @@ public abstract class VectorGeometryUtil {
 		return UNIT_CIRCLE_POINTS;
 	}
 	
-	public static Vector2f[] getVectors2f(final float... point) {
+	public static AbstractVector2f[] getVectors2f(final float... point) {
 		if((point.length & 1) == 1)
 			throw new UnsupportedOperationException(
 					"the length of the array must be even " + Arrays.toString(point));
-		final Vector2f[] res = new Vector2f[point.length / 2];
+		final AbstractVector2f[] res = new AbstractVector2f[point.length / 2];
 		for(int i = 0; i < point.length; i += 2)
-			res[i / 2] = new Vector2f(point[i], point[i + 1]);
+			res[i / 2] = new FinalVector2f(point[i], point[i + 1]);
 		return res;
 	}
 	
@@ -380,16 +380,16 @@ public abstract class VectorGeometryUtil {
 	}
 	
 	public static int lastIndexConvex(AbstractVector2f[] points) {
-		final var vlines = new Vector2f[points.length + 1];
+		final var vlines = new AbstractVector2f[points.length + 1];
 		for(int i = 0; i < points.length - 1; i++) {
 			final var p0 = points[i + 0];
 			final var p1 = points[i + 1];
-			vlines[i] = p1.sub(p0, new Vector2f());
+			vlines[i] = p1.minus(p0);
 		}
 		{
 			final var p0 = points[points.length - 1];
 			final var p1 = points[0];
-			vlines[vlines.length - 2] = p1.sub(p0, new Vector2f());
+			vlines[vlines.length - 2] = p1.minus(p0);
 		}
 		{
 			vlines[vlines.length - 1] = vlines[0];
@@ -420,7 +420,7 @@ public abstract class VectorGeometryUtil {
 		if(len == 3) {
 			final var p0 = new Vector2f(1, 0);
 			Arrays.sort(points, 1, points.length, Comparator
-					.comparing(p->p.sub(points[0], new Vector2f()).normalize().cross(p0)));
+					.comparing(p -> p.minus(points[0]).normalize(1).cross(p0)));
 			return Arrays.asList(new Triangle2D(points[0], points[1], points[2]));
 		}
 		throw new UnsupportedOperationException("points.length=" + points.length);

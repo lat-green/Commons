@@ -1,12 +1,13 @@
 package com.greentree.commons.geometry.geom2d.shape;
 
 import static com.greentree.commons.geometry.geom2d.util.VectorGeometryUtil.*;
+import static com.greentree.commons.math.vector.AbstractVector2fKt.*;
 
 import org.joml.Matrix2f;
 
 import com.greentree.commons.geometry.geom2d.util.Transform2DImpl;
+import com.greentree.commons.math.vector.AbstractMutableVector2f;
 import com.greentree.commons.math.vector.AbstractVector2f;
-import com.greentree.commons.math.vector.Vector2f;
 
 public final class Capsule2D extends Shape2D {
 	
@@ -14,21 +15,22 @@ public final class Capsule2D extends Shape2D {
 		super(new Transform2DImpl(), points(p1, p2, radius));
 	}
 	
-	public static Vector2f[] points(AbstractVector2f focus1, AbstractVector2f focus2,
+	public static AbstractVector2f[] points(AbstractVector2f focus1, AbstractVector2f focus2,
 			float radius) {
-		final AbstractVector2f focus_vec = focus2.sub(focus1, new Vector2f());// 1 -> 2
-		if(focus_vec.length() == 0)
-			focus_vec.set(1, 0);
-		focus_vec.mul(new Matrix2f().rotate((float) (Math.PI / 2))).normalize(radius);
-		final Vector2f[] points = new Vector2f[POINT_IN_CIRCLE];
+		AbstractMutableVector2f init_focus_vec = focus2.minus(focus1).toMutable();// 1 -> 2
+		if(init_focus_vec.length() == 0)
+			init_focus_vec.set(1f, 0f);
+		var focus_vec = vec2f(init_focus_vec);
+		focus_vec = focus_vec.times(new Matrix2f().rotate((float) (Math.PI / 2))).normalize(radius);
+		final AbstractVector2f[] points = new AbstractVector2f[POINT_IN_CIRCLE];
 		final Matrix2f mat = new Matrix2f().rotate((float) (2 * Math.PI / POINT_IN_CIRCLE));
 		for(int i = (int) Math.floor(POINT_IN_CIRCLE / 2f); i < POINT_IN_CIRCLE; i++) {
-			focus_vec.mul(mat);
-			points[i] = focus1.add(focus_vec, new Vector2f());
+			focus_vec = focus_vec.times(mat);
+			points[i] = focus1.plus(focus_vec);
 		}
 		for(int i = 0; i < Math.floor(POINT_IN_CIRCLE / 2f); i++) {
-			focus_vec.mul(mat);
-			points[i] = focus2.add(focus_vec, new Vector2f());
+			focus_vec = focus_vec.times(mat);
+			points[i] = focus2.plus(focus_vec);
 		}
 		return points;
 	}

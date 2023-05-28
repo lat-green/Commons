@@ -2,12 +2,13 @@ package com.greentree.commons.geometry.geom2d.util;
 
 import com.greentree.commons.geometry.geom2d.shape.Transform2D;
 import com.greentree.commons.math.vector.AbstractVector2f;
+import com.greentree.commons.math.vector.AbstractMutableVector2f;
 import com.greentree.commons.math.vector.Vector2f;
 
 
 public final class Transform2DImpl implements Transform2D {
 	
-	private final AbstractVector2f position, scale;
+	private final AbstractMutableVector2f position, scale;
 	private float rotation;
 	
 	public Transform2DImpl() {

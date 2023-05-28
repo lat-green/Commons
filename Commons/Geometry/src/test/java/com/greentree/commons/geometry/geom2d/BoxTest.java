@@ -1,6 +1,6 @@
 package com.greentree.commons.geometry.geom2d;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.greentree.commons.geometry.TestUtil.*;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -57,13 +57,13 @@ public class BoxTest {
 	@MethodSource
 	@ParameterizedTest
 	void min_point(Pair<AbstractVector2f, AbstractVector2f> p) {
-		assertEquals(b.min(p.first), p.seconde);
+		assertVecEquals(b.min(p.first), p.seconde);
 	}
 	
 	@MethodSource
 	@ParameterizedTest
 	void model_min_point(Pair<Pair<Matrix3f, AbstractVector2f>, AbstractVector2f> p) {
-		assertEquals(b.min(p.first.first, p.first.seconde), p.seconde);
+		assertVecEquals(b.min(p.first.first, p.first.seconde), p.seconde);
 	}
 	
 }

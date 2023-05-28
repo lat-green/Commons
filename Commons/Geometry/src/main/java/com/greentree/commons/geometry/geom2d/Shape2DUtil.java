@@ -77,15 +77,14 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
 		final var max_y = Math.max(line.p1().y(), line.p2().y());
 		final var min_y = line.p1().y() + line.p2().y() - max_y;
 		
-		if(p.x > max_x || p.x < min_x || p.y > max_y || p.y < min_y)
+		if(p.x() > max_x || p.x() < min_x || p.y() > max_y || p.y() < min_y)
 			return null;
 		return p;
 	}
 	
 	public static AbstractVector2f contactWithBorder(final ILine2D a, final ILine2D b) {
 		final var res = contact(a, b);
-		if(res == null || !new AABB(a).isIntersect(res.x, res.y)
-				|| !new AABB(b).isIntersect(res.x, res.y))
+		if(res == null || !new AABB(a).isIntersect(res.x(), res.y()) || !new AABB(b).isIntersect(res.x(), res.y()))
 			return null;
 		return res;
 	}
@@ -140,7 +139,7 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
 	
 	@Deprecated
 	public static Poligon2D toClockwisePoligon(AbstractVector2f... collection) {
-		Vector2f c = getCenter(collection);
+		var c = getCenter(collection);
 		List<AbstractVector2f> list = new ArrayList<>(collection.length);
 		Collections.addAll(list, collection);
 		Collections.sort(list, Comparator.comparingDouble((ToDoubleFunction<AbstractVector2f>) p-> {

@@ -7,19 +7,16 @@ import com.greentree.commons.geometry.geom2d.shape.Poligon2D;
 import com.greentree.commons.geometry.geom3d.operation.Shape3DBinaryOperations;
 import com.greentree.commons.math.Mathf;
 import com.greentree.commons.math.vector.AbstractVector3f;
-import com.greentree.commons.math.vector.Vector3f;
 
 public final class Shape3DUtil extends Shape3DBinaryOperations {
 	
 	
 	public static AbstractVector3f[] getPoints(AbstractVector3f[] points, Matrix4f model) {
-		var vec = new AbstractVector3f[points.length];
-		
+		var result = new AbstractVector3f[points.length];
 		for(int i = 0; i < points.length; i++) {
-			vec[i] = new Vector3f();
-			points[i].mul(model, vec[i]);
+			result[i] = points[i].times(model);
 		}
-		return vec;
+		return result;
 	}
 	
 	public static float getProjectionArea(IShape3D shape, AbstractVector3f normal) {
@@ -31,14 +28,13 @@ public final class Shape3DUtil extends Shape3DBinaryOperations {
 	}
 	
 	public static float getRadius(AbstractVector3f center, AbstractVector3f[] points) {
-		return Mathf.sqrt(Mathf.max(p->p.distanceSquared(center), points));
+		return Mathf.sqrt(Mathf.max(p -> p.distanceSqr(center), points));
 	}
 	
 	/** @return sin of ABC angle */
 	public static float getSin(AbstractVector3f a, AbstractVector3f b, AbstractVector3f c) {
-		Vector3f v1 = new Vector3f(), v2 = new Vector3f();
-		a.sub(b, v1);
-		c.sub(b, v2);
+		var v1 = a.minus(b);
+		var v2 = c.minus(b);
 		var cr = v1.cross(v2);
 		float len = cr.length() / v1.length() / v2.length();
 		if(isRight(a, b, c))

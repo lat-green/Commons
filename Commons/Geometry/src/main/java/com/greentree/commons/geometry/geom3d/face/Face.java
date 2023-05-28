@@ -5,15 +5,14 @@ import com.greentree.commons.geometry.geom3d.IShape3D;
 import com.greentree.commons.geometry.math.MathPlane3D;
 import com.greentree.commons.math.Mathf;
 import com.greentree.commons.math.vector.AbstractVector3f;
-import com.greentree.commons.math.vector.Vector3f;
 
 public interface Face extends IShape3D {
 	
 	@Override
 	default float getArea() {
-		AbstractVector3f v1 = new Vector3f(), v2 = new Vector3f();
-		getP1().sub(getP2(), v1);
-		getP3().sub(getP2(), v2);
+		final AbstractVector3f v1, v2;
+		v1 = getP1().minus(getP2());
+		v2 = getP3().minus(getP2());
 		return Mathf.abs(v1.cross(v2).length()) / 2;
 	}
 	
@@ -60,7 +59,7 @@ public interface Face extends IShape3D {
 		float dis, dis0 = Float.MAX_VALUE;
 		for(final var f : getFaces()) {
 			pi = f.minPoint(point);
-			dis = pi.distanceSquared(point);
+			dis = pi.distanceSqr(point);
 			if(dis < dis0) {
 				dis0 = dis;
 				res = pi;

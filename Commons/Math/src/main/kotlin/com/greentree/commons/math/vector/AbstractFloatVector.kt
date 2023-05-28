@@ -93,6 +93,13 @@ interface AbstractFloatVector :  AbstractVector<Float> {
         return this.map { it * it }.sum()
     }
 
+    override fun toMutable(): AbstractMutableFloatVector {
+        val dest = VectorNf(size)
+        for (i in 0 until size) dest[i] = get(i)
+        return dest
+    }
+
+
 }
 
 operator fun Number.plus(other: AbstractVector<out Float>): AbstractFloatVector {

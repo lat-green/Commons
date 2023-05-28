@@ -4,6 +4,10 @@ interface AbstractMutableVector1<T> : AbstractMutableVector<T> {
 
     var x: T
 
+    fun set(value: T) {
+        x = value
+    }
+
     fun x(value: T) {
         this.x = value
     }

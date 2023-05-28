@@ -1,12 +1,12 @@
 package com.greentree.commons.geometry.math;
 
+import static com.greentree.commons.geometry.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 import com.greentree.commons.math.Mathf;
 import com.greentree.commons.math.vector.Vector3f;
-
 public class MathPlane3DTest {
 
 	@Test
@@ -14,7 +14,7 @@ public class MathPlane3DTest {
 		MathPlane3D p1 = new MathPlane3D(of(0, 0, 0),of(0, 0, 1));
 		MathPlane3D p2 = new MathPlane3D(of(0, 0, 0),of(0, 1, 0));
 
-		assertEquals(p1.contact(p2), new MathLine3D(of(0, 0, 0), of(-1, 0, 0)));
+		assertLineEquals(p1.contact(p2), new MathLine3D(of(0, 0, 0), of(-1, 0, 0)));
 	}
 
 	@Test

@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import com.greentree.commons.math.vector.AbstractVector2f;
 import com.greentree.commons.math.vector.FinalVector2f;
-import com.greentree.commons.math.vector.Vector2f;
 
 public class CollisionEvent2D<A extends Collidable2D, B extends Collidable2D> {
 	
@@ -87,7 +86,7 @@ public class CollisionEvent2D<A extends Collidable2D, B extends Collidable2D> {
 		}
 		
 		public Builder inverse() {
-			final var n = normal.mul(-1, new Vector2f());
+			final var n = normal.times(-1);
 			return new Builder(point, n, penetration);
 		}
 		

@@ -92,6 +92,10 @@ interface AbstractVector2f : AbstractFloatVector, AbstractVector2<Float> {
         return org.joml.Vector2f(x, y)
     }
 
+    override fun toMutable(): AbstractMutableVector2f {
+        return Vector2f(x, y)
+    }
+
     companion object {
         val X: AbstractVector2f = FinalVector2f(1f, 0f)
         val Y: AbstractVector2f = FinalVector2f(0f, 1f)
@@ -103,6 +107,7 @@ fun vec2f(other: AbstractVector<out Float>): AbstractVector2f {
     require(other.size == 2) { "the size of the vectors are different $other.size != 2" }
     return vec2f(other[0], other[1])
 }
+
 fun vec2f(x: Float, y: Float): AbstractVector2f {
     return FinalVector2f(x, y)
 }

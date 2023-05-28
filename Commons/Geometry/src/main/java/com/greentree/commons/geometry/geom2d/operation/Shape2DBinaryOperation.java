@@ -14,9 +14,9 @@ import com.greentree.commons.math.vector.Vector2f;
 public abstract class Shape2DBinaryOperation<A extends IShape2D, B extends IShape2D> {
 	
 	public CollisionEvent2D.Builder getCollisionEvent(A a, B b) {
-		Vector2f normal = Shape2DUtil.getCollisionNormalOnNormalProjection(a, b);
+		var normal = Shape2DUtil.getCollisionNormalOnNormalProjection(a, b);
 		return new CollisionEvent2D.Builder(Shape2DUtil.getCollisionPoint(a, b), normal,
-				Shape2DUtil.getProjectionOverlay(a, b, new Vector2f(normal.y, -normal.x)));
+				Shape2DUtil.getProjectionOverlay(a, b, new Vector2f(normal.y(), -normal.x())));
 	}
 	
 	public Collection<AbstractVector2f> getContactPoint(final A a, final B b) {
@@ -24,8 +24,7 @@ public abstract class Shape2DBinaryOperation<A extends IShape2D, B extends IShap
 		for(final var al : a.getLinesLoop())
 			for(final var bl : b.getLinesLoop()) {
 				final Vector2f c = MathLine2D.contact(al.getMathLine(), bl.getMathLine());
-				if(c == null || !al.getAABB().isIntersect(c.x, c.y)
-						|| !bl.getAABB().isIntersect(c.x, c.y))
+				if(c == null || !al.getAABB().isIntersect(c.x(), c.y()) || !bl.getAABB().isIntersect(c.x(), c.y()))
 					continue;
 				res.add(c);
 			}

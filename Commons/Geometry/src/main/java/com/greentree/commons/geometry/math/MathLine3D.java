@@ -7,14 +7,23 @@ import com.greentree.commons.math.vector.Vector3f;
 
 public class MathLine3D {
 
-	private Vector3f vector;
-	private Vector3f point;
+	private AbstractVector3f vector;
+	private AbstractVector3f point;
 
+	public AbstractVector3f p1() {
+		return vector;
+	}
+	
+	public AbstractVector3f p2() {
+		return vector.plus(point);
+	}
+	
 	public MathLine3D(AbstractVector3f point, AbstractVector3f vector) {
 		this.point = new Vector3f(point);
 		this.vector = new Vector3f(vector);
-		if(this.vector.x() < 0)this.vector.mul(-1);
-		this.vector.normalize();
+		if(this.vector.x() < 0)
+			this.vector = this.vector.times(-1);
+		this.vector.normalize(1f);
 	}
 
 	@Override

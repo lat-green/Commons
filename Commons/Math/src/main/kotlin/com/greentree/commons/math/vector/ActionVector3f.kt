@@ -47,6 +47,10 @@ class ActionVector3f : AbstractMutableVector3f {
         action.addListener(l)
     }
 
+    override fun toMutable(): AbstractMutableVector3f {
+        return Vector3f(x, y, z)
+    }
+
     fun tryAction() {
         if (actionX || actionY || actionZ) {
             actionX = false

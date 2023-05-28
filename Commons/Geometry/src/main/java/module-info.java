@@ -18,4 +18,6 @@ open module commons.geometry {
 	exports com.greentree.commons.geometry.geom3d.collision.strategy;
 	exports com.greentree.commons.geometry.geom3d.face;
 	
+	exports com.greentree.commons.geometry.math;
+	
 }

@@ -1,5 +1,7 @@
 package com.greentree.commons.geometry.geom2d.shape;
 
+import static com.greentree.commons.math.vector.AbstractVector2fKt.*;
+
 import java.util.Arrays;
 
 import com.greentree.commons.geometry.geom2d.IMovableShape2D;
@@ -15,7 +17,7 @@ public abstract class Shape2D implements IMovableShape2D {
 	private transient boolean should_update;
 	private final Transform2D transform;
 	private final FinalVector2f[] origine_points;
-	private final Vector2f[] points;
+	private final AbstractVector2f[] points;
 	
 	public Shape2D(Transform2D transform, AbstractVector2f... points) {
 		
@@ -24,13 +26,11 @@ public abstract class Shape2D implements IMovableShape2D {
 		final var c = VectorGeometryUtil.getCenter(points);
 		origine_points = new FinalVector2f[points.length];
 		for(int i = 0; i < points.length; i++) {
-			final var p = new Vector2f(points[i]);
-			p.sub(c);
-			origine_points[i] = new FinalVector2f(p);
+			origine_points[i] = new FinalVector2f(points[i].minus(c));
 		}
 		add(c);
 		
-		this.points = new Vector2f[points.length];
+		this.points = new AbstractVector2f[points.length];
 		for(int i = 0; i < points.length; i++)
 			this.points[i] = new Vector2f();
 		should_update = true;
@@ -53,7 +53,7 @@ public abstract class Shape2D implements IMovableShape2D {
 	}
 	
 	@Override
-	public Vector2f[] getPoints() {
+	public AbstractVector2f[] getPoints() {
 		load();
 		return points;
 	}
@@ -92,22 +92,21 @@ public abstract class Shape2D implements IMovableShape2D {
 		if(transform.setRotation(angle + rot))
 			update();
 		
-		var pos = transform.getPosition();
+		var pos = transform.getPosition().minus(point).toMutable();
 		
 		final float x_ = pos.x(), y_ = pos.y();
 		final float cos = Mathf.cos(angle);
 		final float sin = Mathf.sin(angle);
 		
-		pos.sub(point).set(x_ * cos + y_ * -sin, x_ * sin + y_ * cos).add(point);
+		pos.set(x_ * cos + y_ * -sin, x_ * sin + y_ * cos);
 		
-		if(transform.setPosition(pos))
+		if(transform.setPosition(pos.plus(point)))
 			update();
 	}
 	
 	@Override
 	public void scale(float x, float y) {
-		final var s = transform.getScale();
-		s.mul(x, y);
+		final var s = transform.getScale().minus(vec2f(x, y));
 		if(transform.setScale(s))
 			update();
 	}

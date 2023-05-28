@@ -16,7 +16,7 @@ public final class SwapBinaryOperation3D<A extends IShape3D, B extends IShape3D>
 	@Override
 	public CollisionEvent3D.Builder getCollisionEvent(A a, B b) {
 		var e = shape2DBinaryOperation.getCollisionEvent(b, a);
-		e.normal.mul(-1);
+		e.setNormal(e.normal.times(-1));
 		return e;
 	}
 

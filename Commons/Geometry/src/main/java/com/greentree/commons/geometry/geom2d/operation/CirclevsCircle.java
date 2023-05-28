@@ -9,7 +9,7 @@ public class CirclevsCircle extends Shape2DBinaryOperation<Circle2D, Circle2D> {
 	
 	@Override
 	public CollisionEvent2D.Builder getCollisionEvent(Circle2D a, Circle2D b) {
-		final var n = b.getCenter().sub(a.getCenter(), new Vector2f());
+		final var n = b.getCenter().minus(a.getCenter());
 		final var penetration = -n.length() + a.getRadius() + b.getRadius();
 		
 		float x1 = a.getCenter().x();
@@ -26,7 +26,7 @@ public class CirclevsCircle extends Shape2DBinaryOperation<Circle2D, Circle2D> {
 		float ab = al * al + bl * bl;
 		
 		var res = new CollisionEvent2D.Builder(new Vector2f(-al * cl / ab + x1, -bl * cl / ab + y1),
-				n.normalize(), penetration);
+				n.normalize(1), penetration);
 		
 		return res;
 	}

@@ -2,8 +2,6 @@ package com.greentree.commons.geometry.geom2d;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
-
 import org.junit.jupiter.api.Test;
 
 import com.greentree.commons.geometry.geom2d.shape.Poligon2D;
@@ -24,9 +22,7 @@ public class VectorGeometryUtilTest {
 		assertFalse(VectorGeometryUtil.isClockwise(res));
 		assertTrue(VectorGeometryUtil.isConvex(res));
 		
-		assertTrue(
-				VectorGeometryUtil.equals(res, VectorGeometryUtil.getVectors2f(0, 0, 1, 0, 0, 1)),
-				Arrays.toString(res));
+		assertArrayEquals(res, VectorGeometryUtil.getVectors2f(0, 0, 1, 0, 0, 1));
 	}
 	
 	@Test

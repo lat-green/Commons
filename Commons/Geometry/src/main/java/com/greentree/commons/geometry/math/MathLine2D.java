@@ -65,8 +65,8 @@ public class MathLine2D {
 		return c;
 	}
 
-	public Vector2f getNormal() {
-		return new Vector2f(a, b).normalize();
+	public AbstractVector2f getNormal() {
+		return new Vector2f(a, b).normalize(1f);
 	}
 
 	public MathLine2D getPerpendicular() {

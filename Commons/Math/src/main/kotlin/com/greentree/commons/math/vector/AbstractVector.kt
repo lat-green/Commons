@@ -6,19 +6,24 @@ import java.io.Serializable
 
 interface AbstractVector<T> : Serializable, Iterable<T> {
 
+    fun toMutable(): AbstractMutableVector<T>
+
     operator fun component1(): T {
         return get(0)
     }
+
     operator fun component2(): T {
         return get(1)
     }
+
     operator fun component3(): T {
         return get(2)
     }
+
     operator fun component4(): T {
         return get(3)
     }
-
+    
     fun normalize(length: Number = 1): AbstractVector<T>
 
     fun dot(other: AbstractVector<out T>): T

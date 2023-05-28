@@ -43,10 +43,8 @@ public final class Triangle2D extends Shape2D {
 	
 	@Override
 	public float getArea() {
-		final var v1 = new Vector2f();
-		final var v2 = new Vector2f();
-		p2().sub(p1(), v1);
-		p3().sub(p1(), v2);
+		var v1 = p2().minus(p1());
+		var v2 = p3().minus(p1());
 		return Mathf.abs(v1.cross(v2)) / 2f;
 	}
 	

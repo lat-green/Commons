@@ -1,5 +1,7 @@
 package com.greentree.commons.geometry.geom2d.operation;
 
+import static com.greentree.commons.math.vector.AbstractVector2fKt.*;
+
 import com.greentree.commons.geometry.geom2d.AABB;
 import com.greentree.commons.geometry.geom2d.collision.CollisionEvent2D;
 import com.greentree.commons.geometry.geom2d.shape.Circle2D;
@@ -25,8 +27,8 @@ public class CirclevsRectangle extends Shape2DBinaryOperation<Circle2D, Rectangl
 		float y_extent = box.getHeight() / 2;
 		
 		// Ограничиваем точку ребром AABB
-		closest.x = Mathf.clamp(-x_extent, x_extent, closest.x);
-		closest.y = Mathf.clamp(-y_extent, y_extent, closest.y);
+		closest.setX(Mathf.clamp(-x_extent, x_extent, closest.getX()));
+		closest.setY(Mathf.clamp(-y_extent, y_extent, closest.getY()));
 		
 		boolean inside = false;
 		
@@ -41,25 +43,25 @@ public class CirclevsRectangle extends Shape2DBinaryOperation<Circle2D, Rectangl
 			// Находим ближайшую ось
 			if(x_delta_abs > y_delta_abs) {
 				// Отсекаем до ближайшей ширины
-				if(closest.x > 0)
-					closest.x = x_extent;
+				if(closest.getX() > 0)
+					closest.setX(x_extent);
 				else
-					closest.x = -x_extent;
+					closest.setX(-x_extent);
 			}else // Отсекаем до ближайшей ширины
-				if(closest.y > 0)
-					closest.y = y_extent;
+				if(closest.getY() > 0)
+					closest.setY(y_extent);
 				else
-					closest.y = -y_extent;
+					closest.setY(-y_extent);
 		}
 		
-		Vector2f normal = closest.add(x_delta, y_extent, new Vector2f());
+		var normal = closest.plus(vec2f(x_delta, y_extent));
 		float d = normal.length();
 		float r = a.getRadius();
 		
 		// Если окружность была внутри AABB, то нормаль коллизии нужно отобразить
 		// в точку снаружи
 		if(inside)
-			normal.mul(-1);
+			normal = normal.times(-1);
 		
 		return new CollisionEvent2D.Builder(new Vector2f(), normal, r - d);
 	}

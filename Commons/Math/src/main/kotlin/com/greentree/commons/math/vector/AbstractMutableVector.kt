@@ -26,14 +26,20 @@ interface AbstractMutableVector<T> : AbstractVector<T> {
     operator fun minusAssign(other: AbstractVector<out T>) {
         return assign(minus(other))
     }
+
     operator fun timesAssign(other: AbstractVector<out T>) {
         return assign(times(other))
     }
 
     fun assign(other: AbstractVector<out T>) {
         checkSize(other)
-        for(i in 0 until size) {
+        for (i in 0 until size) {
             set(i, other[i])
         }
     }
+
+    override fun toMutable(): AbstractMutableVector<T> {
+        return this
+    }
+
 }

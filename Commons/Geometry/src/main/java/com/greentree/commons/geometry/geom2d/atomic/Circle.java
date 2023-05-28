@@ -20,7 +20,7 @@ public class Circle implements SimpleShape2D {
 	
 	@Override
 	public AbstractVector2f min(AbstractVector2f point) {
-		return new Vector2f(point).normalize();
+		return new Vector2f(point).normalize(1);
 	}
 	
 	@Override

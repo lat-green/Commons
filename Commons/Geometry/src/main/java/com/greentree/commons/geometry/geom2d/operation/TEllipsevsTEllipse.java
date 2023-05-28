@@ -8,7 +8,7 @@ public class TEllipsevsTEllipse extends Shape2DBinaryOperation<Ellipse2D, Ellips
 	
 	@Override
 	public CollisionEvent2D.Builder getCollisionEvent(Ellipse2D a, Ellipse2D b) {
-		var n = b.getCenter().sub(a.getCenter());
+		var n = b.getCenter().minus(a.getCenter());
 		var p = -n.length() + a.getRadius() + b.getRadius();
 		
 		float x1 = a.getCenter().x();
@@ -25,7 +25,7 @@ public class TEllipsevsTEllipse extends Shape2DBinaryOperation<Ellipse2D, Ellips
 		float ab = al * al + bl * bl;
 		
 		var res = new CollisionEvent2D.Builder(new Vector2f(-al * cl / ab + x1, -bl * cl / ab + y1),
-				n.normalize(), p);
+				n.normalize(1), p);
 		
 		return res;
 	}

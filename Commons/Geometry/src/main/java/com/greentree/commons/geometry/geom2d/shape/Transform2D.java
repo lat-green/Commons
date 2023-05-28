@@ -9,24 +9,18 @@ import com.greentree.commons.math.vector.Vector3f;
 
 public interface Transform2D {
 	
-	default Vector2f[] get(AbstractVector2f... points) {
-		Vector2f[] a = new Vector2f[points.length];
-		for(int i = 0; i < a.length; i++)
-			a[i] = new Vector2f();
-		return get(points, a);
-	}
-	
-	default <T extends AbstractVector2f> T[] get(AbstractVector2f[] points, T[] dest) {
+	default void get(AbstractVector2f[] points, AbstractVector2f[] result) {
 		var mat = getModelMatrix();
 		var temp3 = new Vector3f();
-		for(int i = 0; i < dest.length; i++)
-			temp3.set(points[i], 1).mul(mat).xy(dest[i]);
-		return dest;
+		for(int i = 0; i < points.length; i++) {
+			temp3.set(points[i], 1);
+			result[i] = temp3.times(mat).xy();
+		}
 	}
 	
-	default Vector2f get(Vector2f point) {
+	default AbstractVector2f get(Vector2f point) {
 		var mat = getModelMatrix();
-		return new Vector3f(point, 1).mul(mat).xy();
+		return new Vector3f(point, 1).times(mat).xy();
 	}
 	
 	default Matrix3f getModelMatrix() {

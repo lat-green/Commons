@@ -5,12 +5,27 @@ interface AbstractMutableVector2<T> : AbstractMutableVector<T>, AbstractVector2<
     override var x: T
     override var y: T
 
-    fun x(value: T) {
-        this.x = value
+
+    fun set(x: T, y: T): AbstractMutableVector2<T> {
+        this.x = x
+        this.y = y
+        return this
     }
 
-    fun y(value: T) {
+    fun set(xy: AbstractVector2<T>): AbstractMutableVector2<T> {
+        this.x = xyz.x
+        this.y = xyz.y
+        return this
+    }
+
+    fun x(value: T): AbstractMutableVector2<T> {
+        this.x = value
+        return this
+    }
+
+    fun y(value: T): AbstractMutableVector2<T> {
         this.y = value
+        return this
     }
 
     override fun set(index: Int, value: T) {

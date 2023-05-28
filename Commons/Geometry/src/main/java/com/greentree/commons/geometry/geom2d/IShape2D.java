@@ -47,8 +47,8 @@ public interface IShape2D {
 		return Shape2DUtil.toLineStrip(getPoints());
 	}
 	
-	default Collection<Vector2f> getNormals() {
-		Collection<Vector2f> res = new ArrayList<>();
+	default Collection<AbstractVector2f> getNormals() {
+		Collection<AbstractVector2f> res = new ArrayList<>();
 		for(var l : getLinesLoop())
 			res.add(l.getNormal());
 		return res;

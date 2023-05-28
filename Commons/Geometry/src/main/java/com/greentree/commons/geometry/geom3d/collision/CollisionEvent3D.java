@@ -54,14 +54,50 @@ public class CollisionEvent3D<A extends IShape3D, B extends IShape3D> {
 	
 	public static class Builder {
 		
-		public final AbstractVector3f point;
-		public final AbstractVector3f normal;
-		public final float penetration;
+		public AbstractVector3f point;
+		public AbstractVector3f normal;
+		public float penetration;
+		
+		
+		/** @return the point */
+		public AbstractVector3f getPoint() {
+			return point;
+		}
+
+		
+		/** @param point the point to set */
+		public void setPoint(AbstractVector3f point) {
+			this.point = point;
+		}
+		
+		
+		/** @return the normal */
+		public AbstractVector3f getNormal() {
+			return normal;
+		}
+		
+		
+		/** @param normal the normal to set */
+		public void setNormal(AbstractVector3f normal) {
+			this.normal = normal;
+		}
+		
+		
+		/** @return the penetration */
+		public float getPenetration() {
+			return penetration;
+		}
+		
+		
+		/** @param penetration the penetration to set */
+		public void setPenetration(float penetration) {
+			this.penetration = penetration;
+		}
 		
 		public Builder(AbstractVector3f point, AbstractVector3f normal, float penetration) {
-			this.point = point;
-			this.normal = normal;
-			this.penetration = penetration;
+			setPoint(point);
+			setNormal(normal);
+			setPenetration(penetration);
 		}
 		
 		@Override

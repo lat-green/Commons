@@ -16,7 +16,7 @@ import com.greentree.commons.math.vector.AbstractVector3f;
 public interface IShape3D {
 	
 	default float distanceSquared(AbstractVector3f p) {
-		return minPoint(p).distanceSquared(p);
+		return minPoint(p).distanceSqr(p);
 	}
 	
 	default float distanse(AbstractVector3f p) {
@@ -118,7 +118,7 @@ public interface IShape3D {
 		float dis, dis0 = Float.MAX_VALUE;
 		for(final var f : getFaces()) {
 			pi = f.minPoint(point);
-			dis = pi.distanceSquared(point);
+			dis = pi.distanceSqr(point);
 			if(dis < dis0) {
 				dis0 = dis;
 				res = pi;
