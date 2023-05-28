@@ -13,8 +13,8 @@ interface AbstractMutableVector2<T> : AbstractMutableVector<T>, AbstractVector2<
     }
 
     fun set(xy: AbstractVector2<T>): AbstractMutableVector2<T> {
-        this.x = xyz.x
-        this.y = xyz.y
+        this.x = xy.x
+        this.y = xy.y
         return this
     }
 
