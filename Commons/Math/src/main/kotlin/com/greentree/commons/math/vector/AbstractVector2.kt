@@ -5,12 +5,16 @@ interface AbstractVector2<T> : AbstractVector<T> {
     val x: T
     val y: T
 
+    fun x() = x
+    fun y() = y
+
     override val size: Int
         get() = 2
 
     override fun component1(): T {
         return x
     }
+
     override fun component2(): T {
         return y
     }

@@ -4,6 +4,8 @@ interface AbstractVector1<T> : AbstractVector<T> {
 
     val x: T
 
+    fun x() = x
+
     override val size: Int
         get() = 1
 
@@ -12,7 +14,7 @@ interface AbstractVector1<T> : AbstractVector<T> {
     }
 
     override fun get(index: Int): T {
-        return when(index) {
+        return when (index) {
             0 -> x
             else -> throw IndexOutOfBoundsException()
         }

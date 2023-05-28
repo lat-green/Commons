@@ -5,8 +5,16 @@ interface AbstractMutableVector2<T> : AbstractMutableVector<T>, AbstractVector2<
     override var x: T
     override var y: T
 
+    fun x(value: T) {
+        this.x = value
+    }
+
+    fun y(value: T) {
+        this.y = value
+    }
+
     override fun set(index: Int, value: T) {
-        return when(index) {
+        return when (index) {
             0 -> x = value
             1 -> y = value
             else -> throw IndexOutOfBoundsException()
