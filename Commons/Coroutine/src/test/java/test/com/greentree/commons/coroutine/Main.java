@@ -25,7 +25,7 @@ public class Main {
 					yield new Sleep(5);
 				}
 				default -> throw new NullPointerException();
-			};
+					};
 		}, 2);
 	}
 	
