@@ -36,6 +36,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 	
 	<modules>
 		<module>Action</module>
+		<module>Coroutine</module>
 		<module>Data</module>
 		<module>Geometry</module>
 		<module>Graph</module>
@@ -78,7 +79,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 			</dependency>
 			<dependency>
 				<groupId>com.greentree.commons</groupId>
-				<artifactId>assets</artifactId>
+				<artifactId>coroutine</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
