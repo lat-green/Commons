@@ -10,25 +10,12 @@ public class SupplierGenerator<T> implements Iterator<T>, Serializable {
 	
 	private boolean hasNext;
 	private final Supplier<Supplier<T>> iter;
-	private Supplier<T> next;
+	private T next;
 	
 	
 	public SupplierGenerator(Supplier<Supplier<T>> iter) {
 		this.iter = iter;
-		move();
-	}
-	
-	private Supplier<T> move() {
-		final var res = next;
-		final var sup = iter.get();
-		if(sup != null) {
-			next = sup;
-			hasNext = true;
-		}else {
-			next = null;
-			hasNext = false;
-		}
-		return res;
+		next();
 	}
 	
 	@Override
@@ -38,7 +25,16 @@ public class SupplierGenerator<T> implements Iterator<T>, Serializable {
 	
 	@Override
 	public T next() {
-		return move().get();
+		final var res = next;
+		final var sup = iter.get();
+		if(sup != null) {
+			next = sup.get();
+			hasNext = true;
+		}else {
+			next = null;
+			hasNext = false;
+		}
+		return res;
 	}
 	
 }

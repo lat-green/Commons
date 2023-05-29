@@ -1,9 +1,6 @@
 package com.greentree.common.util.iterator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Iterator;
 import java.util.function.Supplier;
@@ -47,7 +44,7 @@ public class GeneratorTest {
 	@Test
 	void SupplierGenerator() {
 
-		final Iterable<Integer> gen = () -> IteratorUtil.iterator(new Supplier<>() {
+		final Iterable<Integer> gen = IteratorUtil.iterable(new Supplier<>() {
 
 			int i = 2;
 
