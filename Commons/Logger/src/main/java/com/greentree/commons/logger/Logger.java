@@ -21,21 +21,14 @@ public final class Logger {
 		this.politics = politics;
 	}
 	
-	public final void log(LogLayer layer, Supplier<String> str) {
-		if(politics.isEnabled(layer)) {
-			final var builder = new StringBuilder();
-			if(politics.isDataWrite()) {
-				builder.append("00:00:00");
-				builder.append(' ');
-			}
-			if(politics.isThreadWrite()) {
-				builder.append(Thread.currentThread());
-				builder.append(' ');
-			}
-			builder.append(str.get());
-			builder.append('\n');
-			print.print(builder.toString());
-		}
+	public final void log(LogLayer layer, String message) {
+		log(layer, () -> message);
+	}
+	
+	public final void log(LogLayer layer, Supplier<String> message) {
+		politics.log(print, layer, message);
+		print.append('\n');
+		print.flush();
 	}
 	
 }

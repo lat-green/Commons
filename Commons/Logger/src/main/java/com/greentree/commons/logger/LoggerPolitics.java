@@ -1,11 +1,11 @@
 package com.greentree.commons.logger;
 
+import java.io.PrintStream;
+import java.util.function.Supplier;
 
 public interface LoggerPolitics {
 
-	boolean isThreadWrite();
-	boolean isDataWrite();
-	boolean isEnabled(LogLayer layer);
+	void log(PrintStream print, LogLayer layer, Supplier<? extends String> message);
 	
 	
 }

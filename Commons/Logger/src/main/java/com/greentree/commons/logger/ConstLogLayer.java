@@ -1,17 +1,25 @@
 package com.greentree.commons.logger;
 
 
-public enum ConstLogLayer implements LogLayer{
-	INFO,
-	DEBUG,
-	FATAL,
-	ERROR,
-	WARN,
+public enum ConstLogLayer implements LogLayer {
+	
+	INFO(ConsoleColor.YELLOW),
+	DEBUG(ConsoleColor.BLUE),
+	FATAL(ConsoleColor.RED),
+	ERROR(ConsoleColor.RED),
+	WARN(ConsoleColor.GREEN),
 	;
 
-	@Override
-	public String getName() {
-		return name();
+	private final ConsoleColor color;
+	
+	private ConstLogLayer(ConsoleColor color) {
+		this.color = color;
 	}
+	
+	@Override
+	public ConsoleColor color() {
+		return color;
+	}
+	
 
 }

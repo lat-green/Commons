@@ -3,6 +3,8 @@ package com.greentree.commons.logger;
 
 public interface LogLayer {
 	
-	String getName();
+	String name();
+	
+	ConsoleColor color();
 	
 }
