@@ -8,7 +8,7 @@ import com.greentree.commons.data.file.DataFileReader;
 import com.greentree.commons.data.file.DataFileWriter;
 import com.greentree.commons.data.file.DataFiles;
 import com.greentree.commons.data.file.DataSerialization;
-import com.greentree.commons.util.classes.info.TypeInfo;
+import com.greentree.commons.reflection.info.TypeInfo;
 import com.greentree.commons.util.cortege.Pair;
 
 

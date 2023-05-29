@@ -1,6 +1,6 @@
 open module commons.injector {
 	
-	requires transitive commons.util;
+	requires transitive commons.reflection;
 	
 	exports com.greentree.commons.injector;
 	

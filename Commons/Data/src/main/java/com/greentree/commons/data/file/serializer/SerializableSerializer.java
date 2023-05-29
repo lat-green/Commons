@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 import com.greentree.commons.data.file.DataFileReader;
 import com.greentree.commons.data.file.DataFileWriter;
-import com.greentree.commons.util.classes.info.TypeInfo;
+import com.greentree.commons.reflection.info.TypeInfo;
 import com.greentree.commons.util.exception.WrappedException;
 
 public class SerializableSerializer extends AbstractSerializer {

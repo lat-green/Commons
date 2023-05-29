@@ -3,8 +3,6 @@ open module commons.util {
 	
 	exports com.greentree.commons.util;
 	exports com.greentree.commons.util.exception;
-	exports com.greentree.commons.util.classes;
-	exports com.greentree.commons.util.classes.info;
 	exports com.greentree.commons.util.function;
 	exports com.greentree.commons.util.time;
 	exports com.greentree.commons.util.cortege;

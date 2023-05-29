@@ -11,7 +11,7 @@ public final record TypeUsedGraph(Iterable<? extends TypeInfo<?>> classes) imple
 	private static final long serialVersionUID = 1L;
 	
 	@Override
-	public Iterable<? extends TypeInfo<?>> getJoints(Object v) {
+	public Iterable<? extends TypeInfo<?>> getAdjacencyIterable(Object v) {
 		var cls = (TypeInfo<?>) v;
 		var result = new HashSet<TypeInfo<?>>();
 		
@@ -44,6 +44,5 @@ public final record TypeUsedGraph(Iterable<? extends TypeInfo<?>> classes) imple
 	public Iterator<TypeInfo<?>> iterator() {
 		return (Iterator<TypeInfo<?>>) classes.iterator();
 	}
-	
 	
 }

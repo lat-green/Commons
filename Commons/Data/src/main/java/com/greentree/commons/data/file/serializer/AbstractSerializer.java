@@ -5,8 +5,8 @@ import java.io.IOException;
 
 import com.greentree.commons.data.file.DataFileReader;
 import com.greentree.commons.data.file.DataSerializer;
-import com.greentree.commons.util.classes.info.TypeInfo;
-import com.greentree.commons.util.classes.info.TypeInfoBuilder;
+import com.greentree.commons.reflection.info.TypeInfo;
+import com.greentree.commons.reflection.info.TypeInfoBuilder;
 import com.greentree.commons.util.cortege.Pair;
 
 

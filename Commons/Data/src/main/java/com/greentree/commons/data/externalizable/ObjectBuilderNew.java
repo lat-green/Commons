@@ -1,8 +1,8 @@
 package com.greentree.commons.data.externalizable;
 
-import static com.greentree.commons.util.classes.ObjectBuilder.*;
-import static com.greentree.commons.util.classes.info.TypeInfoBuilder.*;
-import static java.util.Arrays.asList;
+import static com.greentree.commons.reflection.ObjectBuilder.*;
+import static com.greentree.commons.reflection.info.TypeInfoBuilder.*;
+import static java.util.Arrays.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.greentree.commons.util.classes.ClassUtil;
-import com.greentree.commons.util.classes.info.TypeInfo;
+import com.greentree.commons.reflection.ClassUtil;
+import com.greentree.commons.reflection.info.TypeInfo;
 import com.greentree.commons.util.cortege.Pair;
 import com.greentree.commons.util.cortege.Triple;
 import com.greentree.commons.util.exception.MultiException;
@@ -22,7 +22,8 @@ import com.greentree.commons.util.function.CheckedFunction;
 public class ObjectBuilderNew {
 
 	public static <T> T get(Class<T> type, Collection<String> names, CheckedFunction<Triple<TypeInfo<?>, String, Object>, Object> func) throws Exception {
-		final T obj = newInstanse(type, names, pair -> func.apply(new Triple<>(getTypeInfo(pair.first), pair.seconde, null)));
+		final T obj = newInstanse(type, names,
+				pair -> func.apply(new Triple<>(getTypeInfo(pair.first), pair.seconde, null)));
 
 		if(names.isEmpty()) return obj;
 

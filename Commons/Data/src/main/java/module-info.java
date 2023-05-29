@@ -17,6 +17,7 @@ import com.greentree.commons.data.file.serializer.StringSerializer;
 open module commons.data {
 	
 	requires transitive commons.action;
+	requires transitive commons.reflection;
 	
 	exports com.greentree.commons.data;
 	

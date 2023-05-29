@@ -3,7 +3,8 @@ package com.greentree.commons.data.file;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import com.greentree.commons.util.classes.info.TypeInfo;
+import com.greentree.commons.reflection.info.TypeInfo;
+
 
 public record DataFileObject(TypeInfo<?> type, byte[] data) implements Serializable {
 

@@ -1,6 +1,6 @@
 package com.greentree.commons.data.file.serializer;
 
-import static com.greentree.commons.util.classes.ObjectBuilder.*;
+import static com.greentree.commons.reflection.ObjectBuilder.*;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -14,8 +14,8 @@ import java.util.HashMap;
 import com.greentree.commons.data.externalizable.ObjectBuilderNew;
 import com.greentree.commons.data.file.DataFileReader;
 import com.greentree.commons.data.file.DataFileWriter;
-import com.greentree.commons.util.classes.ClassUtil;
-import com.greentree.commons.util.classes.info.TypeInfo;
+import com.greentree.commons.reflection.ClassUtil;
+import com.greentree.commons.reflection.info.TypeInfo;
 import com.greentree.commons.util.cortege.Pair;
 import com.greentree.commons.util.function.CheckedRunnable;
 

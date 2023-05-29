@@ -11,9 +11,9 @@ import java.util.Collection;
 import com.greentree.commons.data.file.DataFileReader;
 import com.greentree.commons.data.file.DataFileWriter;
 import com.greentree.commons.data.file.DataSerializer;
-import com.greentree.commons.util.classes.ClassUtil;
-import com.greentree.commons.util.classes.info.TypeInfo;
-import com.greentree.commons.util.classes.info.TypeInfoBuilder;
+import com.greentree.commons.reflection.ClassUtil;
+import com.greentree.commons.reflection.info.TypeInfo;
+import com.greentree.commons.reflection.info.TypeInfoBuilder;
 import com.greentree.commons.util.cortege.Pair;
 import com.greentree.commons.util.exception.WrappedException;
 

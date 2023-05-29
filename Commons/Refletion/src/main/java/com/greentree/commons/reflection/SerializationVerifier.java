@@ -1,6 +1,6 @@
 package com.greentree.commons.reflection;
 
-import static com.greentree.commons.util.classes.ClassUtil.*;
+import static com.greentree.commons.reflection.ClassUtil.*;
 import static java.lang.reflect.Modifier.*;
 
 import java.io.ObjectOutputStream;

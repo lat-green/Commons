@@ -211,7 +211,7 @@ public abstract class FileUtil {
 	
 	public static void write(File to, InputStream in) throws FileNotFoundException, IOException {
 		try(final var out = new FileOutputStream(to)) {
-			InputStreamUtil.copy(in, out);
+			in.transferTo(out);
 		}
 	}
 	

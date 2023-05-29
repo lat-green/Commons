@@ -3,7 +3,7 @@ package com.greentree.commons.injector;
 import java.lang.reflect.Modifier;
 import java.util.stream.Stream;
 
-import com.greentree.commons.util.classes.ClassUtil;
+import com.greentree.commons.reflection.ClassUtil;
 
 public class AllFieldDependencyScanner implements DependencyScanner {
 	

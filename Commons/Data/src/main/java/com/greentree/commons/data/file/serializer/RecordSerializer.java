@@ -7,8 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.greentree.commons.data.file.DataFileReader;
 import com.greentree.commons.data.file.DataFileWriter;
-import com.greentree.commons.util.classes.ClassUtil;
-import com.greentree.commons.util.classes.ObjectBuilder;
+import com.greentree.commons.reflection.ClassUtil;
+import com.greentree.commons.reflection.ObjectBuilder;
 import com.greentree.commons.util.exception.WrappedException;
 
 public class RecordSerializer extends AbstractSerializer {

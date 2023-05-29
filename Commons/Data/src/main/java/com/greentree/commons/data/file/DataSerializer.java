@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import com.greentree.commons.util.classes.info.TypeInfo;
+import com.greentree.commons.reflection.info.TypeInfo;
 import com.greentree.commons.util.cortege.Pair;
 
 public interface DataSerializer {

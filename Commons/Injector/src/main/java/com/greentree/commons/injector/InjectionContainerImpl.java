@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.greentree.commons.util.classes.ClassUtil;
+import com.greentree.commons.reflection.ClassUtil;
 
 public final class InjectionContainerImpl implements ConfigInjectionContainer {
 	

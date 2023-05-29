@@ -9,7 +9,7 @@ public record TypeExtendsGraph(Iterable<Class<?>> classes) implements Graph<Clas
 	private static final long serialVersionUID = 1L;
 	
 	@Override
-	public Iterable<? extends Class<?>> getJoints(Object v) {
+	public Iterable<? extends Class<?>> getAdjacencyIterable(Object v) {
 		var cls = (Class<?>) v;
 		var result = StreamSupport.stream(spliterator(), false)
 				.filter(x ->

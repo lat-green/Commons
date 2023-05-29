@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import com.greentree.commons.util.InputStreamUtil;
 import com.greentree.commons.util.exception.WrappedException;
 
 public interface Resource extends Serializable {
@@ -23,7 +22,7 @@ public interface Resource extends Serializable {
 	
 	default void writeTo(IOResource result) {
 		try(final var out = result.openWrite();final var in = open()) {
-			InputStreamUtil.copy(in, out);
+			in.transferTo(out);
 		}catch(IOException e) {
 			throw new WrappedException(e);
 		}

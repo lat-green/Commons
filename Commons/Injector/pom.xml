@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.greentree.commons</groupId>
 		<artifactId>commons</artifactId>
-		<version>0.3.3</version>
+		<version>0.3.4</version>
 	</parent>
 	
   	<artifactId>injector</artifactId>
@@ -13,7 +13,7 @@
     <dependencies>
         <dependency>
 			<groupId>com.greentree.commons</groupId>
-			<artifactId>util</artifactId>
+			<artifactId>reflection</artifactId>
 	    </dependency>
         <dependency>
 			<groupId>com.greentree.commons</groupId>

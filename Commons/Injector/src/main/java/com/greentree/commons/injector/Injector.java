@@ -2,7 +2,7 @@ package com.greentree.commons.injector;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.greentree.commons.util.classes.ClassUtil;
+import com.greentree.commons.reflection.ClassUtil;
 
 public record Injector(InjectionContainer container, DependencyScanner scanner) {
 	

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.greentree.commons</groupId>
 		<artifactId>commons</artifactId>
-		<version>0.3.3</version>
+		<version>0.3.4</version>
 	</parent>
   
 	<artifactId>data</artifactId>
@@ -15,6 +15,10 @@
 		<dependency>
 			<groupId>com.greentree.commons</groupId>
 			<artifactId>action</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.greentree.commons</groupId>
+			<artifactId>reflection</artifactId>
 		</dependency>
 	</dependencies>
 	
