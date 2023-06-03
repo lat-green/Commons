@@ -25,24 +25,24 @@ public class TopologicalSortTest {
         graph.add("A", "B");
         graph.add("A", "C");
         graph.add("A", "D");
-        graph.add("B", "C");
-        graph.add("B", "D");
+        graph.add("C", "B");
         graph.add("C", "D");
+        graph.add("B", "D");
         var result = graph.getTopologicalSort();
-        assertEquals(result, List.of("A", "B", "C", "D"));
+        assertEquals(result, List.of("A", "C", "B", "D"));
     }
 
     @Test
     void test3() {
         var graph = new DirectedGraph<>();
-        graph.add("B", "C");
-        graph.add("B", "D");
         graph.add("A", "B");
         graph.add("A", "C");
         graph.add("A", "D");
         graph.add("C", "D");
+        graph.add("C", "B");
+        graph.add("B", "D");
         var result = graph.getTopologicalSort();
-        assertEquals(result, List.of("A", "B", "C", "D"));
+        assertEquals(result, List.of("A", "C", "B", "D"));
     }
 
 }

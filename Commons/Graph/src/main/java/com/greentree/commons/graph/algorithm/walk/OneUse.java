@@ -15,11 +15,17 @@ public record OneUse<V>(GraphWalker<V> origin) implements GraphWalker<V> {
 
         @Override
         public void endVisit(V v) {
+            if (used.contains(v))
+                return;
+            used.add(v);
             visitor.endVisit(v);
         }
 
         @Override
         public void endVisit(V parent, V v) {
+            if (used.contains(v))
+                return;
+            used.add(v);
             visitor.endVisit(parent, v);
         }
 
@@ -27,7 +33,6 @@ public record OneUse<V>(GraphWalker<V> origin) implements GraphWalker<V> {
         public boolean startVisit(V v) {
             if (used.contains(v))
                 return false;
-            used.add(v);
             return visitor.startVisit(v);
         }
 
@@ -35,7 +40,6 @@ public record OneUse<V>(GraphWalker<V> origin) implements GraphWalker<V> {
         public boolean startVisit(V parent, V v) {
             if (used.contains(v))
                 return false;
-            used.add(v);
             return visitor.startVisit(parent, v);
         }
 
