@@ -55,6 +55,12 @@ interface AbstractVector3f : AbstractFloatVector, AbstractVector3<Float> {
 		return vec2f(x, y)
 	}
 
+	override fun magnitude(length: Number): AbstractVector3f {
+		if (lengthSquared() < Mathf.EPS)
+			return this
+		return normalize(length)
+	}
+
 	override fun normalize(length: Number): AbstractVector3f {
 		return this * (length.toFloat() / length())
 	}
