@@ -1,32 +1,13 @@
 package com.greentree.commons.math.vector
 
-interface AbstractVector1f : AbstractFloatVector {
+interface AbstractVector1f : AbstractFloatVector, AbstractVector1<Float> {
 
-    val x: Float
+	override fun toMutable(): AbstractMutableVector1f {
+		return Vector1f(x)
+	}
 
-    override fun toMutable(): AbstractMutableVector1f {
-        return Vector1f(x)
-    }
+	companion object {
 
-    override val size: Int
-        get() = 1
-
-    override fun get(index: Int): Float {
-        return when (index) {
-            0 -> x
-            else -> throw IndexOutOfBoundsException()
-        }
-    }
-
-    override fun length(): Float {
-        return x
-    }
-
-    override fun lengthSquared(): Float {
-        return x * x
-    }
-
-    companion object {
-        val X: AbstractVector1f = FinalVector1f(1f)
-    }
+		val X: AbstractVector1f = FinalVector1f(1f)
+	}
 }
