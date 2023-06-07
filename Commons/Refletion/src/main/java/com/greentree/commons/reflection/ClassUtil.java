@@ -18,40 +18,9 @@ import static java.lang.reflect.Modifier.*;
 
 public final class ClassUtil {
 
-    private static final ArrayList<CodeSource> sources;
-    private static final Collection<Class<?>> classes;
-    private static final Collection<String> packages;
-
-    static {
-        sources = new ArrayList<>(64);
-        var loader = ClassUtil.class.getClassLoader();
-        try {
-            var res = loader.getResources("META-INF/").asIterator();
-            while (res.hasNext())
-                sources.add(CodeSource.create(res.next()));
-            sources.add(new BootStrupCodeSource());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        sources.trimToSize();
-    }
-
-    static {
-        final var packages_list = new ArrayList<String>(1024);
-        packages = packages_list;
-        final var m = ClassUtil.class.getModule();
-        if (m != null) {
-            final var l = m.getLayer();
-            if (l != null)
-                for (var mod : l.modules())
-                    packages_list.addAll(mod.getPackages());
-        }
-        packages_list.trimToSize();
-    }
-
-    static {
-        classes = sources.stream().flatMap(x -> x.getAllClasses()).toList();
-    }
+    private static ArrayList<CodeSource> sources;
+    private static Collection<Class<?>> classes;
+    private static Collection<String> packages;
 
     public static <T> Class<? extends T> loadClassInAllPackages(Class<T> baseClass, String className) throws ClassNotFoundException {
         var finder = new AllPacakagesClassFinder(
@@ -61,11 +30,41 @@ public final class ClassUtil {
     }
 
     public static Stream<String> getAllPackages() {
+        if (packages == null) {
+            final var packages_list = new ArrayList<String>(1024);
+            packages = packages_list;
+            final var m = ClassUtil.class.getModule();
+            if (m != null) {
+                final var l = m.getLayer();
+                if (l != null)
+                    for (var mod : l.modules())
+                        packages_list.addAll(mod.getPackages());
+            }
+            packages_list.trimToSize();
+        }
         return packages.stream();
     }
 
     public static Stream<Class<?>> getAllClasses() {
+        if (classes == null) classes = sources().stream().flatMap(x -> x.getAllClasses()).toList();
         return classes.stream();
+    }
+
+    private static Collection<CodeSource> sources() {
+        if (sources == null) {
+            sources = new ArrayList<>(64);
+            var loader = ClassUtil.class.getClassLoader();
+            try {
+                var res = loader.getResources("META-INF/").asIterator();
+                while (res.hasNext())
+                    sources.add(CodeSource.create(res.next()));
+                sources.add(new BootStrupCodeSource());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            sources.trimToSize();
+        }
+        return sources;
     }
 
     @SuppressWarnings("unchecked")
