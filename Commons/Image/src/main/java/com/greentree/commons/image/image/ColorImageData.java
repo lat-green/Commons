@@ -9,7 +9,6 @@ public class ColorImageData implements ImageData {
 
     private final Color color;
     private final PixelFormat format;
-
     public ColorImageData(Color color, PixelFormat format) {
         this.color = color;
         this.format = format;
@@ -21,6 +20,11 @@ public class ColorImageData implements ImageData {
             this.format = PixelFormat.RGBA;
         else
             this.format = PixelFormat.RGB;
+    }
+
+    @Override
+    public String toString() {
+        return "ColorImageData[" + color + ", " + format + ']';
     }
 
     @Override
