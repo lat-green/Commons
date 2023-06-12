@@ -3,10 +3,9 @@ package com.greentree.commons.image;
 import com.greentree.commons.image.image.ByteArrayImageData;
 import com.greentree.commons.image.image.ImageData;
 
-import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
-import java.util.Hashtable;
+import java.nio.ByteBuffer;
 
 import static java.awt.color.ColorSpace.CS_sRGB;
 
@@ -21,53 +20,53 @@ public class ImageIODecoder {
     }
 
     public static ImageData toImageData(BufferedImage image) {
-        final int texWidth = image.getWidth();
-        final int texHeight = image.getHeight();
-        final boolean useAlpha = image.getColorModel().hasAlpha();
-        BufferedImage texImage;
-        if (useAlpha) {
-            final WritableRaster raster = Raster.createInterleavedRaster(0, texWidth, texHeight, 4, null);
-            texImage = new BufferedImage(glAlphaColorModel, raster, false, new Hashtable<>());
-        } else {
-            final WritableRaster raster = Raster.createInterleavedRaster(0, texWidth, texHeight, 3, null);
-            texImage = new BufferedImage(glColorModel, raster, false, new Hashtable<>());
+        var texWidth = image.getWidth();
+        var texHeight = image.getHeight();
+//        var format = type(image.getColorModel().getColorSpace().getType());
+        var pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
+        var buffer = ByteBuffer.allocateDirect(pixels.length * 4);
+//        var buffer = ByteBuffer.allocateDirect(pixels.length * format.numComponents);
+        for (int pixel : pixels) {
+            buffer.put((byte) ((pixel >> 16) & 0xFF));
+            buffer.put((byte) ((pixel >> 8) & 0xFF));
+            buffer.put((byte) (pixel & 0xFF));
+//            if (useAlpha)
+            buffer.put((byte) ((byte) (pixel >> 24) & 0xFF));
         }
-        final Graphics g = texImage.getGraphics();
-        if (useAlpha) {
-            g.setColor(new java.awt.Color(0.0f, 0.0f, 0.0f, 0.0f));
-            g.fillRect(0, 0, texWidth, texHeight);
-        }
-        g.drawImage(image, 0, 0, null);
-        final byte[] data = ((DataBufferByte) texImage.getData().getDataBuffer()).getData();
-        g.dispose();
-        if (useAlpha)
-            return new ByteArrayImageData(data, PixelFormat.RGBA, texWidth, texHeight);
-        else
-            return new ByteArrayImageData(data, PixelFormat.RGB, texWidth, texHeight);
+        buffer.flip();
+//        if (useAlpha)
+        return new ByteArrayImageData(buffer, PixelFormat.RGBA, texWidth, texHeight);
+//        return new ByteArrayImageData(buffer, PixelFormat.RGB, texWidth, texHeight);
     }
 
     public static BufferedImage toBufferedImage(ImageData img) {
-        final var bi = new BufferedImage(img.getWidth(), img.getHeight(), toImageIOType(img.getFormat()));
-        final var bb = img.getData();
-        final int bytesPerPixel = 3;
-        byte[] imageArray = ((DataBufferByte) bi.getRaster()
-                .getDataBuffer()).getData();
-        bb.rewind();
-        bb.get(imageArray);
-        int numPixels = bb.capacity() / bytesPerPixel;
-        for (int i = 0; i < numPixels; i++) {
-            byte tmp = imageArray[i * bytesPerPixel];
-            imageArray[i * bytesPerPixel] = imageArray[i * bytesPerPixel
-                    + 2];
-            imageArray[i * bytesPerPixel + 2] = tmp;
+        if (img.getFormat().hasAlpha) {
+            var bb = img.toFormat(PixelFormat.ABGR).getDataArray();
+            var result = new BufferedImage(img.getWidth(), img.getHeight(), toImageIOType(img.getFormat()));
+            var raster = Raster.createRaster(result.getSampleModel(), new DataBufferByte(bb, bb.length), null);
+            result.setData(raster);
+            return result;
         }
-        return bi;
+        var bb = img.toFormat(PixelFormat.BGR).getDataArray();
+        var result = new BufferedImage(img.getWidth(), img.getHeight(), toImageIOType(img.getFormat()));
+        var raster = Raster.createRaster(result.getSampleModel(), new DataBufferByte(bb, bb.length), null);
+        result.setData(raster);
+        return result;
     }
 
     public static int toImageIOType(PixelFormat format) {
         return switch (format) {
             case RGB -> BufferedImage.TYPE_3BYTE_BGR;
             case RGBA -> BufferedImage.TYPE_4BYTE_ABGR;
+            default -> throw new IllegalArgumentException("Unexpected value: " + format);
+        };
+    }
+
+    private static PixelFormat type(int format) {
+        return switch (format) {
+            case BufferedImage.TYPE_3BYTE_BGR -> PixelFormat.BGR;
+            case BufferedImage.TYPE_4BYTE_ABGR -> PixelFormat.ABGR;
+            case BufferedImage.TYPE_BYTE_GRAY -> PixelFormat.LUMINANCE;
             default -> throw new IllegalArgumentException("Unexpected value: " + format);
         };
     }
