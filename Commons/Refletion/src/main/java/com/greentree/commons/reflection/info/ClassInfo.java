@@ -22,20 +22,8 @@ public final class ClassInfo<C> implements TypeInfo<C> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        ClassInfo<?> other = (ClassInfo<?>) obj;
-        return Objects.equals(cls, other.cls);
-    }
-
-    @Override
-    public TypeInfo<C> getBoxing() {
-        if (isPrimitive())
-            return INSTANCIES.get(ClassUtil.getNotPrimitive(cls));
-        return this;
+    public TypeInfo<?>[] getTypeArguments() {
+        return new TypeInfo[0];
     }
 
     @SuppressWarnings("unchecked")
@@ -49,16 +37,18 @@ public final class ClassInfo<C> implements TypeInfo<C> {
     }
 
     @Override
+    public TypeInfo<C> getBoxing() {
+        if (isPrimitive())
+            return INSTANCIES.get(ClassUtil.getNotPrimitive(cls));
+        return this;
+    }
+
+    @Override
     public TypeInfo<? super C> getSuperType() {
         final var super_class = cls.getGenericSuperclass();
         if (super_class == null)
             return null;
         return TypeInfoBuilder.getTypeInfo(super_class);
-    }
-
-    @Override
-    public Type getType() {
-        return cls;
     }
 
     @Override
@@ -72,23 +62,13 @@ public final class ClassInfo<C> implements TypeInfo<C> {
     }
 
     @Override
-    public TypeInfo<?>[] getTypeArguments() {
-        return new TypeInfo[0];
-    }
-
-    @Override
-    public CharSequence getTypeName() {
-        return cls.getTypeName();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(cls);
-    }
-
-    @Override
     public boolean isPrimitive() {
         return cls.isPrimitive();
+    }
+
+    @Override
+    public Class<C> toClass() {
+        return cls;
     }
 
     @Override
@@ -106,8 +86,28 @@ public final class ClassInfo<C> implements TypeInfo<C> {
     }
 
     @Override
-    public Class<C> toClass() {
+    public CharSequence getTypeName() {
+        return cls.getTypeName();
+    }
+
+    @Override
+    public Type getType() {
         return cls;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cls);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        ClassInfo<?> other = (ClassInfo<?>) obj;
+        return Objects.equals(cls, other.cls);
     }
 
     @Override

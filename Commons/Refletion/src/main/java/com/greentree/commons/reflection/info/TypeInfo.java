@@ -5,42 +5,46 @@ import java.lang.reflect.Type;
 
 public interface TypeInfo<C> extends Serializable {
 
-	TypeInfo<?>[] getTypeArguments();
+    default <T> TypeInfo<T> asExtends(TypeInfo<T> type) {
+        return TypeInfoBuilder.getTypeInfo(toClass(), type.getTypeArguments());
+    }
 
-	TypeInfo<? super C>[] getInterfaces();
+    Class<C> toClass();
 
-	TypeInfo<C> getBoxing();
+    TypeInfo<?>[] getTypeArguments();
 
-	TypeInfo<? super C> getSuperType();
+    TypeInfo<? super C>[] getInterfaces();
 
-	Class<C> toClass();
+    TypeInfo<C> getBoxing();
 
-	Type getType();
+    TypeInfo<? super C> getSuperType();
 
-	String getSimpleName();
+    String getSimpleName();
 
-	String getName();
+    String getName();
 
-	default boolean isPrimitive() {
-		return toClass().isPrimitive();
-	}
+    default boolean isPrimitive() {
+        return toClass().isPrimitive();
+    }
 
-	default boolean isInterface() {
-		return toClass().isInterface();
-	}
+    default boolean isInterface() {
+        return toClass().isInterface();
+    }
 
-	boolean isSuperTo(TypeInfo<? extends C> type);
+    default boolean isSuperOf(TypeInfo<? super C> superType) {
+        return superType.isSuperTo(this);
+    }
 
-	default boolean isSuperOf(TypeInfo<? super C> superType) {
-		return superType.isSuperTo(this);
-	}
+    boolean isSuperTo(TypeInfo<? extends C> type);
 
-	default CharSequence getTypeName() {
-		return getType().getTypeName();
-	}
+    default CharSequence getTypeName() {
+        return getType().getTypeName();
+    }
 
-	default boolean isInstance(Object obj) {
-		return toClass().isInstance(obj);
-	}
+    Type getType();
+
+    default boolean isInstance(Object obj) {
+        return toClass().isInstance(obj);
+    }
 
 }

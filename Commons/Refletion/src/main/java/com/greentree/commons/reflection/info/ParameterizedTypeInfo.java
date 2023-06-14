@@ -26,33 +26,6 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
         return INSTANCIES.get(type);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        ParameterizedTypeInfo<?> other = (ParameterizedTypeInfo<?>) obj;
-        return Objects.equals(type, other.type);
-    }
-
-    @Override
-    public TypeInfo<C> getBoxing() {
-        return this;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public TypeInfo<? super C>[] getInterfaces() {
-        final var clazz = toClass();
-        final var map = getParametersMap();
-        final var is = clazz.getGenericInterfaces();
-        final TypeInfo<? super C>[] ts = new TypeInfo[is.length];
-        for (var i = 0; i < is.length; i++)
-            ts[i] = TypeInfoBuilder.getTypeInfo(map(is[i], map));
-        return ts;
-    }
-
     public ParameterizedType getParameterizedType() {
         return type;
     }
@@ -75,32 +48,9 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
     }
 
     @Override
-    public TypeInfo<? super C> getSuperType() {
-        final var clazz = toClass();
-        final var sup = clazz.getGenericSuperclass();
-        return TypeInfoBuilder.getTypeInfo(map(sup));
-    }
-
-    @Override
-    public Type getType() {
-        return type;
-    }
-
-    @Override
-    public String getSimpleName() {
-        var joiner = new StringJoiner(", ", "<", ">");
-        for (var arg : getTypeArguments()) {
-            joiner.add(arg.getSimpleName());
-        }
-        return toClass().getSimpleName() + joiner;
-    }
-
-    @Override
-    public String getName() {
-        return type.getTypeName();
-    }
-
-    @Override
+    public int hashCode() {
+        return Objects.hash(type);
+    }    @Override
     public TypeInfo<?>[] getTypeArguments() {
         final var args = type.getActualTypeArguments();
         final var res = new TypeInfo[args.length];
@@ -110,44 +60,40 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
     }
 
     @Override
-    public CharSequence getTypeName() {
-        return type.getTypeName();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type);
-    }
-
-    @Override
-    public boolean isSuperOf(TypeInfo<? super C> superType) {
-        if (superType instanceof ParameterizedTypeInfo) {
-            final var s = (ParameterizedTypeInfo<? super C>) superType;
-            if (ClassUtil.isExtends(s.toClass(), toClass()))
-                return dfsTo(this, s);
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        }
-        return superType.toClass().isAssignableFrom(toClass());
-    }
-
+        ParameterizedTypeInfo<?> other = (ParameterizedTypeInfo<?>) obj;
+        return Objects.equals(type, other.type);
+    }    @SuppressWarnings("unchecked")
     @Override
-    public boolean isSuperTo(TypeInfo<? extends C> type) {
-        return dfsTo(type, this);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Class<C> toClass() {
-        return (Class<C>) type.getRawType();
+    public TypeInfo<? super C>[] getInterfaces() {
+        final var clazz = toClass();
+        final var map = getParametersMap();
+        final var is = clazz.getGenericInterfaces();
+        final TypeInfo<? super C>[] ts = new TypeInfo[is.length];
+        for (var i = 0; i < is.length; i++)
+            ts[i] = TypeInfoBuilder.getTypeInfo(map(is[i], map));
+        return ts;
     }
 
     @Override
     public String toString() {
         return type.toString();
+    }    @Override
+    public TypeInfo<C> getBoxing() {
+        return this;
     }
 
     private Type map(Type type) {
         return map(type, getParametersMap());
+    }    @Override
+    public TypeInfo<? super C> getSuperType() {
+        final var clazz = toClass();
+        final var sup = clazz.getGenericSuperclass();
+        return TypeInfoBuilder.getTypeInfo(map(sup));
     }
 
     private static boolean dfsTo(ClassInfo<?> type, ParameterizedTypeInfo<?> superType) {
@@ -157,6 +103,13 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
             if (dfsTo(s, superType))
                 return true;
         return false;
+    }    @Override
+    public String getSimpleName() {
+        var joiner = new StringJoiner(", ", "<", ">");
+        for (var arg : getTypeArguments()) {
+            joiner.add(arg.getSimpleName());
+        }
+        return toClass().getSimpleName() + joiner;
     }
 
     private static boolean dfsTo(ParameterizedTypeInfo<?> type,
@@ -169,6 +122,9 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
             if (dfsTo(s, superType))
                 return true;
         return false;
+    }    @Override
+    public String getName() {
+        return type.getTypeName();
     }
 
     private static boolean dfsTo(TypeInfo<?> type, ParameterizedTypeInfo<?> superType) {
@@ -177,6 +133,10 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
         if (type instanceof ClassInfo)
             return dfsTo((ClassInfo<?>) type, superType);
         return false;
+    }    @SuppressWarnings("unchecked")
+    @Override
+    public Class<C> toClass() {
+        return (Class<C>) type.getRawType();
     }
 
     private static Type map(Type type, Map<String, Type> map) {
@@ -194,6 +154,15 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
             return GenericType.build((Class<?>) raw, types);
         }
         return type;
+    }    @Override
+    public boolean isSuperOf(TypeInfo<? super C> superType) {
+        if (superType instanceof ParameterizedTypeInfo) {
+            final var s = (ParameterizedTypeInfo<? super C>) superType;
+            if (ClassUtil.isExtends(s.toClass(), toClass()))
+                return dfsTo(this, s);
+            return false;
+        }
+        return superType.toClass().isAssignableFrom(toClass());
     }
 
     private static final class ParameterizedTypeInfoSingletonFactory
@@ -216,6 +185,37 @@ public final class ParameterizedTypeInfo<C> implements TypeInfo<C> {
             throw new IllegalArgumentException("" + type);
         }
 
+    }    @Override
+    public boolean isSuperTo(TypeInfo<? extends C> type) {
+        return dfsTo(type, this);
     }
+
+    @Override
+    public CharSequence getTypeName() {
+        return type.getTypeName();
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

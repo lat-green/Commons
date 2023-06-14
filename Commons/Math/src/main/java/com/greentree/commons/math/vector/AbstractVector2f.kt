@@ -9,8 +9,12 @@ interface AbstractVector2f : AbstractFloatVector, AbstractVector2<Float> {
 		return x * vec.y - y * vec.x
 	}
 
+	fun lerp(other: AbstractVector2f, k: Float): AbstractVector2f {
+		return vec2f(Mathf.lerp(x, other.x, k), Mathf.lerp(y, other.y, k))
+	}
+
 	override fun magnitude(length: Number): AbstractVector2f {
-		if (lengthSquared() < Mathf.EPS)
+		if(lengthSquared() < Mathf.EPS)
 			return this
 		return normalize(length)
 	}

@@ -1,6 +1,7 @@
 package com.greentree.commons.math.vector
 
 import com.greentree.commons.math.Mathf
+import com.greentree.commons.math.Mathf.Companion.lerp
 import org.joml.Matrix3f
 import org.joml.Matrix4f
 import org.joml.Vector4f
@@ -9,6 +10,10 @@ interface AbstractVector3f : AbstractFloatVector, AbstractVector3<Float> {
 
 	override fun toMutable(): AbstractMutableVector3f {
 		return Vector3f(x, y, z)
+	}
+
+	fun lerp(other: AbstractVector3f, k: Float): AbstractVector3f {
+		return vec3f(lerp(x, other.x, k), lerp(y, other.y, k), lerp(z, other.z, k))
 	}
 
 	fun xy(): AbstractVector2f {
@@ -46,7 +51,7 @@ interface AbstractVector3f : AbstractFloatVector, AbstractVector3<Float> {
 		var xAxis: AbstractVector3f
 		var yAxis: AbstractVector3f = vec3f(a, b, c).normalize()
 		xAxis = vec3f(b, -a, 0f)
-		if (xAxis.lengthSquared() < Mathf.EPS)
+		if(xAxis.lengthSquared() < Mathf.EPS)
 			xAxis = vec3f(0f, c, -b)
 		yAxis = yAxis.cross(xAxis)
 		val x = dot(xAxis)
@@ -56,7 +61,7 @@ interface AbstractVector3f : AbstractFloatVector, AbstractVector3<Float> {
 	}
 
 	override fun magnitude(length: Number): AbstractVector3f {
-		if (lengthSquared() < Mathf.EPS)
+		if(lengthSquared() < Mathf.EPS)
 			return this
 		return normalize(length)
 	}

@@ -4,38 +4,40 @@ import com.greentree.commons.math.vector.AbstractVector2f;
 
 public interface IMovableShape2D extends IShape2D {
 
-	default void add(AbstractVector2f v) {
-		add(v.x(), v.y());
-	}
-	void add(float x, float y);
+    default void add(AbstractVector2f v) {
+        add(v.x(), v.y());
+    }
 
-	default void moveTo(final AbstractVector2f p) {
-		this.moveTo(p.x(), p.y());
-	}
+    void add(float x, float y);
 
-	default void moveTo(final float x, final float y) {
-		final AbstractVector2f p = getCenter();
-		add(x - p.x(), y - p.y());
-	}
+    default void moveTo(final AbstractVector2f p) {
+        this.moveTo(p.x(), p.y());
+    }
 
-	void rotate(AbstractVector2f point, double angle);
-	default void rotate(double angle) {
-		rotate(getCenter(), angle);
-	}
+    default void moveTo(final float x, final float y) {
+        final AbstractVector2f p = getCenter();
+        add(x - p.x(), y - p.y());
+    }
 
-	default void scale(AbstractVector2f v) {
-		scale(v.x(), v.y());
-	}
+    default void rotate(double angle) {
+        rotate(getCenter(), angle);
+    }
 
-	default void scale(float xy) {
-		scale(xy, xy);
-	}
+    void rotate(AbstractVector2f point, double angle);
 
-	void scale(float x, float y);
+    default void scale(AbstractVector2f v) {
+        scale(v.x(), v.y());
+    }
 
-	default void setSize(final float width, final float height) {
-		final AABB aabb = new AABB(this);
-		scale(width / aabb.getWidth(), height / aabb.getHeight());
-	}
+    void scale(float x, float y);
+
+    default void scale(float xy) {
+        scale(xy, xy);
+    }
+
+    default void setSize(final float width, final float height) {
+        final AABB aabb = new AABB(this);
+        scale(width / aabb.getWidth(), height / aabb.getHeight());
+    }
 
 }
