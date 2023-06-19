@@ -5,8 +5,6 @@ import java.io.Serializable
 
 interface AbstractVector<T> : Serializable, Iterable<T> {
 
-	fun isNormal() = lengthSquared() == 1f
-
 	fun toMutable(): AbstractMutableVector<T>
 
 	operator fun component1(): T {
