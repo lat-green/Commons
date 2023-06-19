@@ -2,8 +2,8 @@ package com.greentree.commons.math.vector
 
 import com.greentree.commons.math.Mathf
 import com.greentree.commons.math.Mathf.Companion.lerp
-import org.joml.Matrix3f
-import org.joml.Matrix4f
+import org.joml.Matrix3fc
+import org.joml.Matrix4fc
 import org.joml.Vector4f
 
 interface AbstractVector3f : AbstractFloatVector, AbstractVector3<Float> {
@@ -32,11 +32,11 @@ interface AbstractVector3f : AbstractFloatVector, AbstractVector3<Float> {
 		return result
 	}
 
-	operator fun times(mat: Matrix3f): AbstractVector3f {
+	operator fun times(mat: Matrix3fc): AbstractVector3f {
 		return mat.transform(toJoml())!!.toMath()
 	}
 
-	operator fun times(mat: Matrix4f): AbstractVector3f {
+	operator fun times(mat: Matrix4fc): AbstractVector3f {
 		return mat.transform(Vector4f(x, y, z, 1f)).vec3()
 	}
 
@@ -150,9 +150,13 @@ interface AbstractVector3f : AbstractFloatVector, AbstractVector3<Float> {
 	}
 }
 
-fun vec3f(other: AbstractVector<out Float>): AbstractVector3f {
+private fun vec3f(other: AbstractVector<out Float>): AbstractVector3f {
 	require(other.size == 3) { "the size of the vectors are different $other.size != 3" }
 	return vec3f(other[0], other[1], other[2])
+}
+
+fun vec3f(xy: AbstractVector2f, z: Float): AbstractVector3f {
+	return FinalVector3f(xy.x, xy.y, z)
 }
 
 fun vec3f(x: Float, y: Float, z: Float): AbstractVector3f {

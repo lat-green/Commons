@@ -56,7 +56,7 @@ public final class Circle2D extends Shape2D {
 
     @Override
     public boolean isInside(AbstractVector2f p) {
-        float d = p.distanceSqr(getCenter());
+        float d = p.distanceSquared(getCenter());
         float r = getRadius();
         return d <= r * r;
     }
@@ -65,7 +65,7 @@ public final class Circle2D extends Shape2D {
     public AABB getAABB() {
         float r = getRadius(), r2 = 2 * r;
         final var c = getCenter();
-        return new AABB(c.x() - r, c.y() - r, r2, r2);
+        return new AABB(c.x() - r, c.x() + r, c.y() - r, c.y() + r);
     }
 
     public static final class CircleTransform2D implements Transform2D {
@@ -79,11 +79,6 @@ public final class Circle2D extends Shape2D {
         }
 
         @Override
-        public AbstractVector2f getPosition() {
-            return position;
-        }
-
-        @Override
         public float getRotation() {
             return 0;
         }
@@ -91,6 +86,11 @@ public final class Circle2D extends Shape2D {
         @Override
         public AbstractVector2f getScale() {
             return new Vector2f(scale, scale);
+        }
+
+        @Override
+        public AbstractVector2f getPosition() {
+            return position;
         }
 
         @Override

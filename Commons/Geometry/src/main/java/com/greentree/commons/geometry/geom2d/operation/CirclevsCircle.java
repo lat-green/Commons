@@ -26,9 +26,9 @@ public class CirclevsCircle extends Shape2DBinaryOperation<Circle2D, Circle2D> {
     }
 
     @Override
-    public boolean isIntersect(final Circle2D a, final Circle2D b) {
+    public boolean isIntersect(Circle2D a, Circle2D b) {
         float r = a.getRadius() + b.getRadius();
-        return b.getCenter().distanceSqr(a.getCenter()) <= r * r;
+        return b.getCenter().distanceSquared(a.getCenter()) <= r * r;
     }
 
 }

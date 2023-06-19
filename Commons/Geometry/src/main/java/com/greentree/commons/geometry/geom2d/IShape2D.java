@@ -2,7 +2,7 @@ package com.greentree.commons.geometry.geom2d;
 
 import com.greentree.commons.geometry.geom2d.shape.Triangle2D;
 import com.greentree.commons.geometry.geom2d.util.VectorGeometryUtil;
-import com.greentree.commons.geometry.math.MathLine1D;
+import com.greentree.commons.math.MathLine1D;
 import com.greentree.commons.math.Mathf;
 import com.greentree.commons.math.vector.AbstractVector2f;
 import com.greentree.commons.math.vector.Vector2f;
@@ -13,23 +13,23 @@ import java.util.Collection;
 public interface IShape2D {
 
     default ILine2D minLine(AbstractVector2f point) {
-        return Mathf.minElement(l -> l.distanseSqr(point), getLinesLoop());
+        return Mathf.minElement(l -> l.distanceSquared(point), getLinesLoop());
     }
 
-    default float distanse(AbstractVector2f p) {
-        return Mathf.sqrt(distanseSqr(p));
+    default float distance(AbstractVector2f p) {
+        return Mathf.sqrt(distanceSquared(p));
     }
 
-    default float distanseSqr(final AbstractVector2f p) {
-        return p.distanceSqr(minPoint(p));
+    default float distanceSquared(AbstractVector2f p) {
+        return p.distanceSquared(nearestPoint(p));
     }
 
-    default AbstractVector2f minPoint(final AbstractVector2f point) {
+    default AbstractVector2f nearestPoint(AbstractVector2f point) {
         AbstractVector2f res = null, mp;
         float dis, dis0 = Float.MAX_VALUE;
         for (final var line : getLinesLoop()) {
-            mp = line.minPoint(point);
-            dis = mp.distanceSqr(point);
+            mp = line.nearestPoint(point);
+            dis = mp.distanceSquared(point);
             if (dis < dis0) {
                 dis0 = dis;
                 res = mp;
@@ -87,7 +87,7 @@ public interface IShape2D {
 
     default float getRadius() {
         final var c = getCenter();
-        return Mathf.max(p -> c.distanceSqr(p), getPoints());
+        return Mathf.max(p -> c.distanceSquared(p), getPoints());
     }
 
     default AbstractVector2f getCenter() {
@@ -99,7 +99,7 @@ public interface IShape2D {
     }
 
     default boolean isInside(AbstractVector2f p) {
-        if (!getAABB().isIntersect(p.x(), p.y()))
+        if (!getAABB().isInside(p.x(), p.y()))
             return false;
         var points = VectorGeometryUtil.cycle(getPoints(), 1);
         for (int i = 0; i < points.length - 1; i++)
@@ -109,7 +109,7 @@ public interface IShape2D {
     }
 
     default AABB getAABB() {
-        return new AABB(this);
+        return new AABB(getPoints());
     }
 
     default boolean isIntersect(IShape2D other) {

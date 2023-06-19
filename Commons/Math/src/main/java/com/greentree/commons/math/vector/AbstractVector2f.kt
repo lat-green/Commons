@@ -1,7 +1,8 @@
 package com.greentree.commons.math.vector
 
 import com.greentree.commons.math.Mathf
-import org.joml.Matrix2f
+import org.joml.Matrix2fc
+import org.joml.Matrix3fc
 
 interface AbstractVector2f : AbstractFloatVector, AbstractVector2<Float> {
 
@@ -95,8 +96,12 @@ interface AbstractVector2f : AbstractFloatVector, AbstractVector2<Float> {
 		return vec2f(-x, -y)
 	}
 
-	operator fun times(mat: Matrix2f): AbstractVector2f {
+	operator fun times(mat: Matrix2fc): AbstractVector2f {
 		return mat.transform(toJoml())!!.toMath()
+	}
+
+	operator fun times(mat: Matrix3fc): AbstractVector2f {
+		return (vec3f(this, 1f) * mat).xy()
 	}
 
 	fun toJoml(): org.joml.Vector2f {

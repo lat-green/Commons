@@ -36,7 +36,7 @@ public interface IMovableShape2D extends IShape2D {
     }
 
     default void setSize(final float width, final float height) {
-        final AABB aabb = new AABB(this);
+        final var aabb = new AABB(getPoints());
         scale(width / aabb.getWidth(), height / aabb.getHeight());
     }
 

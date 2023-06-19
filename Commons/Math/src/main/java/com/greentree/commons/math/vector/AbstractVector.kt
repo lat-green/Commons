@@ -29,10 +29,10 @@ interface AbstractVector<T> : Serializable, Iterable<T> {
 	fun dot(other: AbstractVector<out T>): T
 
 	fun distance(v: AbstractVector<out T>): Float {
-		return Mathf.sqrt(distanceSqr(v))
+		return Mathf.sqrt(distanceSquared(v))
 	}
 
-	fun distanceSqr(v: AbstractVector<out T>): Float {
+	fun distanceSquared(v: AbstractVector<out T>): Float {
 		checkSize(this, v)
 		return (this - v).lengthSquared()
 	}
