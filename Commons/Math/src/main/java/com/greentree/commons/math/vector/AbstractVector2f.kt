@@ -1,28 +1,9 @@
 package com.greentree.commons.math.vector
 
-import com.greentree.commons.math.MathLine2D
 import com.greentree.commons.math.Mathf
-import com.greentree.commons.math.Mathf.Companion.abs
 import org.joml.Matrix2f
-import org.joml.Matrix2fc
-import org.joml.Matrix3f
-import org.joml.Matrix3fc
-import org.joml.Vector3f
 
 interface AbstractVector2f : AbstractFloatVector, AbstractVector2<Float> {
-
-	fun getProjectionPoint(normal: AbstractVector2f): Float {
-		val m = MathLine2D(normal).minPoint(this)
-		return cross(normal).normalize() * m.length()
-	}
-
-	override fun projection(normal: AbstractFloatVector): AbstractVector2f {
-		return projection(vec2f(normal))
-	}
-
-	fun projection(normal: AbstractVector2f): AbstractVector2f {
-		return normal.normalize(dot(normal))
-	}
 
 	fun cross(vec: AbstractVector2f): Float {
 		return x * vec.y - y * vec.x
@@ -114,12 +95,8 @@ interface AbstractVector2f : AbstractFloatVector, AbstractVector2<Float> {
 		return vec2f(-x, -y)
 	}
 
-	operator fun times(mat: Matrix2fc): AbstractVector2f {
-		return mat.transform(toJoml()).toMath()
-	}
-
-	operator fun times(mat: Matrix3fc): AbstractVector2f {
-		return mat.transform(Vector3f(x, y, 1f)).toMath().xy()
+	operator fun times(mat: Matrix2f): AbstractVector2f {
+		return mat.transform(toJoml())!!.toMath()
 	}
 
 	fun toJoml(): org.joml.Vector2f {
@@ -135,18 +112,6 @@ interface AbstractVector2f : AbstractFloatVector, AbstractVector2<Float> {
 		val X: AbstractVector2f = FinalVector2f(1f, 0f)
 		val Y: AbstractVector2f = FinalVector2f(0f, 1f)
 	}
-}
-
-private fun Float.normalize(length: Float = 1f): Float {
-	return length * this / abs(this)
-}
-
-operator fun AbstractVector2f.div(other: Matrix2fc): AbstractVector2f {
-	return times(other.invert(Matrix2f()))
-}
-
-operator fun AbstractVector2f.div(other: Matrix3fc): AbstractVector2f {
-	return times(other.invert(Matrix3f()))
 }
 
 fun vec2f(other: AbstractVector<out Float>): AbstractVector2f {
