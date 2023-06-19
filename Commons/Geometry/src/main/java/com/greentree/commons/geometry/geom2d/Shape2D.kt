@@ -23,13 +23,9 @@ interface Shape2D {
 
 	fun isInside(point: AbstractVector2f): Boolean
 
-	fun moveTo(point: AbstractVector2f): Shape2D {
-		return MoveToShape2D(this, point)
-	}
+	fun moveTo(point: AbstractVector2f): Shape2D
 
-	fun scale(scale: AbstractVector2f): Shape2D {
-		return ScaleShape2D(this, scale)
-	}
+	fun scale(scale: AbstractVector2f): Shape2D
 
 	fun moveTo(x: Float, y: Float): Shape2D {
 		return moveTo(vec2f(x, y))

@@ -13,11 +13,11 @@ public class InsideTest {
 
     @Test
     public void Circle() {
-        final var shape1 = Circle.create(0, 0, 1);
-        final var shape2 = Circle.create(0, 1, 1);
-        final var shape3 = Circle.create(3, 0, 1);
-        final var shape4 = Circle.create(0, 3, 1);
-        final var shape5 = Circle.create(2, 2, 1.5f);
+        final var shape1 = new Circle(0, 0, 1);
+        final var shape2 = new Circle(0, 1, 1);
+        final var shape3 = new Circle(3, 0, 1);
+        final var shape4 = new Circle(0, 3, 1);
+        final var shape5 = new Circle(2, 2, 1.5f);
         final var p = new Vector2f(0, 0);
         assertTrue(shape1.isInside(p));
         assertTrue(shape2.isInside(p));

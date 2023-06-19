@@ -5,7 +5,11 @@ import com.greentree.commons.math.Mathf
 import com.greentree.commons.math.vector.AbstractVector2f
 import com.greentree.commons.math.vector.vec2f
 
-object Square : Shape2D {
+data class Rectangle(
+	override val center: AbstractVector2f,
+	override val width: Float,
+	override val height: Float,
+) : Shape2D {
 
 	private val NORMALS: Iterable<AbstractVector2f> = listOf(
 		vec2f(1f, 0f), vec2f(-1f, 0f), vec2f(0f, 1f),
@@ -15,9 +19,8 @@ object Square : Shape2D {
 		vec2f(1f, 1f), vec2f(-1f, 1f), vec2f(1f, -1f),
 		vec2f(-1f, -1f)
 	)
-	override val center = vec2f(0f, 0f)
 	override val radius: Float
-		get() = TODO("Not yet implemented")
+		get() = vector_length(width / 2, height / 2)
 
 	override fun nearestPoint(point: AbstractVector2f): AbstractVector2f {
 		var tx = (point.x() + 1) / 2
@@ -43,6 +46,14 @@ object Square : Shape2D {
 		return true
 	}
 
+	override fun moveTo(point: AbstractVector2f): Shape2D {
+		TODO("Not yet implemented")
+	}
+
+	override fun scale(scale: AbstractVector2f): Shape2D {
+		TODO("Not yet implemented")
+	}
+
 	override fun projection(normal: AbstractVector2f): MathLine1D {
 		var min = Float.MAX_VALUE
 		var max = Float.MIN_VALUE
@@ -54,5 +65,7 @@ object Square : Shape2D {
 		return MathLine1D(min, max)
 	}
 }
+
+private fun vector_length(x: Float, y: Float) = Mathf.sqrt(x * x + y * y)
 
 private fun AbstractVector2f.isZero() = x == 0f && y == 0f

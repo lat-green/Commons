@@ -4,10 +4,16 @@ import com.greentree.commons.math.MathLine1D
 import com.greentree.commons.math.vector.AbstractVector2f
 import com.greentree.commons.math.vector.vec2f
 
-object Circle : Shape2D {
+data class Circle(
+	override val center: AbstractVector2f,
+	override val radius: Float = 1f,
+) : Shape2D {
 
-	override val center = vec2f(0f, 0f)
-	override val radius = 1f
+	constructor(
+		x: Float = 0f,
+		y: Float = 0f,
+		radius: Float = 1f,
+	) : this(vec2f(x, y), radius)
 
 	override fun nearestPoint(point: AbstractVector2f): AbstractVector2f {
 		if(point.isZero())
@@ -21,18 +27,16 @@ object Circle : Shape2D {
 
 	override fun isInside(point: AbstractVector2f) = point.lengthSquared() <= 1f
 
+	override fun moveTo(point: AbstractVector2f): Shape2D {
+		return Circle(point, radius)
+	}
+
+	override fun scale(scale: AbstractVector2f): Shape2D {
+		return Oval(center, scale.x * radius, scale.y * radius)
+	}
+
 	override fun projection(normal: AbstractVector2f): MathLine1D {
-		return MathLine1D(-1f, 1f)
-	}
-
-	@JvmStatic
-	fun create(x: Float, y: Float, radius: Float): Shape2D {
-		return Circle.moveTo(x, y).scale(radius)
-	}
-
-	@JvmStatic
-	fun create(center: AbstractVector2f, radius: Float): Shape2D {
-		return Circle.moveTo(center).scale(radius)
+		return MathLine1D(-radius, radius)
 	}
 
 	override fun toString() = "Circle"

@@ -14,7 +14,7 @@ import static com.greentree.commons.geometry.TestUtil.assertVecEquals;
 
 public class BoxTest {
 
-    private static final Square SQUARE = Square.INSTANCE;
+    private static final Rectangle SQUARE = new Rectangle(vec(0, 0), 2, 2);
 
     static Stream<Pair<AbstractVector2f, AbstractVector2f>> min_point() {
         final var s = new ArrayList<Pair<AbstractVector2f, AbstractVector2f>>();
