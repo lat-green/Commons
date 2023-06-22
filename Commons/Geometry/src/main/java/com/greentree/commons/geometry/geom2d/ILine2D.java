@@ -70,10 +70,10 @@ public interface ILine2D extends IShape2D {
     }
 
     default float length() {
-        return Mathf.sqrt(lengthSqr());
+        return Mathf.sqrt(lengthSquared());
     }
 
-    default float lengthSqr() {
+    default float lengthSquared() {
         return p1().distanceSquared(p2());
     }
 
