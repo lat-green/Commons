@@ -11,7 +11,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Shape2DBinaryOperation<A extends IShape2D, B extends IShape2D> {
+public class Shape2DBinaryOperation<A extends IShape2D, B extends IShape2D> {
+
+    public static final Shape2DBinaryOperation DEFAULT = new Shape2DBinaryOperation();
 
     public CollisionEvent2D.Builder getCollisionEvent(A a, B b) {
         var normal = Shape2DUtil.getCollisionNormalOnNormalProjection(a, b);
