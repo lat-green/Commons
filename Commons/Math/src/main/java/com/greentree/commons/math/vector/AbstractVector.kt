@@ -23,6 +23,8 @@ interface AbstractVector<T> : Serializable, Iterable<T> {
 		return get(3)
 	}
 
+	fun isNormal() = lengthSquared() == 1f
+
 	fun magnitude(length: Number = 1): AbstractVector<T>
 	fun normalize(length: Number = 1): AbstractVector<T>
 
