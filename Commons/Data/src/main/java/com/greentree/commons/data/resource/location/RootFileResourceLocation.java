@@ -47,6 +47,11 @@ public class RootFileResourceLocation implements NamedResourceLocation, IOResour
         return new FileResource(f);
     }
 
+    @Override
+    public boolean isExist(String name) {
+        return new File(root, name).exists();
+    }
+
     private void checkFile(File file) {
         if (!file.isFile())
             throw new RuntimeException(file + " is not file");
