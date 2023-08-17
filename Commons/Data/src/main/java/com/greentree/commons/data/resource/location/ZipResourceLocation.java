@@ -132,6 +132,11 @@ public class ZipResourceLocation implements NamedResourceLocation, ResourceLocat
             throw new UnsupportedOperationException();
         }
 
+        @Override
+        public boolean exists() {
+            return true;
+        }
+
     }
 
 }

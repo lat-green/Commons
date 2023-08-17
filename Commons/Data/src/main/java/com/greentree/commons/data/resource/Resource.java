@@ -38,4 +38,6 @@ public interface Resource extends Serializable {
 
     URL url() throws MalformedURLException;
 
+    boolean exists();
+
 }

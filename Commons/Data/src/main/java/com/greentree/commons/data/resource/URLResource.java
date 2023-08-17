@@ -93,4 +93,9 @@ public class URLResource implements Resource {
         return url;
     }
 
+    @Override
+    public boolean exists() {
+        return true;
+    }
+
 }
