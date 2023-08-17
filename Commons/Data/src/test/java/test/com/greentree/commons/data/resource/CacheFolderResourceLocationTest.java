@@ -30,7 +30,7 @@ public class CacheFolderResourceLocationTest {
             aout.write(HELLO.getBytes());
         }
         final var out = new RootFileResourceLocation(out_dir);
-        out.root.deleteOnExit();
+        out.getRoot().deleteOnExit();
         final var cache = new CacheResourceLocation(in, out);
         final var res1 = cache.getResource("a.txt");
         try (final var aout = new FileOutputStream(a)) {

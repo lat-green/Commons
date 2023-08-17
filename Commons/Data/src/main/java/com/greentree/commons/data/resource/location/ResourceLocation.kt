@@ -9,13 +9,13 @@ interface ResourceLocation : Serializable {
 		throw UnsupportedOperationException()
 	}
 
-	fun add(location: ResourceLocation?): ResourceLocation? {
-		return MultiResourceLocation.EMPTY.builder().add(location).add(this).build()
-	}
-
 	fun getResource(name: String): Resource
 
 	fun isExist(name: String): Boolean {
 		return getResource(name).exists()
 	}
 }
+
+operator fun ResourceLocation.get(name: String) = getResource(name)
+operator fun ResourceLocation.plus(location: ResourceLocation): ResourceLocation =
+	MultiResourceLocation.EMPTY.builder().add(location).add(this).build()

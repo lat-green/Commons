@@ -8,19 +8,16 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Path
 
-class RootFileResourceLocation(root: File) : NamedResourceLocation, IOResourceLocation {
-
-	val root: File
+class RootFileResourceLocation(val root: File) : NamedResourceLocation, IOResourceLocation {
 
 	constructor(path: Path) : this(path.toFile())
 
 	init {
 		require(root.exists()) { "root must by exists [root=$root]" }
 		require(root.isDirectory) { "root must by directory [root=$root]" }
-		this.root = root
 	}
 
-	constructor(file: String?) : this(File(file))
+	constructor(file: String) : this(File(file))
 
 	override fun clear() {
 		FileUtil.clearDir(root)
@@ -72,9 +69,8 @@ class RootFileResourceLocation(root: File) : NamedResourceLocation, IOResourceLo
 		return FileResource(f)
 	}
 
-	override fun getAllNames(): Iterable<String> {
-		return IteratorUtil.iterable(*root.list())
-	}
+	override val names: Iterable<String>
+		get() = IteratorUtil.iterable(*root.list())
 
 	override fun toString(): String {
 		return "FileSystemLocation[$root]"
