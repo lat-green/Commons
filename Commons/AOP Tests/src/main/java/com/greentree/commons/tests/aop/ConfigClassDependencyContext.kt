@@ -19,7 +19,7 @@ class ConfigClassDependencyContext(configuration: Class<*>) : DependencyContext 
 	private inner class ConfigMethodDependencyContext(val method: Method) : DependencyContext {
 
 		override fun <T> get(type: Class<T>): Collection<T> {
-			if(!isExtends(method.returnType, type))
+			if(!isExtends(type, method.returnType))
 				return listOf()
 			var arguments = this@ConfigClassDependencyContext.arguments(method)
 			return arguments.map { method.invoke(configurationInstance, *it.get()) }.toList() as Collection<T>
