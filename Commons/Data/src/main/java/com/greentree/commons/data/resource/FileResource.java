@@ -52,6 +52,11 @@ public final class FileResource implements IOResource {
         return file.toURI().toURL();
     }
 
+    @Override
+    public boolean exists() {
+        return file.exists();
+    }
+
     public File getFile() {
         return file;
     }
@@ -79,11 +84,6 @@ public final class FileResource implements IOResource {
     @Override
     public boolean delete() {
         return file.delete();
-    }
-
-    @Override
-    public boolean exists() {
-        return file.exists();
     }
 
     @Override
