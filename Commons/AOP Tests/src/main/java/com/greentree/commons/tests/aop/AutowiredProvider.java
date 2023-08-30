@@ -7,4 +7,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutowiredProvider {
 
+    String[] tags() default {};
+
 }

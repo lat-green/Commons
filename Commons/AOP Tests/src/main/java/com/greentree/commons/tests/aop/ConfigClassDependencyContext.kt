@@ -20,8 +20,11 @@ class ConfigClassDependencyContext(configuration: Class<*>) : DependencyContext 
 
 		var running = false
 
-		override fun <T> get(type: Class<T>): Collection<T> {
+		override fun <T> get(type: Class<T>, tags: Collection<String>): Collection<T> {
 			if(running || !isExtends(type, method.returnType))
+				return listOf()
+			val methodTags = method.getAnnotation(AutowiredProvider::class.java).tags.toList()
+			if(!methodTags.containsAll(tags))
 				return listOf()
 			running = true
 			try {
@@ -33,10 +36,10 @@ class ConfigClassDependencyContext(configuration: Class<*>) : DependencyContext 
 		}
 	}
 
-	override fun <T> get(type: Class<T>): Collection<T> {
+	override fun <T> get(type: Class<T>, tags: Collection<String>): Collection<T> {
 		val result = mutableSetOf<T>()
 		for(ctx in contexts) {
-			result.addAll(ctx[type])
+			result.addAll(ctx[type, tags])
 		}
 		return result
 	}

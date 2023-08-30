@@ -13,6 +13,9 @@ class AutowiredArgumentsProvider : ArgumentsProvider {
 			ConfigClassDependencyContext(
 				p0.testClass.getOrNull()!!.getAnnotation(AutowiredConfig::class.java).value.java
 			)
-		return context.arguments(p0.testMethod.getOrNull()!!)
+		return context.arguments(
+			p0.testMethod.getOrNull()!!,
+			p0.testMethod.getOrNull()!!.getAnnotation(AutowiredTest::class.java).tags.toList()
+		)
 	}
 }
