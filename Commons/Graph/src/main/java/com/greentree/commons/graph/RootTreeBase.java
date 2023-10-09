@@ -22,7 +22,7 @@ public final class RootTreeBase<V> implements MutableRootTree<V> {
 	@Override
 	public void add(V vertex, V parent) {
 		if(!infos.containsKey(parent))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("parent: " + parent + " not added");
 		
 		final var p_info = infos.get(parent);
 		
@@ -83,7 +83,7 @@ public final class RootTreeBase<V> implements MutableRootTree<V> {
 	public void remove(V vertex) {
 		final var info = infos.get(vertex);
 		if(info.isRoot())
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("remove root");
 		for(var c : info)
 			remove(c.value);
 		info.parent.remove(info);
