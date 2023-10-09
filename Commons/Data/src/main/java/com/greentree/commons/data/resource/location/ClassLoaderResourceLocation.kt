@@ -1,5 +1,6 @@
 package com.greentree.commons.data.resource.location
 
+import com.greentree.commons.data.resource.Resource
 import com.greentree.commons.data.resource.URLResource
 import java.net.URL
 import java.util.*
@@ -17,12 +18,12 @@ class ClassLoaderResourceLocation @JvmOverloads constructor(private val cls: Cla
 	val loader: ClassLoader
 		get() = cls.classLoader
 
-	override fun getResource(name: String): URLResource {
-		val url = getURL(name)
+	override fun getResource(name: String): Resource {
+		val url = getURL(name) ?: return Resource.Null
 		return URLResource(url)
 	}
 
-	fun getURL(name: String): URL {
+	private fun getURL(name: String): URL? {
 		return loader.getResource(name)
 	}
 
