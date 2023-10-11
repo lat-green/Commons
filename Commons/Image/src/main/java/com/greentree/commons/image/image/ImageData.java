@@ -8,6 +8,8 @@ import java.nio.ByteBuffer;
 
 public interface ImageData extends Serializable {
 
+    ImageData BLACK = BlackImageData.INSTANCE;
+
     Color getColor(int x, int y);
 
     default ImageData subImage(int x, int y, int w, int h) {
