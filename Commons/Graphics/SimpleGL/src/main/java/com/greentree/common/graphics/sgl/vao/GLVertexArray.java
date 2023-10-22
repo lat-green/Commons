@@ -31,13 +31,13 @@ public class GLVertexArray extends GLObject {
 		super(glGenVertexArrays());
 		this.attributes = attributeGroups;
 		bind();
-		int location = 0;
 		int size = 0;
 		for(var group : attributeGroups) {
-			group.pass(location++);
+			group.pass();
 			if(group.divisor == 0)
-			size = group.vbo.size() / group.stride;
+				size = group.vbo.size() / group.stride;
 		}
+		ArrayBuffer.BINDER.unbind();
 		this.size = size;
 		BINDER.unbind();
 	}
@@ -73,17 +73,20 @@ public class GLVertexArray extends GLObject {
 			this.offset = offset;
 			this.divisor = divisor;
 		}
-		
+
 		public AttributeGroup(int location, ArrayBuffer<?> vbo, int size) {
 			this(location, vbo, size, vbo.getDataType().size * size, 0, 0);
 		}
 
-		void pass(int location) {
+		public AttributeGroup(int location, ArrayBuffer<?> vbo, int size, int offset) {
+			this(location, vbo, size, vbo.getDataType().size * size, offset, 0);
+		}
+
+		void pass() {
 			vbo.bind();
 			glEnableVertexAttribArray(location);
 			glVertexAttribPointer(location, size, vbo.getDataType().glEnum, false, stride, offset);
 			glVertexAttribDivisor(location, divisor);
-			vbo.unbind();
 		}
 
 	}
