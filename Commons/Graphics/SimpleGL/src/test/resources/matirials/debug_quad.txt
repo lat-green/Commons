@@ -1,0 +1,2 @@
+shader.vertex=shaders\debug_quad.vtx
+shader.fragment=shaders\debug_quad.frag

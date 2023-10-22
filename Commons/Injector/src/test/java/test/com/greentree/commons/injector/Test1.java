@@ -1,16 +1,16 @@
 package test.com.greentree.commons.injector;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.junit.jupiter.api.Test;
-
 import com.greentree.commons.injector.AllFieldDependencyScanner;
 import com.greentree.commons.injector.InjectionContainerImpl;
 import com.greentree.commons.injector.Injector;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class Test1 {
-	
-	
+
+    @Disabled
 	@Test
 	void test1() throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {

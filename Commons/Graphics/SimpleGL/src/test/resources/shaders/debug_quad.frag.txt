@@ -1,0 +1,32 @@
+#version 330 core
+out vec4 FragColor;
+
+uniform sampler2D tex1;
+uniform sampler2D tex2;
+uniform sampler2D tex3;
+uniform sampler2D tex4;
+
+in vec2 pos;
+
+void main()
+{
+	if(pos.x > 0) {
+		if(pos.y > 0) {
+			FragColor = texture(tex1, pos);
+		}
+		else
+		{
+			FragColor = texture(tex2, pos);
+		}
+	}
+	else
+	{
+		if(pos.y > 0) {
+			FragColor = texture(tex3, pos);
+		}
+		else
+		{
+			FragColor = texture(tex4, pos);
+		}
+	}
+}

@@ -12,13 +12,13 @@ import java.util.stream.Stream
 
 class BoxTest {
 
-	@MethodSource
+	@MethodSource("min_point")
 	@ParameterizedTest
 	fun nearestPoint(p: Pair<AbstractVector2f, AbstractVector2f>) {
 		TestUtil.assertVecEquals(b.nearestPoint(p.first), p.second)
 	}
 
-	@MethodSource
+	@MethodSource("model_min_point")
 	@ParameterizedTest
 	fun model_nearestPoint(p: Pair<Pair<Matrix3f, AbstractVector2f>, AbstractVector2f>) {
 		TestUtil.assertVecEquals(b.nearestPoint(p.first.first, p.first.second), p.second)
@@ -27,6 +27,7 @@ class BoxTest {
 	companion object {
 
 		private val b = Box
+		@JvmStatic
 		fun min_point(): Stream<Pair<AbstractVector2f, AbstractVector2f>> {
 			val s = ArrayList<Pair<AbstractVector2f, AbstractVector2f>>()
 			s.add(Pair(vec(0.0, 1.0), vec(0.0, 1.0)))
@@ -90,6 +91,7 @@ class BoxTest {
 			return Vector2f(x.toFloat(), y.toFloat())
 		}
 
+		@JvmStatic
 		fun model_min_point(): Stream<Pair<Pair<Matrix3f, AbstractVector2f>, AbstractVector2f>> {
 			val res = ArrayList<Pair<Pair<Matrix3f, AbstractVector2f>, AbstractVector2f>>()
 			res.add(

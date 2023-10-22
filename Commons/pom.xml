@@ -4,7 +4,7 @@
 
     <groupId>com.greentree.commons</groupId>
     <artifactId>commons</artifactId>
-    <version>0.3.4</version>
+    <version>0.3.5-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -41,13 +41,13 @@
         <module>Coroutine</module>
         <module>Data</module>
         <module>Geometry</module>
+        <module>Graphics</module>
         <module>Graph</module>
-        <module>Image</module>
         <module>Injector</module>
         <module>Logger</module>
         <module>Math</module>
         <module>Property</module>
-        <module>Refletion</module>
+        <module>Reflection</module>
         <module>Tests</module>
         <module>Util</module>
         <module>Web</module>
@@ -111,8 +111,8 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.greentree.commons</groupId>
-                <artifactId>image</artifactId>
+                <groupId>com.greentree.commons.graphics</groupId>
+                <artifactId>graphics</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -255,6 +255,9 @@
                 <configuration>
                     <source>${java.version.source}</source>
                     <target>${java.version.target}</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
 

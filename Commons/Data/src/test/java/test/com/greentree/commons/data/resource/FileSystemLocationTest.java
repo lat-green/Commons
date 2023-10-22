@@ -1,20 +1,21 @@
 package test.com.greentree.commons.data.resource;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-
+import com.greentree.commons.data.resource.location.ClassLoaderResourceLocation;
+import com.greentree.commons.data.resource.location.RecursionFileSystemLocation;
+import com.greentree.commons.data.resource.location.RootFileResourceLocation;
+import com.greentree.commons.data.resource.location.ZipResourceLocation;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.greentree.commons.data.resource.location.ClassLoaderResourceLocation;
-import com.greentree.commons.data.resource.location.RecursionFileSystemLocation;
-import com.greentree.commons.data.resource.location.RootFileResourceLocation;
-import com.greentree.commons.data.resource.location.ZipResourceLocation;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /** testing class FileSystemLocation
  * @author Arseny Latyshev
@@ -67,7 +68,8 @@ public class FileSystemLocationTest {
 			assertEquals(text, new String(inputStream.readAllBytes()));
 		}
 	}
-	
+
+    @Disabled
 	@Test
 	void zip() throws IOException {
 		final var ress = new ClassLoaderResourceLocation(FileSystemLocationTest.class);

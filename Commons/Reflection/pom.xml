@@ -5,15 +5,15 @@
     <parent>
         <groupId>com.greentree.commons</groupId>
         <artifactId>commons</artifactId>
-        <version>0.3.4</version>
+        <version>0.3.5-SNAPSHOT</version>
     </parent>
 
-    <artifactId>image</artifactId>
+    <artifactId>reflection</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.greentree.commons</groupId>
-            <artifactId>util</artifactId>
+            <artifactId>graph</artifactId>
         </dependency>
     </dependencies>
 

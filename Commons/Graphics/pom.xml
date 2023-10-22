@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.greentree.commons</groupId>
+        <artifactId>commons</artifactId>
+        <version>0.3.5-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.greentree.commons.graphics</groupId>
+    <artifactId>graphics</artifactId>
+
+    <packaging>pom</packaging>
+
+    <name>Graphics</name>
+
+    <modules>
+        <module>Image</module>
+        <module>SimpleGL</module>
+        <module>Smart</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.greentree.commons</groupId>
+                <artifactId>commons</artifactId>
+                <version>${project.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.greentree.commons.graphics</groupId>
+                <artifactId>image</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.greentree.commons.graphics</groupId>
+                <artifactId>sgl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.greentree.commons.graphics</groupId>
+                <artifactId>smart-graphics</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
