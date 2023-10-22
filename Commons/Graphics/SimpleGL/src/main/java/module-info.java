@@ -2,7 +2,7 @@
 open module commons.graphics.sgl {
 	
 	requires transitive commons.math;
-	requires transitive commons.image;
+	requires transitive commons.graphics.image;
 	requires transitive commons.action;
 	
 	requires transitive org.lwjgl;

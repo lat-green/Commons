@@ -1,5 +1,5 @@
 open module commons.graphics.smart {
-    requires transitive commons.image;
+    requires transitive commons.graphics.image;
     requires transitive commons.math;
     exports com.greentree.commons.graphics.smart;
     exports com.greentree.commons.graphics.smart.texture;

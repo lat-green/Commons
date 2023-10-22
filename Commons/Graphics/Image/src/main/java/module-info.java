@@ -1,4 +1,4 @@
-open module commons.image {
+open module commons.graphics.image {
     requires transitive commons.util;
     requires transitive java.desktop;
     exports com.greentree.commons.image.loader;
