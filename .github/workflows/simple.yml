@@ -1,0 +1,31 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Maven Package
+
+on:
+    push:
+        branches: [ "master" ]
+    pull_request:
+        branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    # Пример однолинейного простого скрипта shell
+    - name: Run a one-line script
+      run: echo Hello, world!
+
+    # Пример многолинейного скрипта shell
+    - name: Run a multi-line script
+      run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
