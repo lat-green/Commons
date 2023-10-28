@@ -16,6 +16,8 @@ class ZipResourceLocation(private val zip: Resource) : NamedResourceLocation, Re
 	override val names: Iterable<String>
 		get() = _names
 	private val _names: MutableCollection<String> = ArrayList()
+	override val lastModified: Long
+		get() = zip.lastModified()
 
 	init {
 		zip.open().use { `in` ->

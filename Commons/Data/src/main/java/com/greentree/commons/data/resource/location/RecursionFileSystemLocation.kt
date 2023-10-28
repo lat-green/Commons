@@ -17,6 +17,8 @@ class RecursionFileSystemLocation(private val root: File) : NamedResourceLocatio
 
 	override val names: Iterable<String>
 		get() = locations.names
+	override val lastModified
+		get() = locations.lastModified
 	val locations: NamedResourceLocation
 		get() {
 			if(locs != null) return locs!!

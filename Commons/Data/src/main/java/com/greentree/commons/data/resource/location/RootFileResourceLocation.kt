@@ -69,6 +69,8 @@ class RootFileResourceLocation(val root: File) : NamedResourceLocation, IOResour
 		return FileResource(f)
 	}
 
+	override val lastModified: Long
+		get() = root.lastModified()
 	override val names: Iterable<String>
 		get() = IteratorUtil.iterable(*root.list())
 

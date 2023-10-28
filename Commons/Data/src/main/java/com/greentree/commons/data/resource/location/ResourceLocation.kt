@@ -5,6 +5,8 @@ import java.io.Serializable
 
 interface ResourceLocation : Serializable {
 
+	val lastModified: Long
+
 	fun clear() {
 		throw UnsupportedOperationException()
 	}

@@ -47,6 +47,9 @@ class CacheResourceLocation(
 		return cacheLocation.deleteResource(name)
 	}
 
+	override val lastModified
+		get() = cacheLocation.lastModified
+
 	class CacheResource(private val source: Resource, private val cache: IOResource) : IOResource {
 
 		override val action: ResourceAction

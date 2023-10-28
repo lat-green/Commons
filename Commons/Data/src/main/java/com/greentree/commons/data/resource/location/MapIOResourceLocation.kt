@@ -5,6 +5,8 @@ import com.greentree.commons.data.resource.IOResource
 abstract class MapIOResourceLocation<R : IOResource> : IOResourceLocation {
 
 	private val resources: MutableMap<String, R> = HashMap()
+	override val lastModified: Long
+		get() = resources.values.maxOf { it.lastModified() }
 
 	constructor()
 	constructor(resources: Iterable<R>) {

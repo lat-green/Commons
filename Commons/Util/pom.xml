@@ -1,34 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
-	<parent>
-		<groupId>com.greentree.commons</groupId>
-		<artifactId>commons</artifactId>
-		<version>0.3.5-SNAPSHOT</version>
-	</parent>
-	
-	<artifactId>util</artifactId>
-	
-	<name>Util</name>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<properties>
-		<jmh.version>1.36</jmh.version>
-	</properties>
+    <parent>
+        <groupId>com.greentree.commons</groupId>
+        <artifactId>commons</artifactId>
+        <version>0.3.5-SNAPSHOT</version>
+    </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.openjdk.jmh</groupId>
-			<artifactId>jmh-core</artifactId>
-			<version>${jmh.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmh</groupId>
-			<artifactId>jmh-generator-annprocess</artifactId>
-			<version>${jmh.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	
+    <artifactId>util</artifactId>
+
+    <name>Util</name>
+
 </project>

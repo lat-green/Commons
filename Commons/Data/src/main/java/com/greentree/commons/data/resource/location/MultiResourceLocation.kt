@@ -23,6 +23,8 @@ class MultiResourceLocation private constructor(locations: Iterable<ResourceLoca
 			for(location in locations) if(location is NamedResourceLocation) names.add(location.names)
 			return IteratorUtil.union(names)
 		}
+	override val lastModified: Long
+		get() = locations.maxOf { it.lastModified }
 
 	override fun getResource(name: String): Resource {
 		return getResourceLiniar(name)!!

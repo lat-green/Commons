@@ -6,6 +6,9 @@ import java.net.URL
 
 class RootUrlResourceLocation(private val context: URL) : ResourceLocation {
 
+	override val lastModified: Long
+		get() = URLResource(context).lastModified()
+
 	override fun getResource(name: String) = URLResource(
 		try {
 			URL(context, name)
