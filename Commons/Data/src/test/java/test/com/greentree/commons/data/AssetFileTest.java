@@ -98,8 +98,6 @@ public class AssetFileTest {
 
     @Test
     void arrays() throws IOException {
-        System.out.println(AssetFileTest.class.getModule());
-        System.out.println(DataFile.class.getModule());
         for (var obj : new Object[][]{
                 {},
                 {"A", "B"},
