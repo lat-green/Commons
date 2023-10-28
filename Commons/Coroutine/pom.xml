@@ -1,25 +1,23 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  
-	<parent>
-		<groupId>com.greentree.commons</groupId>
-		<artifactId>commons</artifactId>
-		<version>0.3.5-SNAPSHOT</version>
-	</parent>
-  
-	<artifactId>coroutine</artifactId>
-	
-	<name>Coroutine</name>
-	
-	<dependencies>
-		<dependency>
-			<groupId>com.greentree.commons</groupId>
-			<artifactId>action</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.greentree.commons</groupId>
-			<artifactId>tests</artifactId>
-		</dependency>
-	</dependencies>
-	
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.greentree.commons</groupId>
+        <artifactId>commons</artifactId>
+        <version>0.3.5-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>coroutine</artifactId>
+
+    <name>Coroutine</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-core</artifactId>
+            <version>1.7.3</version>
+        </dependency>
+    </dependencies>
+
 </project>
