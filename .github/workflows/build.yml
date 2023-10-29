@@ -18,10 +18,12 @@ jobs:
     runs-on:  ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     steps:
+    - uses: actions/checkout@v2
     - uses: s4u/setup-maven-action@v1.7.0
       with:
           java-version: 21
           java-distribution: temurin
           maven-version: 3.9.5
+    - uses: openrndr/setup-opengl@v1.1
     - run: mvn -v
     - run: mvn -B clean test -f Commons
