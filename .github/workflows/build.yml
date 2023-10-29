@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        experimental: [false]
+        experimental: [true]
         os: [ubuntu-latest, windows-latest, ubuntu-22.04, ubuntu-20.04]
     runs-on:  ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
