@@ -3,7 +3,6 @@ package test.com.greentree.commons.data;
 import com.greentree.commons.data.file.DataFile;
 import com.greentree.commons.util.array.TArray;
 import com.greentree.commons.util.cortege.Pair;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -74,7 +73,6 @@ public class AssetFileTest {
 
     }
 
-    @Disabled
     @MethodSource("objs")
     @ParameterizedTest
     void test1(Object obj) throws IOException {
@@ -84,7 +82,6 @@ public class AssetFileTest {
         assertEquals(c, obj);
     }
 
-    @Disabled
     @MethodSource("pairs")
     @ParameterizedTest
     void test2(Pair<?, ?> p) throws IOException {

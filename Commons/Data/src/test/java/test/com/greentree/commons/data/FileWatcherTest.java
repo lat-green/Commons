@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FileWatcherTest {
 
     private static final int SLEEP = 5;
-    private static final int REPEAT = 20;
+    private static final int REPEAT = 200;
 
     File dir;
 
