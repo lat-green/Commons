@@ -1,2 +1,0 @@
-shader.vertex=shaders\standart.vtx.glsl
-shader.fragment=shaders\standart.frag.glsl

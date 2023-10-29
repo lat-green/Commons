@@ -39,7 +39,6 @@
         <module>Coroutine</module>
         <module>Data</module>
         <module>Geometry</module>
-        <module>Graphics</module>
         <module>Graph</module>
         <module>Injector</module>
         <module>Logger</module>
@@ -106,11 +105,6 @@
             <dependency>
                 <groupId>com.greentree.commons</groupId>
                 <artifactId>graph</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.greentree.commons.graphics</groupId>
-                <artifactId>graphics</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
