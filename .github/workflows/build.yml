@@ -19,17 +19,6 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Update packages
-      run: sudo apt-get update
-      
-    - name: Install packages
-      run: sudo apt-get install --fix-missing libgl1-mesa-dev
-    
-    - name: Настройка OpenGL
-      uses: openrndr/setup-opengl@v1.1
-
-    - run: xvfb-run glxinfo
       
     - uses: s4u/setup-maven-action@v1.7.0
       with:
