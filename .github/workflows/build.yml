@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         experimental: [true]
-        os: [ubuntu-latest, windows-latest, ubuntu-22.04, ubuntu-20.04]
+        os: [ubuntu-latest, windows-latest, ubuntu-22.04, ubuntu-20.04, ubuntu-bionic]
     runs-on:  ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     steps:
@@ -26,11 +26,14 @@ jobs:
     - name: Install packages
       run: sudo apt-get install --fix-missing libgl1-mesa-dev
     
+    - name: Настройка OpenGL
+      uses: openrndr/setup-opengl@v1.1
+      
     - uses: s4u/setup-maven-action@v1.7.0
       with:
           java-version: 21
           java-distribution: temurin
           maven-version: 3.9.5
-    
+            
     - run: mvn -v
     - run: mvn -B clean test -f Commons
