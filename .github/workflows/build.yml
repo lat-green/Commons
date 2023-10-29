@@ -19,4 +19,5 @@ jobs:
       with:
         website: oracle.com
         release: 21
+    - run: mvn -v
     - run: mvn -B clean test -f Commons
