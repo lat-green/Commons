@@ -9,14 +9,16 @@ on:
             - '*'
     workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+  
 jobs:
   build:
     strategy:
       matrix:
-        experimental: [true]
         os: [ubuntu-latest]
     runs-on:  ${{ matrix.os }}
-    continue-on-error: ${{ matrix.experimental }}
     steps:
     - uses: actions/checkout@v2
       
