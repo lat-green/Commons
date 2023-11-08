@@ -3,7 +3,7 @@ package com.greentree.commons.injector;
 import java.util.stream.Stream;
 
 public interface DependencyScanner {
-	
-	Stream<? extends Dependency> scan(Class<?> cls);
-	
+
+    Stream<? extends Dependency> scan(Class<?> cls);
+
 }
