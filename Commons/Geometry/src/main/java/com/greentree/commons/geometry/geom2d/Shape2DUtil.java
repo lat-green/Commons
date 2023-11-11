@@ -117,11 +117,6 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
         return new CollisionEvent2D<>(a, b, getHandler(sa, sb).getCollisionEvent(sa, sb));
     }
 
-    public static <A extends IShape2D, B extends IShape2D> Collection<AbstractVector2f> getContactPoint(
-            A a, B b) {
-        return getHandler(a, b).getContactPoint(a, b);
-    }
-
     private static Shape2DBinaryOperation getHandler(IShape2D a, IShape2D b) {
         return getHandler(a.getClass(), b.getClass());
     }
@@ -132,6 +127,11 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
         if (res != null)
             return res;
         return Shape2DBinaryOperation.DEFAULT;
+    }
+
+    public static <A extends IShape2D, B extends IShape2D> Collection<AbstractVector2f> getContactPoint(
+            A a, B b) {
+        return getHandler(a, b).getContactPoint(a, b);
     }
 
     public static <A extends IShape2D, B extends IShape2D> boolean isIntersect(final A a,
