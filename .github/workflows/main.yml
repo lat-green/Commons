@@ -30,16 +30,13 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        name: main-artifact
-        path: Commons/
+        path: Commons/**/site/jacoco/
 
   test-coverage:
     runs-on: ubuntu-latest
     needs: build
     steps:
     - uses: actions/download-artifact@v3
-      with:
-        name: main-artifact
 
     - name: Test Coverage
       uses: codecov/codecov-action@v1
