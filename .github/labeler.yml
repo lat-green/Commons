@@ -1,0 +1,13 @@
+theme:build:
+  - ".github/**"
+  - "**/pom.xml"
+  - ".gitignore"
+
+theme:code:
+  - "**/src/main/*"
+
+theme:tests:
+  - "**/src/test/*"
+
+theme:documentation:
+  - "**/docs/**"
