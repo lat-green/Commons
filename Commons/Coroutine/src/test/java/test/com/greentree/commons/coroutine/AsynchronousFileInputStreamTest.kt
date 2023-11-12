@@ -50,6 +50,18 @@ class AsynchronousFileInputStreamTest {
 		}
 	}
 
+	@MethodSource("sizes")
+	@ParameterizedTest
+	fun read_read(size: Int) = runBlocking {
+		createTempFile(size)
+		AsynchronousFileInputStream(path).use {
+			val a = it.read().toByte()
+			val b = it.read().toByte()
+			assertEquals(a, bytes[0])
+			assertEquals(b, bytes[1])
+		}
+	}
+
 	companion object {
 
 		@JvmStatic
