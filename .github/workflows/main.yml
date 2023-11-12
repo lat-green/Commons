@@ -30,7 +30,7 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        path: Commons/**/site/jacoco/
+        path: Commons/**/site/jacoco/*
 
   test-coverage:
     runs-on: ubuntu-latest
