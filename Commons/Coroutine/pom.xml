@@ -14,9 +14,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jetbrains.kotlinx</groupId>
-            <artifactId>kotlinx-coroutines-core</artifactId>
-            <version>1.7.3</version>
+            <groupId>com.greentree.commons</groupId>
+            <artifactId>util</artifactId>
         </dependency>
     </dependencies>
 
