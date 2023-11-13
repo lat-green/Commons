@@ -1,6 +1,6 @@
-package test.com.greentree.commons.coroutine
+package test.com.greentree.commons.data
 
-import com.greentree.commons.coroutine.AsynchronousFileInputStream
+import com.greentree.commons.data.AsynchronousFileInputStream
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.ThreadLocalRandom
-import java.util.stream.IntStream.*
+import java.util.stream.IntStream
 
 class AsynchronousFileInputStreamTest {
 
@@ -65,6 +65,6 @@ class AsynchronousFileInputStreamTest {
 	companion object {
 
 		@JvmStatic
-		fun sizes() = range(1, 64).mapToObj { Arguments.of(it * 1024) }
+		fun sizes() = IntStream.range(1, 64).mapToObj { Arguments.of(it * 1024) }
 	}
 }
