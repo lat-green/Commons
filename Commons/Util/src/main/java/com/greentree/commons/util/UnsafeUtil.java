@@ -20,7 +20,7 @@ public class UnsafeUtil {
             field.setAccessible(true);
             return (Unsafe) field.get(null);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to get Unsafe instance");
+            throw new RuntimeException("Unable to get Unsafe instance", e);
         }
     }
 
