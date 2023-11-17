@@ -5,6 +5,8 @@ interface Name {
 	val name: String
 }
 
+data class TextName(override val name: String) : Name
+
 object Arseny : Name {
 
 	override val name: String
@@ -29,6 +31,7 @@ object Tom : Person {
 }
 
 data class NamePerson(private val _name: Name) : Person {
+	constructor(name: String) : this(TextName(name))
 
 	override val name: String
 		get() = _name.name

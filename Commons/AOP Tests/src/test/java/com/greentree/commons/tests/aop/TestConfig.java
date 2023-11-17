@@ -8,6 +8,11 @@ public class TestConfig {
     }
 
     @AutowiredProvider
+    Person personCopyWithLastName(Person person) {
+        return new NamePerson(person.getName() + " AAA");
+    }
+
+    @AutowiredProvider
     Person personFromName(Name name) {
         return new NamePerson(name);
     }
