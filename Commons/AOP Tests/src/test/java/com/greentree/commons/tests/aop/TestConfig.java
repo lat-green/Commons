@@ -2,18 +2,18 @@ package com.greentree.commons.tests.aop;
 
 public class TestConfig {
 
-    @AutowiredProvider
-    Person person1() {
+    @AutowiredProvider(tags = "Anton")
+    Person personAnton() {
         return Anton.INSTANCE;
     }
 
     @AutowiredProvider
-    Person person2(Name name) {
+    Person personFromName(Name name) {
         return new NamePerson(name);
     }
 
-    @AutowiredProvider
-    Name name1() {
+    @AutowiredProvider(tags = "Arseny")
+    Name nameArseny() {
         return Arseny.INSTANCE;
     }
 

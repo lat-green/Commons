@@ -21,12 +21,6 @@ fun DependencyContext.arguments(tags: Collection<String>, vararg types: Class<*>
 	return result.stream()
 }
 
-private tailrec fun gcd(a: Int, b: Int): Int =
-	if(b == 0)
-		a
-	else
-		gcd(b, a % b)
-
 fun DependencyContext.solve(
 	iterator: Iterator<Class<*>>,
 	line: MutableCollection<() -> Any>,
