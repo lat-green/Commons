@@ -47,6 +47,7 @@
         <module>Math</module>
         <module>Property</module>
         <module>Reflection</module>
+        <module>Serialization</module>
         <module>Tests</module>
         <module>Util</module>
         <module>Web</module>
@@ -150,6 +151,11 @@
             <dependency>
                 <groupId>com.greentree.commons</groupId>
                 <artifactId>reflection</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.greentree.commons</groupId>
+                <artifactId>serialization</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
