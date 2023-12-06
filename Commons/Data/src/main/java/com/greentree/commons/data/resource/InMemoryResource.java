@@ -76,7 +76,7 @@ public final class InMemoryResource implements IOResource {
             @Override
             public void close() throws IOException {
                 super.close();
-                lock.unlockWrite(stamp);
+                lock.unlockRead(stamp);
             }
 
         };
@@ -89,17 +89,17 @@ public final class InMemoryResource implements IOResource {
     }
 
     @Override
+    public boolean exists() {
+        return data != null;
+    }
+
+    @Override
     public boolean delete() {
         if (!exists())
             return false;
         action.eventDelete();
         data = null;
         return true;
-    }
-
-    @Override
-    public boolean exists() {
-        return data != null;
     }
 
     @Override
