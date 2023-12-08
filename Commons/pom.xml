@@ -37,6 +37,7 @@
 
     <modules>
         <module>Action</module>
+        <module>Annotations</module>
         <module>AOP Tests</module>
         <module>Coroutine</module>
         <module>Data</module>
