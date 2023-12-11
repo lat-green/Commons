@@ -13,10 +13,14 @@
 	<name>Action</name>
 	
 	<dependencies>
-        <dependency>
+		<dependency>
 			<groupId>com.greentree.commons</groupId>
 			<artifactId>util</artifactId>
-        </dependency>
+		</dependency>
+		<dependency>
+			<groupId>com.greentree.commons</groupId>
+			<artifactId>tests</artifactId>
+		</dependency>
 	</dependencies>
 	
 </project>

@@ -1,26 +1,30 @@
 package com.greentree.commons.action.event.bus
 
-class EventBusImpl<K, A> : EventBus<K, A> {
+class EventBusImpl<K, L> : EventBus<K, L> {
 
-	private val topics = mutableMapOf<K, TopicImpl<A>>()
+	private val topics = mutableMapOf<K, TopicImpl<L>>()
 
-	private class TopicImpl<T> : EventBus.Topic<T> {
+	private class TopicImpl<L> : EventBus.Topic<L> {
 
-		private val listeners = mutableListOf<(T) -> Unit>()
+		private val listeners = mutableListOf<L>()
 
-		override fun addListener(listener: (T) -> Unit) {
+		override fun addListener(listener: L) {
 			listeners.add(listener)
 		}
 
-		override fun removeListener(listener: (T) -> Unit) {
+		override fun removeListener(listener: L) {
 			listeners.remove(listener)
 		}
 
-		override fun event(argument: T) {
+		override fun event(block: (L) -> Unit) {
 			for(listener in listeners)
-				listener(argument)
+				try {
+					block(listener)
+				} catch(e: Exception) {
+					e.printStackTrace()
+				}
 		}
 	}
 
-	override fun topic(key: K): EventBus.Topic<A> = topics.getOrPut(key) { TopicImpl() }
+	override fun topic(key: K): EventBus.Topic<L> = topics.getOrPut(key) { TopicImpl() }
 }
