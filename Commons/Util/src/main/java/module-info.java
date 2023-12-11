@@ -1,5 +1,6 @@
 open module commons.util {
     requires transitive jdk.unsupported;
+    requires kotlin.stdlib;
     exports com.greentree.commons.util;
     exports com.greentree.commons.util.exception;
     exports com.greentree.commons.util.function;
