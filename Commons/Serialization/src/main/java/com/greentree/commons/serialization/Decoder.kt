@@ -1,5 +1,8 @@
 package com.greentree.commons.serialization
 
+import com.greentree.commons.serialization.descriptor.SerialDescriptor
+import com.greentree.commons.serialization.serializer.DeserializationStrategy
+
 interface Decoder {
 
 	fun decodeBoolean(): Boolean
@@ -15,8 +18,8 @@ interface Decoder {
 
 	fun decodeString(): String
 
-	fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder
+	fun beginStructure(descriptor: SerialDescriptor<*>): CompositeDecoder
 	fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T
 
-	fun decodeEnum(enumDescriptor: SerialDescriptor): Int
+	fun <E : Enum<E>> decodeEnum(enumDescriptor: SerialDescriptor<E>): E
 }

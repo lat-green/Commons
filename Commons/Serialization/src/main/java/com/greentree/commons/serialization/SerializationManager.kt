@@ -1,0 +1,3 @@
+package com.greentree.commons.serialization
+
+interface SerializationManager

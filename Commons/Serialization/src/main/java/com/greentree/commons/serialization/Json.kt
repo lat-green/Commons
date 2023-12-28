@@ -1,17 +1,22 @@
 package com.greentree.commons.serialization
 
+import com.greentree.commons.serialization.descriptor.SerialDescriptor
+import com.greentree.commons.serialization.serializer.DeserializationStrategy
+import com.greentree.commons.serialization.serializer.SerializationStrategy
+import com.greentree.commons.serialization.serializer.serializer
+
 object Json {
 
 	fun decoder(json: String) = JsonDecoder(json)
 	fun encoder() = JsonEncoder()
 
-	inline fun <reified T> encodeToString(value: T): String {
+	inline fun <reified T : Any> encodeToString(value: T): String {
 		val encoder = encoder()
 		serializer<T>().serialize(encoder, value)
 		return encoder.result
 	}
 
-	inline fun <reified T> decodeFromString(value: String): T {
+	inline fun <reified T : Any> decodeFromString(value: String): T {
 		val decoder = decoder(value)
 		return serializer<T>().deserialize(decoder)
 	}
@@ -61,10 +66,18 @@ class JsonEncoder : Encoder {
 		TODO("Not yet implemented")
 	}
 
-	override fun beginStructure(descriptor: SerialDescriptor) = JsonObjectEncoder(descriptor).also {
+	override fun <T> encodeSerializable(serializer: SerializationStrategy<T>, value: T) {
+		TODO("Not yet implemented")
+	}
+
+	override fun beginStructure(descriptor: SerialDescriptor<*>) = JsonObjectEncoder(descriptor).also {
 		addResult {
 			it.result
 		}
+	}
+
+	override fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E) {
+		TODO("Not yet implemented")
 	}
 
 	private fun addResult(text: () -> String) {
@@ -80,7 +93,7 @@ class JsonEncoder : Encoder {
 	}
 }
 
-class JsonObjectEncoder(private val descriptor: SerialDescriptor) : CompositeEncoder {
+class JsonObjectEncoder(private val descriptor: SerialDescriptor<*>) : CompositeEncoder {
 
 	val result
 		get() = "{${resultSupplier()}}"
@@ -157,6 +170,10 @@ class JsonObjectEncoder(private val descriptor: SerialDescriptor) : CompositeEnc
 			"\"$name\":${encoder.result}"
 		}
 	}
+
+	override fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E) {
+		TODO("Not yet implemented")
+	}
 }
 
 data class JsonDecoder(val json: String) : Decoder {
@@ -197,18 +214,18 @@ data class JsonDecoder(val json: String) : Decoder {
 		TODO("Not yet implemented")
 	}
 
-	override fun beginStructure(descriptor: SerialDescriptor) = JsonObjectDecoder(json, descriptor)
+	override fun beginStructure(descriptor: SerialDescriptor<*>) = JsonObjectDecoder(json, descriptor)
 
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
 		TODO("Not yet implemented")
 	}
 
-	override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
+	override fun <E : Enum<E>> decodeEnum(enumDescriptor: SerialDescriptor<E>): E {
 		TODO("Not yet implemented")
 	}
 }
 
-class JsonObjectDecoder(val json: String, val descriptor: SerialDescriptor) : CompositeDecoder {
+class JsonObjectDecoder(val json: String, val descriptor: SerialDescriptor<*>) : CompositeDecoder {
 
 	private var _index = 0
 	val index
@@ -251,6 +268,10 @@ class JsonObjectDecoder(val json: String, val descriptor: SerialDescriptor) : Co
 	}
 
 	override fun <T> decodeSerializableElement(deserializer: DeserializationStrategy<T>): T {
+		TODO("Not yet implemented")
+	}
+
+	override fun <E : Enum<E>> decodeEnumElement(descriptor: SerialDescriptor<E>): E {
 		TODO("Not yet implemented")
 	}
 

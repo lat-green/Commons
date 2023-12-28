@@ -1,5 +1,8 @@
 package com.greentree.commons.serialization
 
+import com.greentree.commons.serialization.descriptor.SerialDescriptor
+import com.greentree.commons.serialization.serializer.SerializationStrategy
+
 interface CompositeEncoder {
 
 	fun encodeBooleanElement(value: Boolean)
@@ -17,4 +20,6 @@ interface CompositeEncoder {
 		serializer: SerializationStrategy<T>,
 		value: T,
 	)
+	
+	fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E)
 }

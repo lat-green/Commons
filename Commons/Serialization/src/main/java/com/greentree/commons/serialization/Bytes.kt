@@ -1,5 +1,9 @@
 package com.greentree.commons.serialization
 
+import com.greentree.commons.serialization.descriptor.SerialDescriptor
+import com.greentree.commons.serialization.serializer.DeserializationStrategy
+import com.greentree.commons.serialization.serializer.SerializationStrategy
+import com.greentree.commons.serialization.serializer.serializer
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -8,13 +12,13 @@ object Bytes {
 	fun encoder(output: OutputStream) = BytesEncoder(output)
 	fun decoder(input: InputStream) = BytesDecoder(input)
 
-	inline fun <reified T> encodeToSteam(value: T, output: OutputStream) {
+	inline fun <reified T : Any> encodeToSteam(value: T, output: OutputStream) {
 		val encoder = encoder(output)
 		serializer<T>().serialize(encoder, value)
 		output.flush()
 	}
 
-	inline fun <reified T> decodeFromSteam(value: InputStream): T {
+	inline fun <reified T : Any> decodeFromSteam(value: InputStream): T {
 		val decoder = decoder(value)
 		return serializer<T>().deserialize(decoder)
 	}
@@ -58,19 +62,19 @@ class BytesDecoder(private val input: InputStream) : Decoder {
 		TODO("Not yet implemented")
 	}
 
-	override fun beginStructure(descriptor: SerialDescriptor) = BytesCompositeDecoder(descriptor, input)
+	override fun beginStructure(descriptor: SerialDescriptor<*>) = BytesCompositeDecoder(descriptor, input)
 
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
 		TODO("Not yet implemented")
 	}
 
-	override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
+	override fun <E : Enum<E>> decodeEnum(enumDescriptor: SerialDescriptor<E>): E {
 		TODO("Not yet implemented")
 	}
 }
 
 class BytesCompositeDecoder(
-	private val descriptor: SerialDescriptor,
+	private val descriptor: SerialDescriptor<*>,
 	private val input: InputStream,
 ) : CompositeDecoder {
 
@@ -108,6 +112,10 @@ class BytesCompositeDecoder(
 
 	override fun <T> decodeSerializableElement(deserializer: DeserializationStrategy<T>): T {
 		return deserializer.deserialize(BytesDecoder(input))
+	}
+
+	override fun <E : Enum<E>> decodeEnumElement(descriptor: SerialDescriptor<E>): E {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -149,11 +157,18 @@ class BytesEncoder(private val output: OutputStream) : Encoder {
 		output.writeUTF(value)
 	}
 
-	override fun beginStructure(descriptor: SerialDescriptor) = BytesCompositeEncoder(descriptor, output)
+	override fun <T> encodeSerializable(serializer: SerializationStrategy<T>, value: T) {
+		TODO("Not yet implemented")
+	}
+
+	override fun beginStructure(descriptor: SerialDescriptor<*>) = BytesCompositeEncoder(descriptor, output)
+	override fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E) {
+		TODO("Not yet implemented")
+	}
 }
 
 class BytesCompositeEncoder(
-	private val descriptor: SerialDescriptor,
+	private val descriptor: SerialDescriptor<*>,
 	private val output: OutputStream,
 ) : CompositeEncoder {
 
@@ -191,6 +206,10 @@ class BytesCompositeEncoder(
 
 	override fun <T> encodeSerializableElement(serializer: SerializationStrategy<T>, value: T) {
 		serializer.serialize(BytesEncoder(output), value)
+	}
+
+	override fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E) {
+		TODO("Not yet implemented")
 	}
 }
 
