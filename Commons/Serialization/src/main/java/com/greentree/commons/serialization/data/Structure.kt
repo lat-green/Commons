@@ -1,4 +1,4 @@
-package com.greentree.commons.serialization
+package com.greentree.commons.serialization.data
 
 interface Structure<T> : AutoCloseable {
 

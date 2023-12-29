@@ -1,4 +1,4 @@
-package com.greentree.commons.serialization
+package com.greentree.commons.serialization.data
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject

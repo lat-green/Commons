@@ -1,4 +1,4 @@
-package com.greentree.commons.serialization
+package com.greentree.commons.serialization.data
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.serializer.DeserializationStrategy

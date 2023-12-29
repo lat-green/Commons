@@ -1,6 +1,6 @@
 package com.greentree.commons.serialization.serializer
 
-import com.greentree.commons.serialization.Decoder
+import com.greentree.commons.serialization.data.Decoder
 
 interface DeserializationStrategy<T> {
 

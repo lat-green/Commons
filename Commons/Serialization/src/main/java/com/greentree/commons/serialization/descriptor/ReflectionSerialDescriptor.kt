@@ -1,7 +1,7 @@
 package com.greentree.commons.serialization.descriptor
 
-import com.greentree.commons.serialization.Decoder
-import com.greentree.commons.serialization.Encoder
+import com.greentree.commons.serialization.data.Decoder
+import com.greentree.commons.serialization.data.Encoder
 import com.greentree.commons.serialization.serializer.serializer
 import java.lang.reflect.Modifier
 

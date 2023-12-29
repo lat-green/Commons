@@ -1,12 +1,12 @@
 package com.greentree.commons.serialization.serializer
 
-import com.greentree.commons.serialization.Decoder
-import com.greentree.commons.serialization.Encoder
-import com.greentree.commons.serialization.decodeSerializable
+import com.greentree.commons.serialization.data.Decoder
+import com.greentree.commons.serialization.data.Encoder
+import com.greentree.commons.serialization.data.decodeSerializable
+import com.greentree.commons.serialization.data.encodeSerializable
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.descriptor.StringSerialDescriptor
 import com.greentree.commons.serialization.descriptor.descriptor
-import com.greentree.commons.serialization.encodeSerializable
 import java.lang.reflect.Modifier
 
 class NotFinalClassesSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
