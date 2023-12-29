@@ -6,9 +6,9 @@ import com.google.gson.JsonPrimitive
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.serializer.serializer
 
-object Json {
+object Json : DecodeDataFormat<JsonElement> {
 
-	fun decoder(json: JsonElement) = JsonDecoder(json)
+	override fun decoder(json: JsonElement) = JsonDecoder(json)
 	fun encoder(onResult: (JsonElement) -> Unit) = JsonEncoder(onResult)
 
 	inline fun <reified T : Any> encodeToString(value: T): JsonElement {
