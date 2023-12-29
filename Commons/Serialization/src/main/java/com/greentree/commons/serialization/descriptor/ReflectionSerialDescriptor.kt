@@ -1,7 +1,7 @@
 package com.greentree.commons.serialization.descriptor
 
-import com.greentree.commons.serialization.CompositeDecoder
-import com.greentree.commons.serialization.CompositeEncoder
+import com.greentree.commons.serialization.Decoder
+import com.greentree.commons.serialization.Encoder
 import com.greentree.commons.serialization.serializer.serializer
 import java.lang.reflect.Modifier
 
@@ -14,19 +14,17 @@ data class ReflectionSerialDescriptor<T : Any>(
 	override val elementsCount: Int
 		get() = fields.size
 
-	override fun encode(encoder: CompositeEncoder, value: T) =
-		encoder.encodeSerializableElement(serializer(cls), value)
+	override fun encode(encoder: Encoder, value: T) =
+		serializer(cls).serialize(encoder, value)
 
-	override fun decode(decoder: CompositeDecoder) =
-		decoder.decodeSerializableElement(serializer(cls))
+	override fun decode(decoder: Decoder) =
+		serializer(cls).deserialize(decoder)
 
 	private val fields
 		get() = cls.declaredFields.filter { !Modifier.isStatic(it.modifiers) }
 			.filter { !Modifier.isTransient(it.modifiers) }
 
-	override fun getElementIndex(name: String): Int {
-		TODO("Not yet implemented")
-	}
+	override fun getElementIndex(name: String) = fields.map { it.name }.indexOf(name)
 
 	override fun getElementName(index: Int) = fields[index].name
 

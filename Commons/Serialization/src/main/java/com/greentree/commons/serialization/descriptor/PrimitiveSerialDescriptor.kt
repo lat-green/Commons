@@ -1,7 +1,7 @@
 package com.greentree.commons.serialization.descriptor
 
-import com.greentree.commons.serialization.CompositeDecoder
-import com.greentree.commons.serialization.CompositeEncoder
+import com.greentree.commons.serialization.Decoder
+import com.greentree.commons.serialization.Encoder
 import com.greentree.commons.serialization.serializer.serializer
 
 abstract class PrimitiveSerialDescriptor<T>(cls: Class<T>) : SerialDescriptor<T> {
@@ -18,41 +18,41 @@ abstract class PrimitiveSerialDescriptor<T>(cls: Class<T>) : SerialDescriptor<T>
 		TODO("Not yet implemented")
 	}
 
+	override fun isElementOptional(index: Int) = false
+
 	override fun getElementDescriptor(index: Int): SerialDescriptor<*> {
 		TODO("Not yet implemented")
 	}
-
-	override fun isElementOptional(index: Int) = false
 }
 
 object IntSerialDescriptor : PrimitiveSerialDescriptor<Int>(Int::class.java) {
 
-	override fun encode(encoder: CompositeEncoder, value: Int) = encoder.encodeIntElement(value)
-	override fun decode(decoder: CompositeDecoder) = decoder.decodeIntElement()
+	override fun encode(encoder: Encoder, value: Int) = encoder.encodeInt(value)
+	override fun decode(decoder: Decoder) = decoder.decodeInt()
 }
 
 object StringSerialDescriptor : PrimitiveSerialDescriptor<String>(String::class.java) {
 
-	override fun encode(encoder: CompositeEncoder, value: String) = encoder.encodeStringElement(value)
-	override fun decode(decoder: CompositeDecoder) = decoder.decodeStringElement()
+	override fun encode(encoder: Encoder, value: String) = encoder.encodeString(value)
+	override fun decode(decoder: Decoder) = decoder.decodeString()
 }
 
 object ShortSerialDescriptor : PrimitiveSerialDescriptor<Short>(Short::class.java) {
 
-	override fun encode(encoder: CompositeEncoder, value: Short) = encoder.encodeShortElement(value)
-	override fun decode(decoder: CompositeDecoder) = decoder.decodeShortElement()
+	override fun encode(encoder: Encoder, value: Short) = encoder.encodeShort(value)
+	override fun decode(decoder: Decoder) = decoder.decodeShort()
 }
 
 data class EnumSerialDescriptor<E : Enum<E>>(private val cls: Class<E>) : PrimitiveSerialDescriptor<E>(cls) {
 
-	override fun encode(encoder: CompositeEncoder, value: E) = encoder.encodeEnumElement(this, value)
-	override fun decode(decoder: CompositeDecoder) = decoder.decodeEnumElement(this)
+	override fun encode(encoder: Encoder, value: E) = encoder.encodeEnum(this, value)
+	override fun decode(decoder: Decoder) = decoder.decodeEnum(this)
 }
 
 data class ObjectSerialDescriptor<T : Any>(private val cls: Class<T>) : PrimitiveSerialDescriptor<T>(cls) {
 
-	override fun encode(encoder: CompositeEncoder, value: T) = encoder.encodeSerializableElement(serializer(cls), value)
-	override fun decode(decoder: CompositeDecoder) = decoder.decodeSerializableElement(serializer(cls))
+	override fun encode(encoder: Encoder, value: T) = serializer(cls).serialize(encoder, value)
+	override fun decode(decoder: Decoder) = serializer(cls).deserialize(decoder)
 }
 
 val <T : Any> Class<T>.descriptor

@@ -1,7 +1,7 @@
 package com.greentree.commons.serialization
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
-import com.greentree.commons.serialization.serializer.SerializationStrategy
+import com.greentree.commons.serialization.serializer.serializer
 
 interface Encoder {
 
@@ -18,12 +18,11 @@ interface Encoder {
 
 	fun encodeString(value: String)
 
-	fun <T> encodeSerializable(
-		serializer: SerializationStrategy<T>,
-		value: T,
-	)
+	fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Encoder>
 
-	fun beginStructure(descriptor: SerialDescriptor<*>): CompositeEncoder
+	fun <E : Enum<E>> encodeEnum(descriptor: SerialDescriptor<E>, value: E)
+}
 
-	fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E)
+fun <T : Any> Encoder.encodeSerializable(value: T) {
+	serializer(value.javaClass).serialize(this, value)
 }

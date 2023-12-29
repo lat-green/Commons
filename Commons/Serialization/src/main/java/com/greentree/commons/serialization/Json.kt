@@ -1,286 +1,132 @@
 package com.greentree.commons.serialization
 
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
-import com.greentree.commons.serialization.serializer.DeserializationStrategy
-import com.greentree.commons.serialization.serializer.SerializationStrategy
 import com.greentree.commons.serialization.serializer.serializer
 
 object Json {
 
-	fun decoder(json: String) = JsonDecoder(json)
-	fun encoder() = JsonEncoder()
+	fun decoder(json: JsonElement) = JsonDecoder(json)
+	fun encoder(onResult: (JsonElement) -> Unit) = JsonEncoder(onResult)
 
-	inline fun <reified T : Any> encodeToString(value: T): String {
-		val encoder = encoder()
+	inline fun <reified T : Any> encodeToString(value: T): JsonElement {
+		lateinit var result: JsonElement
+		val encoder = encoder {
+			result = it
+		}
 		serializer<T>().serialize(encoder, value)
-		return encoder.result
+		return result
 	}
 
-	inline fun <reified T : Any> decodeFromString(value: String): T {
+	inline fun <reified T : Any> decodeFromString(value: JsonElement): T {
 		val decoder = decoder(value)
 		return serializer<T>().deserialize(decoder)
 	}
 }
 
-class JsonEncoder : Encoder {
+class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {
 
-	val result
-		get() = resultSupplier()
-	private var resultSupplier = {
-		""
+	private var isDone = false
+
+	private fun setResult(result: JsonElement) {
+		require(!isDone)
+		isDone = true
+		onResult(result)
 	}
 
 	override fun encodeBoolean(value: Boolean) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
 	override fun encodeByte(value: Byte) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
 	override fun encodeChar(value: Char) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
 	override fun encodeShort(value: Short) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
 	override fun encodeInt(value: Int) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
 	override fun encodeLong(value: Long) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
 	override fun encodeFloat(value: Float) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
 	override fun encodeDouble(value: Double) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
 	override fun encodeString(value: String) {
-		TODO("Not yet implemented")
+		setResult(JsonPrimitive(value))
 	}
 
-	override fun <T> encodeSerializable(serializer: SerializationStrategy<T>, value: T) {
-		TODO("Not yet implemented")
-	}
+	override fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Encoder> {
+		val result = JsonObject()
 
-	override fun beginStructure(descriptor: SerialDescriptor<*>) = JsonObjectEncoder(descriptor).also {
-		addResult {
-			it.result
+		return object : Structure<Encoder> {
+			override fun field(name: String): Encoder {
+				val res = JsonEncoder {
+					result.add(name, it)
+				}
+				return res
+			}
+
+			override fun field(index: Int) = field(descriptor.getElementName(index))
+
+			override fun close() {
+				setResult(result)
+			}
 		}
 	}
 
-	override fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E) {
-		TODO("Not yet implemented")
-	}
-
-	private fun addResult(text: () -> String) {
-		val result = resultSupplier
-		resultSupplier = {
-			val a = result()
-			val b = text()
-			if(a.isBlank())
-				b
-			else
-				"$a,$b"
-		}
+	override fun <E : Enum<E>> encodeEnum(descriptor: SerialDescriptor<E>, value: E) {
+		setResult(JsonPrimitive(value.toString()))
 	}
 }
 
-class JsonObjectEncoder(private val descriptor: SerialDescriptor<*>) : CompositeEncoder {
+class JsonDecoder(private val element: JsonElement) : Decoder {
 
-	val result
-		get() = "{${resultSupplier()}}"
-	private var resultSupplier = {
-		""
-	}
-	private var _index = 0
-	val index
-		get() = _index++
+	override fun decodeBoolean(): Boolean = element.asBoolean
 
-	override fun encodeBooleanElement(value: Boolean) {
-		val name = descriptor.getElementName(index)
-		addResult("\"$name\":$value")
-	}
+	override fun decodeByte(): Byte = element.asByte
 
-	override fun encodeByteElement(value: Byte) {
-		TODO("Not yet implemented")
-	}
+	override fun decodeChar(): Char = element.asCharacter
 
-	override fun encodeShortElement(value: Short) {
-		TODO("Not yet implemented")
-	}
+	override fun decodeShort(): Short = element.asShort
 
-	private fun addResult(text: String) {
-		val result = resultSupplier
-		resultSupplier = {
-			val a = result()
-			if(a.isBlank())
-				text
-			else
-				"$a,$text"
+	override fun decodeInt(): Int = element.asInt
+
+	override fun decodeLong(): Long = element.asLong
+
+	override fun decodeFloat(): Float = element.asFloat
+
+	override fun decodeDouble(): Double = element.asDouble
+
+	override fun decodeString(): String = element.asString
+
+	override fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Decoder> {
+		val element = element.asJsonObject
+
+		return object : Structure<Decoder> {
+			override fun field(name: String) = JsonDecoder(element.get(name))
+
+			override fun field(index: Int) = field(descriptor.getElementName(index))
 		}
-	}
-
-	private fun addResult(text: () -> String) {
-		val result = resultSupplier
-		resultSupplier = {
-			val a = result()
-			val b = text()
-			if(a.isBlank())
-				b
-			else
-				"$a,$b"
-		}
-	}
-
-	override fun encodeIntElement(value: Int) {
-		val name = descriptor.getElementName(index)
-		addResult("\"$name\":$value")
-	}
-
-	override fun encodeLongElement(value: Long) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeStringElement(value: String) {
-		val name = descriptor.getElementName(index)
-		addResult("\"$name\":\"$value\"")
-	}
-
-	override fun encodeFloatElement(value: Float) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeDoubleElement(value: Double) {
-		TODO("Not yet implemented")
-	}
-
-	override fun <T> encodeSerializableElement(serializer: SerializationStrategy<T>, value: T) {
-		val name = descriptor.getElementName(index)
-		val encoder = Json.encoder()
-		serializer.serialize(encoder, value)
-		addResult {
-			"\"$name\":${encoder.result}"
-		}
-	}
-
-	override fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E) {
-		TODO("Not yet implemented")
-	}
-}
-
-data class JsonDecoder(val json: String) : Decoder {
-
-	override fun decodeBoolean(): Boolean {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeByte(): Byte {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeChar(): Char {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeShort(): Short {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeInt(): Int {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeLong(): Long {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeFloat(): Float {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeDouble(): Double {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeString(): String {
-		TODO("Not yet implemented")
-	}
-
-	override fun beginStructure(descriptor: SerialDescriptor<*>) = JsonObjectDecoder(json, descriptor)
-
-	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
-		TODO("Not yet implemented")
 	}
 
 	override fun <E : Enum<E>> decodeEnum(enumDescriptor: SerialDescriptor<E>): E {
 		TODO("Not yet implemented")
-	}
-}
-
-class JsonObjectDecoder(val json: String, val descriptor: SerialDescriptor<*>) : CompositeDecoder {
-
-	private var _index = 0
-	val index
-		get() = _index++
-
-	override fun decodeBooleanElement(): Boolean {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeByteElement(): Byte {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeCharElement(): Char {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeShortElement(): Short {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeIntElement(): Int {
-		val begin = getIndexByName(descriptor.getElementName(index))
-		val end = json.indexOfAny(charArrayOf(',', '}'), begin)
-		return json.substring(begin, end).strip().toInt()
-	}
-
-	override fun decodeLongElement(): Long {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeDoubleElement(): Double {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeStringElement(): String {
-		val begin = getIndexByName(descriptor.getElementName(index)) + 1
-		val end = json.indexOf('"', begin)
-		return json.substring(begin, end)
-	}
-
-	override fun <T> decodeSerializableElement(deserializer: DeserializationStrategy<T>): T {
-		TODO("Not yet implemented")
-	}
-
-	override fun <E : Enum<E>> decodeEnumElement(descriptor: SerialDescriptor<E>): E {
-		TODO("Not yet implemented")
-	}
-
-	private fun getIndexByName(name: String): Int {
-		val name = "\"$name\""
-		var index = json.indexOf(name)
-		if(index == -1)
-			throw IllegalArgumentException("name = $name not found in $json")
-		index += name.length + 1
-		return index
 	}
 }

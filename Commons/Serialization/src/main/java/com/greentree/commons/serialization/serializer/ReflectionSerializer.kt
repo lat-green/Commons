@@ -1,9 +1,11 @@
 package com.greentree.commons.serialization.serializer
 
+import com.greentree.commons.reflection.ClassUtil
 import com.greentree.commons.serialization.Decoder
 import com.greentree.commons.serialization.Encoder
 import com.greentree.commons.serialization.descriptor.ReflectionSerialDescriptor
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
+import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 import kotlin.jvm.internal.DefaultConstructorMarker
 
@@ -17,38 +19,46 @@ class ReflectionSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 	}
 
 	override fun deserialize(decoder: Decoder): T {
-		val struct = decoder.beginStructure(descriptor)
 		val parameters = mutableListOf<Any>()
-		for(i in 0 ..< descriptor.elementsCount) {
-			val fieldTypeDescriptor = descriptor.getElementDescriptor(i)
-			val value = fieldTypeDescriptor.decode(struct)!!
-			parameters.add(value)
+		decoder.beginStructure(descriptor).use { struct ->
+			for(i in 0 ..< descriptor.elementsCount) {
+				val fieldTypeDescriptor = descriptor.getElementDescriptor(i)
+				val value = fieldTypeDescriptor.decode(struct.field(i))!!
+				parameters.add(value)
+			}
 		}
 		return try {
-			val constructor = cls.getConstructor(*parameters.map { it.javaClass.unboxing() }
+			val constructor = cls.getSupportedConstructor(*parameters.map { it.javaClass.unboxing() }
 				.toTypedArray())
 			constructor.newInstance(*parameters.toTypedArray())
 		} catch(e: NoSuchMethodException) {
 			try {
-				val constructor = cls.getConstructor(*parameters.map { it.javaClass.unboxing() }
+				val constructor = cls.getSupportedConstructor(*parameters.map { it.javaClass.unboxing() }
 					.toTypedArray() + DefaultConstructorMarker::class.java)
 				constructor.newInstance(*(parameters.toTypedArray() as Array<Any?> + null as Any?))
 			} catch(e1: Exception) {
 				e.addSuppressed(e1)
 				throw e
 			}
-		} as T
+		}
 	}
 
 	override fun serialize(encoder: Encoder, value: T) {
-		val struct = encoder.beginStructure(descriptor)
-		for(i in 0 ..< descriptor.elementsCount) {
-			val fieldTypeDescriptor = descriptor.getElementDescriptor(i) as SerialDescriptor<Any>
-			val field = cls.getDeclaredField(descriptor.getElementName(i))
-			field.trySetAccessible()
-			fieldTypeDescriptor.encode(struct, field.get(value))
+		encoder.beginStructure(descriptor).use { struct ->
+			for(i in 0 ..< descriptor.elementsCount) {
+				val fieldTypeDescriptor = descriptor.getElementDescriptor(i) as SerialDescriptor<Any>
+				val field = cls.getDeclaredField(descriptor.getElementName(i))
+				field.trySetAccessible()
+				fieldTypeDescriptor.encode(struct.field(i), field.get(value))
+			}
 		}
 	}
+}
+
+fun <T> Class<T>.getSupportedConstructor(vararg array: Class<*>): Constructor<T> {
+	return declaredConstructors.first { constructor ->
+		constructor.parameters.zip(array).all { (param, argument) -> ClassUtil.isExtends(param.type, argument) }
+	} as Constructor<T>
 }
 
 fun Class<*>.unboxing(): Class<*> =

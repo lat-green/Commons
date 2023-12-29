@@ -6,7 +6,7 @@ import com.greentree.commons.serialization.serializer.SerializationStrategy
 import com.greentree.commons.serialization.serializer.serializer
 import java.io.InputStream
 import java.io.OutputStream
-
+/*
 object Bytes {
 
 	fun encoder(output: OutputStream) = BytesEncoder(output)
@@ -295,3 +295,4 @@ private fun InputStream.readByte(): Byte {
 	val a = read()
 	return a.toByte()
 }
+*/
