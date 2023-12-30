@@ -9,11 +9,7 @@ import com.greentree.commons.serialization.descriptor.StringSerialDescriptor
 import com.greentree.commons.serialization.descriptor.descriptor
 import java.lang.reflect.Modifier
 
-class NotFinalClassesSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
-
-	init {
-		require(!Modifier.isFinal(cls.modifiers)) { "type $cls is final" }
-	}
+class BaseClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 
 	override val descriptor: SerialDescriptor<T>
 		get() = SerialDescriptor.builder("type-value")

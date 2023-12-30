@@ -9,7 +9,7 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 import kotlin.jvm.internal.DefaultConstructorMarker
 
-class ReflectionSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
+class FinalClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 
 	override val descriptor: SerialDescriptor<T>
 		get() = ReflectionSerialDescriptor(cls)

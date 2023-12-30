@@ -19,8 +19,6 @@ interface Encoder {
 	fun encodeString(value: String)
 
 	fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Encoder>
-
-	fun <E : Enum<E>> encodeEnum(descriptor: SerialDescriptor<E>, value: E)
 }
 
 fun <T : Any> Encoder.encodeSerializable(value: T) {

@@ -1,12 +1,11 @@
 package com.greentree.commons.serialization.data
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
-import com.greentree.commons.serialization.serializer.DeserializationStrategy
-import com.greentree.commons.serialization.serializer.SerializationStrategy
 import com.greentree.commons.serialization.serializer.serializer
+import java.io.EOFException
 import java.io.InputStream
 import java.io.OutputStream
-/*
+
 object Bytes {
 
 	fun encoder(output: OutputStream) = BytesEncoder(output)
@@ -24,15 +23,42 @@ object Bytes {
 	}
 }
 
-class BytesDecoder(private val input: InputStream) : Decoder {
+class BytesEncoder(private val output: OutputStream) : Encoder, Structure<Encoder> {
+
+	override fun encodeBoolean(value: Boolean) = output.writeBoolean(value)
+
+	override fun encodeByte(value: Byte) = output.writeByte(value)
+
+	override fun encodeChar(value: Char) = output.writeChar(value)
+
+	override fun encodeShort(value: Short) = output.writeShort(value)
+
+	override fun encodeInt(value: Int) = output.writeInt(value)
+
+	override fun encodeLong(value: Long) = output.writeLong(value)
+
+	override fun encodeFloat(value: Float) = output.writeFloat(value)
+
+	override fun encodeDouble(value: Double) = output.writeDouble(value)
+
+	override fun encodeString(value: String) = output.writeUTF(value)
+
+	override fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Encoder> {
+		return this
+	}
+
+	override fun field(name: String) = this
+
+	override fun field(index: Int) = this
+}
+
+class BytesDecoder(private val input: InputStream) : Decoder, Structure<Decoder> {
 
 	override fun decodeBoolean(): Boolean {
 		TODO("Not yet implemented")
 	}
 
-	override fun decodeByte(): Byte {
-		TODO("Not yet implemented")
-	}
+	override fun decodeByte() = input.readByte()
 
 	override fun decodeChar(): Char {
 		TODO("Not yet implemented")
@@ -42,9 +68,7 @@ class BytesDecoder(private val input: InputStream) : Decoder {
 		TODO("Not yet implemented")
 	}
 
-	override fun decodeInt(): Int {
-		TODO("Not yet implemented")
-	}
+	override fun decodeInt() = input.readInt()
 
 	override fun decodeLong(): Long {
 		TODO("Not yet implemented")
@@ -58,159 +82,13 @@ class BytesDecoder(private val input: InputStream) : Decoder {
 		TODO("Not yet implemented")
 	}
 
-	override fun decodeString(): String {
-		TODO("Not yet implemented")
-	}
+	override fun decodeString() = input.readUTF()
 
-	override fun beginStructure(descriptor: SerialDescriptor<*>) = BytesCompositeDecoder(descriptor, input)
+	override fun beginStructure(descriptor: SerialDescriptor<*>) = this
 
-	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
-		TODO("Not yet implemented")
-	}
+	override fun field(name: String) = this
 
-	override fun <E : Enum<E>> decodeEnum(enumDescriptor: SerialDescriptor<E>): E {
-		TODO("Not yet implemented")
-	}
-}
-
-class BytesCompositeDecoder(
-	private val descriptor: SerialDescriptor<*>,
-	private val input: InputStream,
-) : CompositeDecoder {
-
-	override fun decodeBooleanElement(): Boolean {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeByteElement(): Byte {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeCharElement(): Char {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeShortElement(): Short {
-		return input.readShort()
-	}
-
-	override fun decodeIntElement(): Int {
-		return input.readInt()
-	}
-
-	override fun decodeLongElement(): Long {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeDoubleElement(): Double {
-		TODO("Not yet implemented")
-	}
-
-	override fun decodeStringElement(): String {
-		return input.readUTF()
-	}
-
-	override fun <T> decodeSerializableElement(deserializer: DeserializationStrategy<T>): T {
-		return deserializer.deserialize(BytesDecoder(input))
-	}
-
-	override fun <E : Enum<E>> decodeEnumElement(descriptor: SerialDescriptor<E>): E {
-		TODO("Not yet implemented")
-	}
-}
-
-class BytesEncoder(private val output: OutputStream) : Encoder {
-
-	override fun encodeBoolean(value: Boolean) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeByte(value: Byte) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeChar(value: Char) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeShort(value: Short) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeInt(value: Int) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeLong(value: Long) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeFloat(value: Float) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeDouble(value: Double) {
-		TODO("Not yet implemented")
-	}
-
-	override fun encodeString(value: String) {
-		output.writeUTF(value)
-	}
-
-	override fun <T> encodeSerializable(serializer: SerializationStrategy<T>, value: T) {
-		TODO("Not yet implemented")
-	}
-
-	override fun beginStructure(descriptor: SerialDescriptor<*>) = BytesCompositeEncoder(descriptor, output)
-	override fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E) {
-		TODO("Not yet implemented")
-	}
-}
-
-class BytesCompositeEncoder(
-	private val descriptor: SerialDescriptor<*>,
-	private val output: OutputStream,
-) : CompositeEncoder {
-
-	override fun encodeBooleanElement(value: Boolean) {
-		output.writeBoolean(value)
-	}
-
-	override fun encodeByteElement(value: Byte) {
-		output.writeByte(value)
-	}
-
-	override fun encodeShortElement(value: Short) {
-		output.writeShort(value)
-	}
-
-	override fun encodeIntElement(value: Int) {
-		output.writeInt(value)
-	}
-
-	override fun encodeLongElement(value: Long) {
-		output.writeLong(value)
-	}
-
-	override fun encodeStringElement(value: String) {
-		output.writeUTF(value)
-	}
-
-	override fun encodeFloatElement(value: Float) {
-//		output.writeFloat(value)
-	}
-
-	override fun encodeDoubleElement(value: Double) {
-//		output.writeDouble(value)
-	}
-
-	override fun <T> encodeSerializableElement(serializer: SerializationStrategy<T>, value: T) {
-		serializer.serialize(BytesEncoder(output), value)
-	}
-
-	override fun <E : Enum<E>> encodeEnumElement(descriptor: SerialDescriptor<E>, value: E) {
-		TODO("Not yet implemented")
-	}
+	override fun field(index: Int) = this
 }
 
 private fun OutputStream.writeUTF(value: String) {
@@ -233,11 +111,25 @@ private fun OutputStream.writeByte(value: Byte) {
 	write(value and 0xFF)
 }
 
+private fun OutputStream.writeChar(value: Char) {
+	val value = value.code
+	write(value ushr 8 and 0xFF)
+	write(value ushr 0 and 0xFF)
+}
+
 private fun OutputStream.writeInt(value: Int) {
 	write(value ushr 24 and 0xFF)
 	write(value ushr 16 and 0xFF)
 	write(value ushr 8 and 0xFF)
 	write(value ushr 0 and 0xFF)
+}
+
+private fun OutputStream.writeFloat(value: Float) {
+	writeInt(value.toRawBits())
+}
+
+private fun OutputStream.writeDouble(value: Double) {
+	writeLong(value.toRawBits())
 }
 
 private fun OutputStream.writeLong(value: Long) {
@@ -255,44 +147,50 @@ private fun OutputStream.writeLong(value: Long) {
 private fun InputStream.readUTF(): String {
 	val bytes = mutableListOf<Byte>()
 	var byte: Byte
-	while(read().also { byte = it.toByte() } != 0) {
+	while(readOrEOF().also { byte = it.toByte() } != 0) {
 		bytes.add(byte)
 	}
 	return String(bytes.toByteArray())
 }
 
 private fun InputStream.readBoolean(): Boolean {
-	return read() == 1
+	return readOrEOF() == 1
 }
 
 private fun InputStream.readInt(): Int {
-	val a = read()
-	val b = read()
-	val c = read()
-	val d = read()
+	val a = readOrEOF()
+	val b = readOrEOF()
+	val c = readOrEOF()
+	val d = readOrEOF()
 	return (a shl 24) or (b shl 16) or (c shl 8) or d
 }
 
 private fun InputStream.readLong(): Long {
-	val a = read().toLong()
-	val b = read().toLong()
-	val c = read().toLong()
-	val d = read().toLong()
-	val e = read().toLong()
-	val f = read().toLong()
-	val g = read().toLong()
-	val k = read().toLong()
+	val a = readOrEOF().toLong()
+	val b = readOrEOF().toLong()
+	val c = readOrEOF().toLong()
+	val d = readOrEOF().toLong()
+	val e = readOrEOF().toLong()
+	val f = readOrEOF().toLong()
+	val g = readOrEOF().toLong()
+	val k = readOrEOF().toLong()
 	return (a shl 56) or (b shl 48) or (c shl 40) or (d shl 32) or (e shl 24) or (f shl 16) or (g shl 8) or k
 }
 
 private fun InputStream.readShort(): Short {
-	val a = read()
-	val b = read()
+	val a = readOrEOF()
+	val b = readOrEOF()
 	return ((a shl 8) or b).toShort()
 }
 
 private fun InputStream.readByte(): Byte {
-	val a = read()
+	val a = readOrEOF()
 	return a.toByte()
 }
-*/
+
+private fun InputStream.readOrEOF() = run {
+	val b = read()
+	if(b == -1)
+		throw EOFException()
+	b
+}

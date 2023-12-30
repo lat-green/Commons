@@ -31,6 +31,12 @@ object IntSerialDescriptor : PrimitiveSerialDescriptor<Int>(Int::class.java) {
 	override fun decode(decoder: Decoder) = decoder.decodeInt()
 }
 
+object ByteSerialDescriptor : PrimitiveSerialDescriptor<Byte>(Byte::class.java) {
+
+	override fun encode(encoder: Encoder, value: Byte) = encoder.encodeByte(value)
+	override fun decode(decoder: Decoder) = decoder.decodeByte()
+}
+
 object StringSerialDescriptor : PrimitiveSerialDescriptor<String>(String::class.java) {
 
 	override fun encode(encoder: Encoder, value: String) = encoder.encodeString(value)
@@ -45,8 +51,8 @@ object ShortSerialDescriptor : PrimitiveSerialDescriptor<Short>(Short::class.jav
 
 data class EnumSerialDescriptor<E : Enum<E>>(private val cls: Class<E>) : PrimitiveSerialDescriptor<E>(cls) {
 
-	override fun encode(encoder: Encoder, value: E) = encoder.encodeEnum(this, value)
-	override fun decode(decoder: Decoder) = decoder.decodeEnum(this)
+	override fun encode(encoder: Encoder, value: E) = encoder.encodeInt(value.ordinal)
+	override fun decode(decoder: Decoder) = cls.enumConstants[decoder.decodeInt()]
 }
 
 data class ObjectSerialDescriptor<T : Any>(private val cls: Class<T>) : PrimitiveSerialDescriptor<T>(cls) {

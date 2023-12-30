@@ -90,10 +90,6 @@ class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {
 			}
 		}
 	}
-
-	override fun <E : Enum<E>> encodeEnum(descriptor: SerialDescriptor<E>, value: E) {
-		setResult(JsonPrimitive(value.toString()))
-	}
 }
 
 class JsonDecoder(private val element: JsonElement) : Decoder {
@@ -124,9 +120,5 @@ class JsonDecoder(private val element: JsonElement) : Decoder {
 
 			override fun field(index: Int) = field(descriptor.getElementName(index))
 		}
-	}
-
-	override fun <E : Enum<E>> decodeEnum(enumDescriptor: SerialDescriptor<E>): E {
-		TODO("Not yet implemented")
 	}
 }

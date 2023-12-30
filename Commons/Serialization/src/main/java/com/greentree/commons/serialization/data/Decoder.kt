@@ -2,6 +2,7 @@ package com.greentree.commons.serialization.data
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.serializer.serializer
+import kotlin.reflect.KClass
 
 interface Decoder {
 
@@ -19,10 +20,9 @@ interface Decoder {
 	fun decodeString(): String
 
 	fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Decoder>
-
-	fun <E : Enum<E>> decodeEnum(enumDescriptor: SerialDescriptor<E>): E
 }
 
+fun <T : Any> Decoder.decodeSerializable(cls: KClass<T>) = decodeSerializable(cls.java)
 fun <T : Any> Decoder.decodeSerializable(cls: Class<T>) = serializer(cls).deserialize(this)
 
 inline fun <reified T : Any> Decoder.decodeSerializable() = decodeSerializable(T::class.java)
