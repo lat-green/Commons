@@ -3,6 +3,7 @@ package com.greentree.commons.serialization.serializer
 import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.serialization.data.Encoder
 import com.greentree.commons.serialization.data.decodeSerializable
+import com.greentree.commons.serialization.data.decodeSerializableTo
 import com.greentree.commons.serialization.data.encodeSerializable
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.descriptor.StringSerialDescriptor
@@ -22,6 +23,14 @@ class BaseClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 			val type = struct.field(0).decodeString()
 			val cls = Class.forName(type) as Class<T>
 			return struct.field(1).decodeSerializable(cls)
+		}
+	}
+
+	override fun deserializeTo(decoder: Decoder, value: T): T {
+		decoder.beginStructure(descriptor).use { struct ->
+			val type = struct.field(0).decodeString()
+			val cls = Class.forName(type) as Class<T>
+			return struct.field(1).decodeSerializableTo(cls, value)
 		}
 	}
 

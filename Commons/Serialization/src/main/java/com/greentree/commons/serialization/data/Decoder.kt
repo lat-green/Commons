@@ -26,3 +26,8 @@ fun <T : Any> Decoder.decodeSerializable(cls: KClass<T>) = decodeSerializable(cl
 fun <T : Any> Decoder.decodeSerializable(cls: Class<T>) = serializer(cls).deserialize(this)
 
 inline fun <reified T : Any> Decoder.decodeSerializable() = decodeSerializable(T::class.java)
+
+fun <T : Any> Decoder.decodeSerializableTo(cls: KClass<T>, value: T) = decodeSerializableTo(cls.java, value)
+fun <T : Any> Decoder.decodeSerializableTo(cls: Class<T>, value: T) = serializer(cls).deserializeTo(this, value)
+
+inline fun <reified T : Any> Decoder.decodeSerializableTo(value: T) = decodeSerializableTo(T::class.java, value)

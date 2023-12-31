@@ -1,18 +1,13 @@
 package com.greentree.commons.serialization.serializer
 
 import com.greentree.commons.serialization.annotation.CustomSerializer
-import com.greentree.commons.serialization.data.Decoder
-import com.greentree.commons.serialization.data.Encoder
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 
-interface Serializer<T> : SerializationStrategy<T>, DeserializationStrategy<T> {
+interface Serializer<T : Any> : SerializationStrategy<T>, DeserializationStrategy<T> {
 
 	override val descriptor: SerialDescriptor<T>
-
-	override fun deserialize(decoder: Decoder): T
-	override fun serialize(encoder: Encoder, value: T)
 }
 
 inline fun <reified T : Any> serializer() = serializer(T::class.java)

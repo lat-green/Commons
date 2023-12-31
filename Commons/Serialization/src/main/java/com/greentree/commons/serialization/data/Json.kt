@@ -25,6 +25,11 @@ object Json : DecodeDataFormat<JsonElement> {
 		val decoder = decoder(value)
 		return serializer<T>().deserialize(decoder)
 	}
+
+	inline fun <reified T : Any> decodeFromStringTo(value: JsonElement, result: T): T {
+		val decoder = decoder(value)
+		return serializer<T>().deserializeTo(decoder, result)
+	}
 }
 
 class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {

@@ -5,6 +5,7 @@ import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.serialization.data.Encoder
 import com.greentree.commons.serialization.descriptor.ReflectionSerialDescriptor
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
+import com.greentree.commons.util.UnsafeUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 import kotlin.jvm.internal.DefaultConstructorMarker

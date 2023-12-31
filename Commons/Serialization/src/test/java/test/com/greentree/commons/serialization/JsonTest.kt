@@ -1,7 +1,10 @@
 package test.com.greentree.commons.serialization
 
+import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
 import com.greentree.commons.serialization.data.Json
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import test.data.Anton
 import test.data.CustomPerson
@@ -16,7 +19,18 @@ class JsonTest {
 		val person = Person("ara", 12)
 		val json = Json.encodeToString(person)
 		val person2 = Json.decodeFromString<Person>(json)
-		Assertions.assertEquals(person, person2)
+		assertEquals(person, person2)
+	}
+
+	@Test
+	fun testBaseDecodeTo() {
+		val person = Person("ara", 12)
+		val json = JsonObject().also { person ->
+			person.add("name", JsonPrimitive("anton"))
+			person.add("age", JsonPrimitive(13))
+		}
+		val person2 = Json.decodeFromStringTo(json, person)
+		assertEquals(Person("anton", 13), person2)
 	}
 
 	@Test
@@ -24,7 +38,7 @@ class JsonTest {
 		val person = CustomPerson(NameImpl("ara"), 12)
 		val json = Json.encodeToString(person)
 		val person2 = Json.decodeFromString<CustomPerson>(json)
-		Assertions.assertEquals(person, person2)
+		assertEquals(person, person2)
 	}
 
 	@Test
@@ -32,7 +46,7 @@ class JsonTest {
 		val person = CustomPerson(Anton, 12)
 		val json = Json.encodeToString(person)
 		val person2 = Json.decodeFromString<CustomPerson>(json)
-		Assertions.assertEquals(person, person2)
+		assertEquals(person, person2)
 	}
 
 	@Test
@@ -40,6 +54,6 @@ class JsonTest {
 		val person = ObjectPerson(Anton, 12)
 		val json = Json.encodeToString(person)
 		val person2 = Json.decodeFromString<ObjectPerson>(json)
-		Assertions.assertEquals(person, person2)
+		assertEquals(person, person2)
 	}
 }
