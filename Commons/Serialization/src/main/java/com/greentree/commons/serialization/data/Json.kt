@@ -1,6 +1,7 @@
 package com.greentree.commons.serialization.data
 
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
@@ -116,7 +117,12 @@ class JsonDecoder(private val element: JsonElement) : Decoder {
 		val element = element.asJsonObject
 
 		return object : Structure<Decoder> {
-			override fun field(name: String) = JsonDecoder(element.get(name))
+			override fun field(name: String) = JsonDecoder(
+				if(element.has(name))
+					element.get(name)
+				else
+					JsonNull.INSTANCE
+			)
 
 			override fun field(index: Int) = field(descriptor.getElementName(index))
 		}

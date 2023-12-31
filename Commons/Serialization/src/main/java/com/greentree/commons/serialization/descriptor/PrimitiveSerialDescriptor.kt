@@ -2,7 +2,7 @@ package com.greentree.commons.serialization.descriptor
 
 import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.serialization.data.Encoder
-import com.greentree.commons.serialization.serializer.serializer
+import kotlin.reflect.KClass
 
 abstract class PrimitiveSerialDescriptor<T>(cls: Class<T>) : SerialDescriptor<T> {
 
@@ -25,22 +25,10 @@ abstract class PrimitiveSerialDescriptor<T>(cls: Class<T>) : SerialDescriptor<T>
 	}
 }
 
-object IntSerialDescriptor : PrimitiveSerialDescriptor<Int>(Int::class.java) {
-
-	override fun encode(encoder: Encoder, value: Int) = encoder.encodeInt(value)
-	override fun decode(decoder: Decoder) = decoder.decodeInt()
-}
-
 object ByteSerialDescriptor : PrimitiveSerialDescriptor<Byte>(Byte::class.java) {
 
 	override fun encode(encoder: Encoder, value: Byte) = encoder.encodeByte(value)
 	override fun decode(decoder: Decoder) = decoder.decodeByte()
-}
-
-object StringSerialDescriptor : PrimitiveSerialDescriptor<String>(String::class.java) {
-
-	override fun encode(encoder: Encoder, value: String) = encoder.encodeString(value)
-	override fun decode(decoder: Decoder) = decoder.decodeString()
 }
 
 object ShortSerialDescriptor : PrimitiveSerialDescriptor<Short>(Short::class.java) {
@@ -49,22 +37,59 @@ object ShortSerialDescriptor : PrimitiveSerialDescriptor<Short>(Short::class.jav
 	override fun decode(decoder: Decoder) = decoder.decodeShort()
 }
 
+object IntSerialDescriptor : PrimitiveSerialDescriptor<Int>(Int::class.java) {
+
+	override fun encode(encoder: Encoder, value: Int) = encoder.encodeInt(value)
+	override fun decode(decoder: Decoder) = decoder.decodeInt()
+}
+
+object LongSerialDescriptor : PrimitiveSerialDescriptor<Long>(Long::class.java) {
+
+	override fun encode(encoder: Encoder, value: Long) = encoder.encodeLong(value)
+	override fun decode(decoder: Decoder) = decoder.decodeLong()
+}
+
+object FloatSerialDescriptor : PrimitiveSerialDescriptor<Float>(Float::class.java) {
+
+	override fun encode(encoder: Encoder, value: Float) = encoder.encodeFloat(value)
+	override fun decode(decoder: Decoder) = decoder.decodeFloat()
+}
+
+object DoubleSerialDescriptor : PrimitiveSerialDescriptor<Double>(Double::class.java) {
+
+	override fun encode(encoder: Encoder, value: Double) = encoder.encodeDouble(value)
+	override fun decode(decoder: Decoder) = decoder.decodeDouble()
+}
+
+object StringSerialDescriptor : PrimitiveSerialDescriptor<String>(String::class.java) {
+
+	override fun encode(encoder: Encoder, value: String) = encoder.encodeString(value)
+	override fun decode(decoder: Decoder) = decoder.decodeString()
+}
+
 data class EnumSerialDescriptor<E : Enum<E>>(private val cls: Class<E>) : PrimitiveSerialDescriptor<E>(cls) {
 
 	override fun encode(encoder: Encoder, value: E) = encoder.encodeInt(value.ordinal)
 	override fun decode(decoder: Decoder) = cls.enumConstants[decoder.decodeInt()]
 }
 
-data class ObjectSerialDescriptor<T : Any>(private val cls: Class<T>) : PrimitiveSerialDescriptor<T>(cls) {
+data class ObjectSerialDescriptor<T : Any>(private val cls: KClass<T>) : PrimitiveSerialDescriptor<T>(cls.java) {
 
-	override fun encode(encoder: Encoder, value: T) = serializer(cls).serialize(encoder, value)
-	override fun decode(decoder: Decoder) = serializer(cls).deserialize(decoder)
+	override fun encode(encoder: Encoder, value: T) {}
+	override fun decode(decoder: Decoder) = cls.objectInstance!!
 }
 
 val <T : Any> Class<T>.descriptor
 	get() = when(this) {
 		String::class.java -> StringSerialDescriptor as SerialDescriptor<T>
-		Int::class.java -> IntSerialDescriptor as SerialDescriptor<T>
+		Byte::class.java -> ByteSerialDescriptor as SerialDescriptor<T>
 		Short::class.java -> ShortSerialDescriptor as SerialDescriptor<T>
-		else -> ReflectionSerialDescriptor(this)
+		Int::class.java -> IntSerialDescriptor as SerialDescriptor<T>
+		Long::class.java -> LongSerialDescriptor as SerialDescriptor<T>
+		Float::class.java -> FloatSerialDescriptor as SerialDescriptor<T>
+		Double::class.java -> DoubleSerialDescriptor as SerialDescriptor<T>
+		else -> when {
+			kotlin.objectInstance != null -> ObjectSerialDescriptor(kotlin)
+			else -> ReflectionSerialDescriptor(this)
+		}
 	}

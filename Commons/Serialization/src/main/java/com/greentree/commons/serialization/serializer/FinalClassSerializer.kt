@@ -30,11 +30,13 @@ class FinalClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 		return try {
 			val constructor = cls.getSupportedConstructor(*parameters.map { it.javaClass.unboxing() }
 				.toTypedArray())
+			constructor.trySetAccessible()
 			constructor.newInstance(*parameters.toTypedArray())
 		} catch(e: NoSuchMethodException) {
 			try {
 				val constructor = cls.getSupportedConstructor(*parameters.map { it.javaClass.unboxing() }
 					.toTypedArray() + DefaultConstructorMarker::class.java)
+				constructor.trySetAccessible()
 				constructor.newInstance(*(parameters.toTypedArray() as Array<Any?> + null as Any?))
 			} catch(e1: Exception) {
 				e.addSuppressed(e1)

@@ -8,3 +8,9 @@ sealed interface Name {
 data class NameImpl(override val value: String) : Name
 
 data class ProxyName(val origin: Name) : Name by origin
+
+data object Anton : Name {
+
+	override val value: String
+		get() = "Anton"
+}
