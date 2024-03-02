@@ -8,10 +8,20 @@ public class TestConfig {
     }
 
     @AutowiredProvider
-    Person personCopyWithLastName(Person person) {
-        return new NamePerson(person.getName() + " AAA");
+    Shape newRect() {
+        return new Rect(15f);
     }
 
+    @AutowiredProvider
+    Shape newTriangle() {
+        return new Triangle(15f);
+    }
+
+    //    @AutowiredProvider
+//    Person personCopyWithLastName(Person person) {
+//        return new NamePerson(person.getName() + " AAA");
+//    }
+//
     @AutowiredProvider
     Person personFromName(Name name) {
         return new NamePerson(name);

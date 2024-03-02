@@ -13,8 +13,7 @@ class AutowiredArgumentsProvider : ArgumentsProvider {
 				p0.testClass.get().getAnnotation(AutowiredConfig::class.java).value.java
 			)
 		return context.arguments(
-			p0.testMethod.get(),
-			p0.testMethod.get().getAnnotation(AutowiredTest::class.java).tags.toList()
+			p0.testMethod.get()
 		)
 	}
 }

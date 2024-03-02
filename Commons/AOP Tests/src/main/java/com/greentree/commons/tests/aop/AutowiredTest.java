@@ -12,6 +12,4 @@ import java.lang.annotation.*;
 @ParameterizedTest
 public @interface AutowiredTest {
 
-    String[] tags() default {};
-
 }

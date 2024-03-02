@@ -1,7 +1,6 @@
 package com.greentree.commons.tests.aop;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @AutowiredConfig(TestConfig.class)
 public class TestAOP {
@@ -11,9 +10,21 @@ public class TestAOP {
         assertNotNull(person.getName());
     }
 
-    @AutowiredTest(tags = {"Anton"})
-    void testTagAnton(Person person) {
+    @AutowiredTest
+    void testTagAnton(@AutowiredArgument(tags = {"Anton"}) Person person) {
         assertEquals(person.getName(), "Anton");
+    }
+
+    @AutowiredTest
+    void doubleArgumentNotNull(Person person, Shape shape) {
+        assertNotNull(person);
+        assertNotNull(person.getName());
+        assertNotNull(shape);
+    }
+
+    @AutowiredTest
+    void shapeAreaMoreZero(Shape shape) {
+        assertTrue(shape.getArea() > 0f);
     }
 
 }

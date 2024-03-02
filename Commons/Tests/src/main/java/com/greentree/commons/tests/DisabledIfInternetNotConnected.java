@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ExtendWith(DisabledIfRunInIDECondition.class)
-public @interface DisabledIfRunInIDE {
-
+@ExtendWith(DisabledIfInternetNotConnectedCondition.class)
+public @interface DisabledIfInternetNotConnected {
+	
 }

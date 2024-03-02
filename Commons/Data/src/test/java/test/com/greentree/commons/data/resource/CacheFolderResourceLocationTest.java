@@ -3,6 +3,7 @@ package test.com.greentree.commons.data.resource;
 import com.greentree.commons.data.resource.location.CacheResourceLocation;
 import com.greentree.commons.data.resource.location.RootFileResourceLocation;
 import com.greentree.commons.data.resource.location.RootUrlResourceLocation;
+import com.greentree.commons.tests.DisabledIfInternetNotConnected;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +43,7 @@ public class CacheFolderResourceLocationTest {
         out_dir.delete();
     }
 
+    @DisabledIfInternetNotConnected
     @Test
     void test2() throws IOException {
         final var out_dir = Files.createTempDirectory("out").toFile();

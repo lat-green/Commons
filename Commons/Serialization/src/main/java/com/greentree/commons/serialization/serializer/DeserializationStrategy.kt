@@ -3,6 +3,7 @@ package com.greentree.commons.serialization.serializer
 import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.util.UnsafeUtil
 import sun.misc.Unsafe
+import java.lang.reflect.Modifier
 
 interface DeserializationStrategy<T : Any> {
 
@@ -19,6 +20,9 @@ interface DeserializationStrategy<T : Any> {
 
 private fun <T : Any> Unsafe.copy(value: T, dest: T) {
 	for(field in value::class.java.declaredFields) {
+		val m = field.modifiers
+		if(Modifier.isStatic(m))
+			continue
 		val offset = objectFieldOffset(field)
 		when(field.type) {
 			Byte::class.java -> {

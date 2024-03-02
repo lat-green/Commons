@@ -2,38 +2,46 @@ package com.greentree.commons.tests.aop
 
 import org.junit.jupiter.params.provider.Arguments
 import java.lang.reflect.Method
+import java.util.*
 import java.util.stream.Stream
 
 interface DependencyContext {
 
-	operator fun <T> get(type: Class<T>, tags: Collection<String>): Collection<() -> T>
+	operator fun <T> get(type: Class<T>, tags: Collection<String>): Collection<T>
 
 	fun count(type: Class<*>, tags: Collection<String>): Int = get(type, tags).size
 }
 
-fun DependencyContext.arguments(method: Method, tags: Collection<String> = listOf()) =
-	arguments(tags, *method.parameterTypes)
+fun DependencyContext.arguments(method: Method) = run {
+	val a = method.parameters.map {
+		it.type!! to (it.getAnnotation(AutowiredArgument::class.java)?.tags?.toList() ?: listOf())
+	}
+	val s = arguments(a).toList()
+//	println(method)
+//	println(a)
+//	println(s)
+//	println()
+	s.stream()
+}
 
-fun DependencyContext.arguments(tags: Collection<String>, vararg types: Class<*>): Stream<out Arguments> {
-	val result = mutableListOf<Arguments>()
-	val count = types.map { count(it, tags) }.reduceOrNull { a, b -> a * b / gcd(a, b) } ?: 0
-	solve(types.iterator(), mutableListOf(), result, tags)
-	return result.stream()
+fun DependencyContext.arguments(types: List<Pair<Class<*>, Collection<String>>>): Stream<out Arguments> {
+	val values = types.map { (cls, tags) -> get(cls, tags) }
+	return solve(values).stream()
 }
 
 fun DependencyContext.solve(
-	iterator: Iterator<Class<*>>,
-	line: MutableCollection<() -> Any>,
-	result: MutableCollection<Arguments>,
-	tags: Collection<String>,
-) {
-	if(iterator.hasNext()) {
-		val cls = iterator.next()
-		for(v in get(cls, tags)) {
-			line.add(v)
-			solve(iterator, line, result, tags)
-			line.remove(v)
+	values: List<Collection<Any>>,
+	index: Int = 0,
+	line: Stack<Any> = Stack(),
+	result: MutableCollection<Arguments> = mutableListOf(),
+): Collection<Arguments> {
+	if(index < values.size) {
+		for(v in values[index]) {
+			line.push(v)
+			solve(values, index + 1, line, result)
+			line.pop()
 		}
 	} else
-		result.add(SimpleArguments(line.map { it() }.toTypedArray()))
+		result.add(SimpleArguments(line.toTypedArray()))
+	return result
 }

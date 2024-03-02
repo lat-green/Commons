@@ -1,7 +1,6 @@
-package test.com.greentree.commons.serialization.test.com.greentree.commons.serialization
+package test.com.greentree.commons.serialization
 
 import com.greentree.commons.serialization.data.Bytes
-import com.greentree.commons.serialization.data.Json
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import test.data.Anton
