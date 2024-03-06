@@ -2,26 +2,18 @@ package com.greentree.commons.tests.aop
 
 import org.junit.jupiter.params.provider.Arguments
 import java.lang.reflect.Method
-import java.util.*
 import java.util.stream.Stream
 
 interface DependencyContext {
 
-	operator fun <T> get(type: Class<T>, tags: Collection<String>): Collection<T>
-
-	fun count(type: Class<*>, tags: Collection<String>): Int = get(type, tags).size
+	operator fun <T> get(type: Class<T>, tags: Collection<String>): Iterable<T>
 }
 
 fun DependencyContext.arguments(method: Method) = run {
 	val a = method.parameters.map {
 		it.type!! to (it.getAnnotation(AutowiredArgument::class.java)?.tags?.toList() ?: listOf())
 	}
-	val s = arguments(a).toList()
-//	println(method)
-//	println(a)
-//	println(s)
-//	println()
-	s.stream()
+	arguments(a)
 }
 
 fun DependencyContext.arguments(types: List<Pair<Class<*>, Collection<String>>>): Stream<out Arguments> {
@@ -30,18 +22,18 @@ fun DependencyContext.arguments(types: List<Pair<Class<*>, Collection<String>>>)
 }
 
 fun DependencyContext.solve(
-	values: List<Collection<Any>>,
-	index: Int = 0,
-	line: Stack<Any> = Stack(),
-	result: MutableCollection<Arguments> = mutableListOf(),
+	values: List<Iterable<Any>>,
 ): Collection<Arguments> {
-	if(index < values.size) {
-		for(v in values[index]) {
-			line.push(v)
-			solve(values, index + 1, line, result)
-			line.pop()
+	var result = listOf(listOf<Any>())
+
+	for(v in values)
+		result = result.flatMap {
+			v.map { e ->
+				it + e
+			}
 		}
-	} else
-		result.add(SimpleArguments(line.toTypedArray()))
-	return result
+	
+	return result.map {
+		Arguments.of(*it.toTypedArray())
+	}
 }

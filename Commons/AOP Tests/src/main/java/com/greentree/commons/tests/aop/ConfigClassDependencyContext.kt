@@ -20,27 +20,36 @@ class ConfigClassDependencyContext(configuration: Class<*>) : DependencyContext 
 
 		var running = false
 
-		override fun <T> get(type: Class<T>, tags: Collection<String>): Collection<T> {
-			if(running || !isExtends(type, method.returnType))
-				return listOf()
-			val methodTags = method.getAnnotation(AutowiredProvider::class.java).tags.toList()
-			if(!methodTags.containsAll(tags))
-				return listOf()
-			running = true
-			try {
-				var arguments = this@ConfigClassDependencyContext.arguments(method)
-				return arguments.map { method.invoke(configurationInstance, *it.get()) as T }.toList()
-			} finally {
-				running = false
+		override fun <T> get(type: Class<T>, tags: Collection<String>): Iterable<T> {
+			return object : Iterable<T> {
+				override fun iterator(): Iterator<T> {
+					if(running || !isExtends(type, method.returnType))
+						return listOf<T>().iterator()
+					val methodTags = method.getAnnotation(AutowiredProvider::class.java).tags.toList()
+					if(!methodTags.containsAll(tags))
+						return listOf<T>().iterator()
+					running = true
+					try {
+						var arguments = this@ConfigClassDependencyContext.arguments(method)
+						return arguments.map { method.invoke(configurationInstance, *it.get()) as T }.toList()
+							.iterator()
+					} finally {
+						running = false
+					}
+				}
 			}
 		}
 	}
 
-	override fun <T> get(type: Class<T>, tags: Collection<String>): Collection<T> {
-		val result = mutableSetOf<T>()
-		for(ctx in contexts) {
-			result.addAll(ctx[type, tags])
+	override fun <T> get(type: Class<T>, tags: Collection<String>): Iterable<T> {
+		return object : Iterable<T> {
+			override fun iterator(): Iterator<T> {
+				val result = mutableSetOf<T>()
+				for(ctx in contexts) {
+					result.addAll(ctx[type, tags])
+				}
+				return result.iterator()
+			}
 		}
-		return result
 	}
 }
