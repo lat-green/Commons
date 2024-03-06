@@ -4,14 +4,11 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.concurrent.locks.StampedLock;
 
 public final class InMemoryResource implements IOResource {
 
     private static final long serialVersionUID = 1L;
-    private final ResourceActionImpl action = new ResourceActionImpl();
     private final String name;
-    private final StampedLock lock = new StampedLock();
     private long lastModified;
     private byte[] data;
 
@@ -24,22 +21,14 @@ public final class InMemoryResource implements IOResource {
         this.name = name;
     }
 
+    @Deprecated
     public void setData(byte[] data) {
         final var clone = data.clone();
-        final long stamp = lock.writeLock();
-        try {
-            setData0(clone);
-        } finally {
-            lock.unlockWrite(stamp);
-        }
+        setData0(clone);
     }
 
     private void setData0(byte[] data) {
-        if (exists())
-            action.eventModify();
-        else
-            action.eventCreate();
-        this.data = data.clone();
+        this.data = data;
         setLastModified();
     }
 
@@ -49,7 +38,7 @@ public final class InMemoryResource implements IOResource {
 
     @Override
     public ResourceAction getAction() {
-        return action;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -69,18 +58,7 @@ public final class InMemoryResource implements IOResource {
 
     @Override
     public InputStream open() {
-        final var in = new ByteArrayInputStream(data) {
-
-            private final long stamp = lock.readLock();
-
-            @Override
-            public void close() throws IOException {
-                super.close();
-                lock.unlockRead(stamp);
-            }
-
-        };
-        return in;
+        return new ByteArrayInputStream(data);
     }
 
     @Override
@@ -97,7 +75,6 @@ public final class InMemoryResource implements IOResource {
     public boolean delete() {
         if (!exists())
             return false;
-        action.eventDelete();
         data = null;
         return true;
     }
@@ -106,26 +83,19 @@ public final class InMemoryResource implements IOResource {
     public OutputStream openWrite() {
         final var out = new ByteArrayOutputStream() {
 
-            private final long stamp = lock.writeLock();
-
             @Override
             public void close() throws IOException {
                 setData0(toByteArray());
                 super.close();
-                lock.unlockWrite(stamp);
             }
         };
         return out;
     }
 
+    @Deprecated
     public void setData(byte[] data, int from, int to) {
         final var clone = Arrays.copyOfRange(data, from, to);
-        final long stamp = lock.writeLock();
-        try {
-            setData0(clone);
-        } finally {
-            lock.unlockWrite(stamp);
-        }
+        setData0(clone);
     }
 
 }

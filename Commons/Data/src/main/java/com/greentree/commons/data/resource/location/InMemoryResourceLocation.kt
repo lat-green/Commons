@@ -6,7 +6,7 @@ class InMemoryResourceLocation : MapIOResourceLocation<InMemoryResource>, IOReso
 	constructor()
 	constructor(resources: Iterable<InMemoryResource>) : super(resources)
 
-	override fun newResource(name: String?): InMemoryResource {
+	override fun newResource(name: String): InMemoryResource {
 		return InMemoryResource(name)
 	}
 

@@ -20,13 +20,13 @@ abstract class MapIOResourceLocation<R : IOResource> : IOResourceLocation {
 
 	@Synchronized
 	override fun createNewResource(name: String): R {
-		require(resources.containsKey(name)) { "already created $name" }
+		require(!resources.containsKey(name)) { "already created $name" }
 		val res = newResource(name)
 		resources[name] = res
 		return res
 	}
 
-	protected abstract fun newResource(name: String?): R
+	protected abstract fun newResource(name: String): R
 
 	companion object {
 
