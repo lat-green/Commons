@@ -59,25 +59,25 @@ public class TypeUtil {
         throw new IllegalArgumentException("lcas " + lcas + " of " + a + " " + b);
     }
 
-    public static <T, S> TypeInfo<T> getFirstAtgument(Class<? extends S> type,
+    public static <T, S> TypeInfo<T> getFirstArgument(Class<? extends S> type,
                                                       Class<S> superClass) {
-        return getFirstAtgument(TypeInfoBuilder.getTypeInfo(type), superClass);
+        return getFirstArgument(TypeInfoBuilder.getTypeInfo(type), superClass);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T, S> TypeInfo<T> getFirstAtgument(TypeInfo<? extends S> type,
+    public static <T, S> TypeInfo<T> getFirstArgument(TypeInfo<? extends S> type,
                                                       Class<S> superClass) {
-        return (TypeInfo<T>) getTtype(type, superClass).getTypeArguments()[0];
+        return (TypeInfo<T>) getType(type, superClass).getTypeArguments()[0];
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> TypeInfo<T> getTtype(TypeInfo<? extends T> type, Class<T> superClass) {
+    public static <T> TypeInfo<T> getType(TypeInfo<? extends T> type, Class<T> superClass) {
         if (type.toClass().equals(superClass))
             return (TypeInfo<T>) type;
         final var superType = TypeInfoBuilder.getTypeInfo(superClass);
         for (var i : getSuperClassAndInterfaces(type))
             if (isExtends(superType, i)) {
-                final TypeInfo<T> t = getTtype((TypeInfo<? extends T>) i, superClass);
+                final TypeInfo<T> t = getType((TypeInfo<? extends T>) i, superClass);
                 if (t != null)
                     return t;
             }

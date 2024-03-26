@@ -39,9 +39,9 @@ public final class GenericType implements ParameterizedType, Serializable {
 		return genericType.apply(type, new Type[0]);
 	}
 	
-	public static GenericType build(Class<?> type, Type... parameteris) {
-		Objects.requireNonNull(parameteris);
-		return genericType.apply(type, parameteris);
+	public static GenericType build(Class<?> type, Type... parameters) {
+		Objects.requireNonNull(parameters);
+		return genericType.apply(type, parameters);
 	}
 	
 	public static GenericType make(Class<?> rawType, Type[] actualTypeArguments, Type ownerType) {
