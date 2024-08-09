@@ -16,3 +16,8 @@ interface IOResourceLocation : ResourceLocation {
 		return createResource(name)
 	}
 }
+
+fun IOResourceLocation.createOrGetResource(name: String) = if(isExist(name))
+	getResource(name)
+else
+	createNewResource(name)

@@ -4,6 +4,7 @@ import java.io.InputStream
 import java.io.Serializable
 import java.net.MalformedURLException
 import java.net.URL
+import java.nio.charset.Charset
 
 interface Resource : Serializable {
 
@@ -51,6 +52,14 @@ interface Resource : Serializable {
 		override fun exists() = false
 	}
 }
+
+val Resource.extension
+	get() = name.substringAfterLast('.')
+
+fun Resource.readBytes() = open().use { it.readBytes() }
+
+fun Resource.reader(charset: Charset = Charsets.UTF_8) = open().reader(charset)
+fun Resource.readText(charset: Charset = Charsets.UTF_8) = reader(charset).use { it.readText() }
 
 fun Resource.writeTo(result: IOResource, lastRead: Long) {
 	val m = lastModified()

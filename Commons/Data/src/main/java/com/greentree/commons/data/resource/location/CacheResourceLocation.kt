@@ -12,14 +12,14 @@ import java.net.URL
 class CacheResourceLocation(
 	private val sourceLocation: ResourceLocation,
 	private val cacheLocation: IOResourceLocation,
-) : IOResourceLocation {
+) : ResourceLocation {
 
 	override fun clear() {
 		cacheLocation.clear()
 	}
 
 	@Synchronized
-	override fun getResource(name: String): IOResource {
+	override fun getResource(name: String): Resource {
 		return if(cacheLocation.isExist(name)) {
 			if(sourceLocation.isExist(name)) {
 				val cache = cacheLocation.getResource(name)
@@ -39,18 +39,10 @@ class CacheResourceLocation(
 		} else IOResource.Null
 	}
 
-	override fun createNewResource(name: String): IOResource {
-		throw UnsupportedOperationException()
-	}
-
-	override fun deleteResource(name: String): Boolean {
-		return cacheLocation.deleteResource(name)
-	}
-
 	override val lastModified
 		get() = cacheLocation.lastModified
 
-	class CacheResource(private val source: Resource, private val cache: IOResource) : IOResource {
+	class CacheResource(private val source: Resource, private val cache: IOResource) : Resource {
 
 		override val action: ResourceAction
 			get() = source.action
@@ -74,16 +66,8 @@ class CacheResourceLocation(
 			return cache.url()
 		}
 
-		override fun delete(): Boolean {
-			return cache.delete()
-		}
-
 		override fun exists(): Boolean {
 			return cache.exists()
-		}
-
-		override fun openWrite(): OutputStream {
-			throw UnsupportedOperationException()
 		}
 
 		companion object {
