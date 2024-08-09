@@ -2,8 +2,6 @@ package com.greentree.commons.serialization.descriptor
 
 import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.serialization.data.Encoder
-import com.greentree.commons.serialization.serializer.isKotlin
-import kotlin.reflect.KClass
 
 abstract class PrimitiveSerialDescriptor<T>(cls: Class<T>) : SerialDescriptor<T> {
 
@@ -80,25 +78,19 @@ data class EnumSerialDescriptor<E : Enum<E>>(private val cls: Class<E>) : Primit
 	override fun decode(decoder: Decoder) = cls.enumConstants[decoder.decodeInt()]
 }
 
-data class ObjectSerialDescriptor<T : Any>(private val cls: KClass<T>) : PrimitiveSerialDescriptor<T>(cls.java) {
-
-	override fun encode(encoder: Encoder, value: T) {}
-	override fun decode(decoder: Decoder) = cls.objectInstance!!
-}
-
 val <T : Any> Class<T>.descriptor
-	get() = when(this) {
-		String::class.java -> StringSerialDescriptor as SerialDescriptor<T>
-		Byte::class.java -> ByteSerialDescriptor as SerialDescriptor<T>
-		Short::class.java -> ShortSerialDescriptor as SerialDescriptor<T>
-		Int::class.java -> IntSerialDescriptor as SerialDescriptor<T>
-		Integer::class.java -> IntSerialDescriptor as SerialDescriptor<T>
-		Long::class.java -> LongSerialDescriptor
-		Float::class.java -> FloatSerialDescriptor as SerialDescriptor<T>
-		Double::class.java -> DoubleSerialDescriptor
-		Boolean::class.java -> BooleanSerialDescriptor
-		else -> when {
-			isKotlin(kotlin) && kotlin.objectInstance != null -> ObjectSerialDescriptor(kotlin)
-			else -> ReflectionSerialDescriptor(this)
+	get() = run {
+		if(isPrimitive) when(this) {
+			String::class.java -> StringSerialDescriptor
+			Byte::class.java -> ByteSerialDescriptor
+			Short::class.java -> ShortSerialDescriptor
+			Int::class.java -> IntSerialDescriptor
+			Integer::class.java -> IntSerialDescriptor
+			Long::class.java -> LongSerialDescriptor
+			Float::class.java -> FloatSerialDescriptor
+			Double::class.java -> DoubleSerialDescriptor
+			Boolean::class.java -> BooleanSerialDescriptor
+			else -> TODO("$this")
 		}
+		else ReflectionSerialDescriptor(this)
 	} as SerialDescriptor<T>

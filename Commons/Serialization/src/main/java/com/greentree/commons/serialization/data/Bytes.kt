@@ -2,6 +2,7 @@ package com.greentree.commons.serialization.data
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.descriptor.descriptor
+import java.io.DataInputStream
 import java.io.EOFException
 import java.io.InputStream
 import java.io.OutputStream
@@ -10,7 +11,7 @@ import kotlin.reflect.KClass
 object Bytes {
 
 	fun encoder(output: OutputStream) = BytesEncoder(output)
-	fun decoder(input: InputStream) = BytesDecoder(input)
+	fun decoder(input: InputStream) = BytesDecoder(DataInputStream(input))
 
 	fun <T : Any> encodeToSteam(cls: KClass<T>, value: T, output: OutputStream) {
 		val encoder = encoder(output)
@@ -75,37 +76,25 @@ class BytesEncoder(private val output: OutputStream) : Encoder, Structure<Encode
 	override fun field(index: Int) = this
 }
 
-class BytesDecoder(private val input: InputStream) : Decoder, Structure<Decoder> {
+class BytesDecoder(private val input: DataInputStream) : Decoder, Structure<Decoder> {
 
-	override fun decodeBoolean(): Boolean {
-		TODO("Not yet implemented")
-	}
+	override fun decodeBoolean(): Boolean = input.readBoolean()
 
-	override fun decodeByte() = input.readByte()
+	override fun decodeByte(): Byte = input.readByte()
 
-	override fun decodeChar(): Char {
-		TODO("Not yet implemented")
-	}
+	override fun decodeChar(): Char = input.readChar()
 
-	override fun decodeShort(): Short {
-		TODO("Not yet implemented")
-	}
+	override fun decodeShort(): Short = input.readShort()
 
-	override fun decodeInt() = input.readInt()
+	override fun decodeInt(): Int = input.readInt()
 
-	override fun decodeLong(): Long {
-		TODO("Not yet implemented")
-	}
+	override fun decodeLong(): Long = input.readLong()
 
-	override fun decodeFloat(): Float {
-		TODO("Not yet implemented")
-	}
+	override fun decodeFloat(): Float = input.readFloat()
 
-	override fun decodeDouble(): Double {
-		TODO("Not yet implemented")
-	}
+	override fun decodeDouble(): Double = input.readDouble()
 
-	override fun decodeString() = input.readUTF()
+	override fun decodeString(): String = input.readUTF()
 
 	override fun beginStructure(descriptor: SerialDescriptor<*>) = this
 

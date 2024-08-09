@@ -18,6 +18,10 @@
         </dependency>
         <dependency>
             <groupId>com.greentree.commons</groupId>
+            <artifactId>injector</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
             <artifactId>reflection</artifactId>
         </dependency>
     </dependencies>
