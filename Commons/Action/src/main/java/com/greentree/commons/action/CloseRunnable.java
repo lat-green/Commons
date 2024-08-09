@@ -1,6 +1,4 @@
-package com.greentree.commons.data;
-
-import com.greentree.commons.action.ListenerCloser;
+package com.greentree.commons.action;
 
 public record CloseRunnable(ListenerCloser listenerCloser) implements Runnable {
 

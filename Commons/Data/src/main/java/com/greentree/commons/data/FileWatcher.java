@@ -1,5 +1,6 @@
 package com.greentree.commons.data;
 
+import com.greentree.commons.action.CloseRunnable;
 import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.action.observer.object.EventAction;
