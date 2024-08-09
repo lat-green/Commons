@@ -1,6 +1,6 @@
 package com.greentree.commons.data;
 
-import com.greentree.commons.action.CloseRunnable;
+import com.greentree.commons.action.ListenerCleanerKt;
 import com.greentree.commons.action.ListenerCloser;
 import com.greentree.commons.action.observable.ObjectObservable;
 import com.greentree.commons.action.observer.object.EventAction;
@@ -11,7 +11,6 @@ import com.greentree.commons.util.exception.WrappedException;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.Cleaner;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.WatchKey;
@@ -59,9 +58,8 @@ public class FileWatcher {
 
         private static final long serialVersionUID = 1L;
 
-        private final ListenerCloser lc1, lc2, lc3;
-
         public FileResourceAction(FolderResourceAction action, Path file) {
+            final ListenerCloser lc1, lc2, lc3;
             lc1 = action.getOnCreateAbsolute().addListener(f -> {
                 if (f.equals(file))
                     eventCreate();
@@ -74,10 +72,9 @@ public class FileWatcher {
                 if (f.equals(file))
                     eventDelete();
             });
-            var cleaner = Cleaner.create();
-            cleaner.register(this, new CloseRunnable(lc1));
-            cleaner.register(this, new CloseRunnable(lc2));
-            cleaner.register(this, new CloseRunnable(lc3));
+            ListenerCleanerKt.closeOnFinalize(lc1, this);
+            ListenerCleanerKt.closeOnFinalize(lc2, this);
+            ListenerCleanerKt.closeOnFinalize(lc3, this);
         }
 
     }
