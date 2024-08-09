@@ -19,21 +19,20 @@ interface RootTree<out V : Any> : Tree<V> {
 	val root: V
 		get() {
 			val iter = iterator()
-			var p: V?
-			var v: V?
-			p = iter.next()
+			var p = iter.next()
+			var v: V
 			do {
 				v = p
 				p = getParent(v)
 			} while(v !== p)
-			return v!!
+			return v
 		}
 
 	/** @return parent of vertex, or root if vertex is root
 	 */
-	fun getParent(v: Any?): V
+	fun getParent(v: @UnsafeVariance V): V
 
-	fun depth(v: Any?): Int {
+	fun depth(v: @UnsafeVariance V): Int {
 		var v = v
 		var depth = 0
 		var p: V? = null
@@ -49,7 +48,8 @@ interface RootTree<out V : Any> : Tree<V> {
 		val result = ArrayList<V>()
 		result.add(v)
 		for(c in getChildren(v)) {
-			for(e in getChildrenClosure(c)) result.add(e)
+			for(e in getChildrenClosure(c))
+				result.add(e)
 		}
 		return result
 	}

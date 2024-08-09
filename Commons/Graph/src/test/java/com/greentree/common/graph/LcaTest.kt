@@ -28,7 +28,7 @@ class LcaTest {
 				return superClass.isAssignableFrom(cls)
 			}
 
-			override fun getParent(v: Any?): Class<*> {
+			override fun getParent(v: Class<*>): Class<*> {
 				if(v === Any::class.java) return Any::class.java
 				return (v as Class<*>?)!!.superclass
 			}

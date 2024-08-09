@@ -39,7 +39,7 @@ class RootTreeBase<V>(root: V) : MutableRootTree<V> {
 		infos[root] = NodeInfo(root)
 	}
 
-	override fun getParent(v: Any?): V {
+	override fun getParent(v: V): V {
 		return infos[v]!!.parent.value
 	}
 
@@ -155,7 +155,5 @@ class RootTreeBase<V>(root: V) : MutableRootTree<V> {
 				n = n.next
 			}
 		}
-
 	}
-
 }
