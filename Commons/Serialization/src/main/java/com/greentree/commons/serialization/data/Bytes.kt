@@ -1,25 +1,48 @@
 package com.greentree.commons.serialization.data
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
-import com.greentree.commons.serialization.serializer.serializer
+import com.greentree.commons.serialization.descriptor.descriptor
 import java.io.EOFException
 import java.io.InputStream
 import java.io.OutputStream
+import kotlin.reflect.KClass
 
 object Bytes {
 
 	fun encoder(output: OutputStream) = BytesEncoder(output)
 	fun decoder(input: InputStream) = BytesDecoder(input)
 
+	fun <T : Any> encodeToSteam(cls: KClass<T>, value: T, output: OutputStream) {
+		val encoder = encoder(output)
+		cls.java.descriptor.encode(encoder, value)
+		output.flush()
+	}
+
+	fun <T : Any> decodeFromSteam(cls: KClass<T>, value: InputStream): T {
+		val decoder = decoder(value)
+		return cls.java.descriptor.decode(decoder)
+	}
+
+	fun <T : Any> encodeToSteam(cls: Class<T>, value: T, output: OutputStream) {
+		val encoder = encoder(output)
+		cls.descriptor.encode(encoder, value)
+		output.flush()
+	}
+
+	fun <T : Any> decodeFromSteam(cls: Class<T>, value: InputStream): T {
+		val decoder = decoder(value)
+		return cls.descriptor.decode(decoder)
+	}
+
 	inline fun <reified T : Any> encodeToSteam(value: T, output: OutputStream) {
 		val encoder = encoder(output)
-		serializer<T>().serialize(encoder, value)
+		T::class.java.descriptor.encode(encoder, value)
 		output.flush()
 	}
 
 	inline fun <reified T : Any> decodeFromSteam(value: InputStream): T {
 		val decoder = decoder(value)
-		return serializer<T>().deserialize(decoder)
+		return T::class.java.descriptor.decode(decoder)
 	}
 }
 

@@ -2,6 +2,7 @@ package test.com.greentree.commons.serialization
 
 import com.greentree.commons.serialization.data.Bytes
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import test.data.Anton
 import test.data.CustomPerson
@@ -39,6 +40,19 @@ class BytesTest {
 			Bytes.decodeFromSteam<NamePerson>(stream)
 		}
 		Assertions.assertEquals(person, person2)
+	}
+
+	@Test
+	fun testPrimitive() {
+		val value = 12
+		val arr = ByteArrayOutputStream().use { stream ->
+			Bytes.encodeToSteam(value, stream)
+			stream.toByteArray()
+		}
+		val decodeValue = ByteArrayInputStream(arr).use { stream ->
+			Bytes.decodeFromSteam<Int>(stream)
+		}
+		Assertions.assertEquals(value, decodeValue)
 	}
 
 	@Test
@@ -91,5 +105,20 @@ class BytesTest {
 			Bytes.decodeFromSteam<CustomPerson>(stream)
 		}
 		Assertions.assertEquals(person, person2)
+	}
+
+	@Disabled
+	@Test
+	fun reflectCollection() {
+		val list = mutableListOf<Any>()
+		list.add(list)
+		val arr = ByteArrayOutputStream().use { stream ->
+			Bytes.encodeToSteam(list, stream)
+			stream.toByteArray()
+		}
+		val deserializeList = ByteArrayInputStream(arr).use { stream ->
+			Bytes.decodeFromSteam<CustomPerson>(stream)
+		}
+		Assertions.assertEquals(list, deserializeList)
 	}
 }

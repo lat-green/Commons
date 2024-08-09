@@ -10,9 +10,9 @@ interface Serializer<T : Any> : SerializationStrategy<T>, DeserializationStrateg
 	override val descriptor: SerialDescriptor<T>
 }
 
-inline fun <reified T : Any> serializer() = serializer(T::class.java)
+inline fun <reified T : Any> serializer() = serializer(T::class)
 
-fun <T : Any> serializer(cls: KClass<T>) = serializer(cls.java)
+fun <T : Any> serializer(cls: Class<T>) = serializer(cls.kotlin)
 
 object SerializerCache {
 
@@ -26,25 +26,34 @@ object SerializerCache {
 	}
 }
 
-fun <T : Any> serializer(cls: Class<T>) =
+fun <T : Any> serializer(cls: KClass<T>): Serializer<T> =
 	when {
-		cls.isAnnotationPresent(CustomSerializer::class.java) -> SerializerCache.newInstance(
-			cls.getDeclaredAnnotation(CustomSerializer::class.java)
+		cls.java.isAnnotationPresent(CustomSerializer::class.java) -> SerializerCache.newInstance(
+			cls.java.getDeclaredAnnotation(CustomSerializer::class.java)
 				.serializator
 		) as Serializer<T>
-
-		Modifier.isFinal(cls.modifiers) -> FinalClassSerializer(cls)
-		cls.isSealed -> ByteNameJavaSealedClassSerializer(cls)
-		cls.kotlin.isSealed -> when {
-			cls.kotlin.sealedSubclasses.size < Byte.VALUES -> ByteNameKotlinSealedClassSerializer(
-				cls.kotlin
-			)
-
-			else -> IntNameKotlinSealedClassSerializer(cls.kotlin)
+//		cls.java == java.lang.Long::class.java -> LongSerializer
+//		cls.java == java.lang.Integer::class.java -> IntSerializer
+//		cls.java == java.lang.Short::class.java -> ShortSerializer
+//		cls.java == java.lang.Byte::class.java -> ByteSerializer
+//		cls.java == java.lang.Double::class.java -> DoubleSerializer
+//		cls.java == java.lang.Float::class.java -> FloatSerializer
+//		cls.java == java.lang.String::class.java -> StringSerializer
+//		cls.java == java.lang.Boolean::class.java -> BooleanSerializer
+		cls.java.isEnum -> EnumSerializer(cls)
+		Modifier.isFinal(cls.java.modifiers) -> FinalClassSerializer(cls.java)
+		cls.java.isSealed -> ByteNameJavaSealedClassSerializer(cls.java)
+		isKotlin(cls) && cls.isSealed -> when {
+			cls.sealedSubclasses.size < Byte.VALUES -> ByteNameKotlinSealedClassSerializer(cls)
+			else -> IntNameKotlinSealedClassSerializer(cls)
 		}
 
-		else -> BaseClassSerializer(cls)
-	}
+		else -> BaseClassSerializer(cls.java)
+	} as Serializer<T>
+
+fun isKotlin(cls: KClass<*>): Boolean {
+	return false
+}
 
 val Byte.Companion.VALUES
 	get() = MAX_VALUE - MIN_VALUE + 1

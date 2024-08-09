@@ -2,6 +2,7 @@ package com.greentree.commons.serialization.descriptor
 
 import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.serialization.data.Encoder
+import com.greentree.commons.serialization.serializer.isKotlin
 import kotlin.reflect.KClass
 
 abstract class PrimitiveSerialDescriptor<T>(cls: Class<T>) : SerialDescriptor<T> {
@@ -55,6 +56,12 @@ object FloatSerialDescriptor : PrimitiveSerialDescriptor<Float>(Float::class.jav
 	override fun decode(decoder: Decoder) = decoder.decodeFloat()
 }
 
+object BooleanSerialDescriptor : PrimitiveSerialDescriptor<Boolean>(Boolean::class.java) {
+
+	override fun encode(encoder: Encoder, value: Boolean) = encoder.encodeBoolean(value)
+	override fun decode(decoder: Decoder) = decoder.decodeBoolean()
+}
+
 object DoubleSerialDescriptor : PrimitiveSerialDescriptor<Double>(Double::class.java) {
 
 	override fun encode(encoder: Encoder, value: Double) = encoder.encodeDouble(value)
@@ -85,11 +92,13 @@ val <T : Any> Class<T>.descriptor
 		Byte::class.java -> ByteSerialDescriptor as SerialDescriptor<T>
 		Short::class.java -> ShortSerialDescriptor as SerialDescriptor<T>
 		Int::class.java -> IntSerialDescriptor as SerialDescriptor<T>
-		Long::class.java -> LongSerialDescriptor as SerialDescriptor<T>
+		Integer::class.java -> IntSerialDescriptor as SerialDescriptor<T>
+		Long::class.java -> LongSerialDescriptor
 		Float::class.java -> FloatSerialDescriptor as SerialDescriptor<T>
-		Double::class.java -> DoubleSerialDescriptor as SerialDescriptor<T>
+		Double::class.java -> DoubleSerialDescriptor
+		Boolean::class.java -> BooleanSerialDescriptor
 		else -> when {
-			kotlin.objectInstance != null -> ObjectSerialDescriptor(kotlin)
+			isKotlin(kotlin) && kotlin.objectInstance != null -> ObjectSerialDescriptor(kotlin)
 			else -> ReflectionSerialDescriptor(this)
 		}
-	}
+	} as SerialDescriptor<T>

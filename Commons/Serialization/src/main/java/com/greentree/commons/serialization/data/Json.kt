@@ -5,6 +5,7 @@ import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
+import com.greentree.commons.serialization.descriptor.descriptor
 import com.greentree.commons.serialization.serializer.serializer
 
 object Json : DecodeDataFormat<JsonElement> {
@@ -17,13 +18,13 @@ object Json : DecodeDataFormat<JsonElement> {
 		val encoder = encoder {
 			result = it
 		}
-		serializer<T>().serialize(encoder, value)
+		T::class.java.descriptor.encode(encoder, value)
 		return result
 	}
 
 	inline fun <reified T : Any> decodeFromString(value: JsonElement): T {
 		val decoder = decoder(value)
-		return serializer<T>().deserialize(decoder)
+		return T::class.java.descriptor.decode(decoder)
 	}
 
 	inline fun <reified T : Any> decodeFromStringTo(value: JsonElement, result: T): T {
