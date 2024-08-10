@@ -1,32 +1,24 @@
 package com.greentree.commons.serialization.descriptor
 
-import com.greentree.commons.serialization.data.Decoder
-import com.greentree.commons.serialization.data.Encoder
-import com.greentree.commons.serialization.serializer.serializer
 import java.lang.reflect.Modifier
 
-data class ReflectionSerialDescriptor<T : Any>(
-	val cls: Class<T>,
-) : SerialDescriptor<T> {
+data class ReflectionSerialDescriptor(
+	val cls: Class<*>,
+) : SerialDescriptor {
 
 	override val serialName: String
 		get() = cls.name
 	override val elementsCount: Int
 		get() = fields.size
-
-	override fun encode(encoder: Encoder, value: T) =
-		serializer(cls).serialize(encoder, value)
-
-	override fun decode(decoder: Decoder) =
-		serializer(cls).deserialize(decoder)
-
 	private val fields
-		get() = cls.declaredFields.filter { !Modifier.isStatic(it.modifiers) }
+		get() = cls.declaredFields
+			.filter { !Modifier.isStatic(it.modifiers) }
 			.filter { !Modifier.isTransient(it.modifiers) }
+			.sortedBy { it.name }
 
 	override fun getElementIndex(name: String) = fields.map { it.name }.indexOf(name)
 
-	override fun getElementName(index: Int) = fields[index].name
+	override fun getElementName(index: Int): String = fields[index].name
 
 	override fun isElementOptional(index: Int) = false
 

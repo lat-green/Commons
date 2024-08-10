@@ -1,8 +1,7 @@
 package com.greentree.commons.serialization.data
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
-import com.greentree.commons.serialization.descriptor.descriptor
-import java.io.DataInputStream
+import com.greentree.commons.serialization.serializer.serializer
 import java.io.EOFException
 import java.io.InputStream
 import java.io.OutputStream
@@ -11,39 +10,39 @@ import kotlin.reflect.KClass
 object Bytes {
 
 	fun encoder(output: OutputStream) = BytesEncoder(output)
-	fun decoder(input: InputStream) = BytesDecoder(DataInputStream(input))
+	fun decoder(input: InputStream) = BytesDecoder(input)
 
-	fun <T : Any> encodeToSteam(cls: KClass<T>, value: T, output: OutputStream) {
+	fun <T : Any> encodeToSteam(cls: KClass<in T>, value: T, output: OutputStream) {
 		val encoder = encoder(output)
-		cls.java.descriptor.encode(encoder, value)
+		serializer(cls).serialize(encoder, value)
 		output.flush()
 	}
 
 	fun <T : Any> decodeFromSteam(cls: KClass<T>, value: InputStream): T {
 		val decoder = decoder(value)
-		return cls.java.descriptor.decode(decoder)
+		return serializer(cls).deserialize(decoder)
 	}
 
-	fun <T : Any> encodeToSteam(cls: Class<T>, value: T, output: OutputStream) {
+	fun <T : Any> encodeToSteam(cls: Class<in T>, value: T, output: OutputStream) {
 		val encoder = encoder(output)
-		cls.descriptor.encode(encoder, value)
+		serializer(cls).serialize(encoder, value)
 		output.flush()
 	}
 
 	fun <T : Any> decodeFromSteam(cls: Class<T>, value: InputStream): T {
 		val decoder = decoder(value)
-		return cls.descriptor.decode(decoder)
+		return serializer(cls).deserialize(decoder)
 	}
 
 	inline fun <reified T : Any> encodeToSteam(value: T, output: OutputStream) {
 		val encoder = encoder(output)
-		T::class.java.descriptor.encode(encoder, value)
+		serializer<T>().serialize(encoder, value)
 		output.flush()
 	}
 
 	inline fun <reified T : Any> decodeFromSteam(value: InputStream): T {
 		val decoder = decoder(value)
-		return T::class.java.descriptor.decode(decoder)
+		return serializer<T>().deserialize(decoder)
 	}
 }
 
@@ -67,7 +66,11 @@ class BytesEncoder(private val output: OutputStream) : Encoder, Structure<Encode
 
 	override fun encodeString(value: String) = output.writeUTF(value)
 
-	override fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Encoder> {
+	override fun beginStructure(descriptor: SerialDescriptor): Structure<Encoder> {
+		return this
+	}
+
+	override fun beginCollection(descriptor: SerialDescriptor): Structure<Encoder> {
 		return this
 	}
 
@@ -76,7 +79,7 @@ class BytesEncoder(private val output: OutputStream) : Encoder, Structure<Encode
 	override fun field(index: Int) = this
 }
 
-class BytesDecoder(private val input: DataInputStream) : Decoder, Structure<Decoder> {
+class BytesDecoder(private val input: InputStream) : Decoder, Structure<Decoder> {
 
 	override fun decodeBoolean(): Boolean = input.readBoolean()
 
@@ -96,11 +99,23 @@ class BytesDecoder(private val input: DataInputStream) : Decoder, Structure<Deco
 
 	override fun decodeString(): String = input.readUTF()
 
-	override fun beginStructure(descriptor: SerialDescriptor<*>) = this
+	override fun beginStructure(descriptor: SerialDescriptor) = this
+
+	override fun beginCollection(descriptor: SerialDescriptor) = this
 
 	override fun field(name: String) = this
 
 	override fun field(index: Int) = this
+}
+
+private fun InputStream.readDouble(): Double = java.lang.Double.longBitsToDouble(readLong())
+
+private fun InputStream.readFloat(): Float = java.lang.Float.intBitsToFloat(readInt())
+
+private fun InputStream.readChar(): Char {
+	val a = readOrEOF() shl 8
+	val b = readOrEOF() shl 0
+	return (a or b).toChar()
 }
 
 private fun OutputStream.writeUTF(value: String) {

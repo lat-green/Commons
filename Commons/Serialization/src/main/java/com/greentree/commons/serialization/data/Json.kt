@@ -1,36 +1,50 @@
 package com.greentree.commons.serialization.data
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
-import com.greentree.commons.serialization.descriptor.descriptor
+import com.greentree.commons.serialization.serializer.DeserializationStrategy
+import com.greentree.commons.serialization.serializer.SerializationStrategy
 import com.greentree.commons.serialization.serializer.serializer
+import kotlin.reflect.KClass
 
 object Json : DecodeDataFormat<JsonElement> {
 
 	override fun decoder(json: JsonElement) = JsonDecoder(json)
 	fun encoder(onResult: (JsonElement) -> Unit) = JsonEncoder(onResult)
 
-	inline fun <reified T : Any> encodeToString(value: T): JsonElement {
+	inline fun <reified T : Any> encodeToString(value: T) =
+		encodeToString(serializer<T>(), value)
+
+	inline fun <reified T : Any> decodeFromString(value: JsonElement) =
+		decodeFromString(serializer<T>(), value)
+
+	fun <T : Any> encodeToString(serializer: SerializationStrategy<T>, value: T): JsonElement {
 		lateinit var result: JsonElement
 		val encoder = encoder {
 			result = it
 		}
-		T::class.java.descriptor.encode(encoder, value)
+		serializer.serialize(encoder, value)
 		return result
 	}
 
-	inline fun <reified T : Any> decodeFromString(value: JsonElement): T {
+	fun <T : Any> decodeFromString(serializer: DeserializationStrategy<T>, value: JsonElement): T {
 		val decoder = decoder(value)
-		return T::class.java.descriptor.decode(decoder)
+		return serializer.deserialize(decoder)
 	}
 
-	inline fun <reified T : Any> decodeFromStringTo(value: JsonElement, result: T): T {
-		val decoder = decoder(value)
-		return serializer<T>().deserializeTo(decoder, result)
-	}
+	fun <T : Any> encodeToString(cls: KClass<in T>, value: T) = encodeToString(serializer(cls), value)
+
+	fun <T : Any> decodeFromString(cls: KClass<T>, value: JsonElement) =
+		decodeFromString(serializer(cls), value)
+
+	fun <T : Any> encodeToString(cls: Class<in T>, value: T) = encodeToString(serializer(cls), value)
+
+	fun <T : Any> decodeFromString(cls: Class<T>, value: JsonElement) =
+		decodeFromString(serializer(cls), value)
 }
 
 class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {
@@ -79,7 +93,7 @@ class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {
 		setResult(JsonPrimitive(value))
 	}
 
-	override fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Encoder> {
+	override fun beginStructure(descriptor: SerialDescriptor): Structure<Encoder> {
 		val result = JsonObject()
 
 		return object : Structure<Encoder> {
@@ -91,6 +105,25 @@ class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {
 			}
 
 			override fun field(index: Int) = field(descriptor.getElementName(index))
+
+			override fun close() {
+				setResult(result)
+			}
+		}
+	}
+
+	override fun beginCollection(descriptor: SerialDescriptor): Structure<Encoder> {
+		val result = JsonArray()
+
+		return object : Structure<Encoder> {
+			override fun field(name: String) = field(name.toInt())
+
+			override fun field(index: Int): JsonEncoder {
+				val res = JsonEncoder {
+					result[index] = it
+				}
+				return res
+			}
 
 			override fun close() {
 				setResult(result)
@@ -119,7 +152,17 @@ class JsonDecoder(private val element: JsonElement) : Decoder {
 
 	override fun decodeString(): String = element.asString
 
-	override fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Decoder> {
+	override fun beginCollection(descriptor: SerialDescriptor): Structure<Decoder> {
+		val element = element.asJsonArray
+
+		return object : Structure<Decoder> {
+			override fun field(name: String) = field(name.toInt())
+
+			override fun field(index: Int) = JsonDecoder(element.get(index))
+		}
+	}
+
+	override fun beginStructure(descriptor: SerialDescriptor): Structure<Decoder> {
 		val element = element.asJsonObject
 
 		return object : Structure<Decoder> {

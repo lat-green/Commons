@@ -4,27 +4,28 @@ import com.greentree.commons.reflection.ClassUtil
 import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.serialization.data.Encoder
 import com.greentree.commons.serialization.descriptor.ReflectionSerialDescriptor
-import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
-import kotlin.jvm.internal.DefaultConstructorMarker
+import kotlin.reflect.full.primaryConstructor
 
-class FinalClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
+class FinalClassSerializer<T : Any>(
+	private val cls: Class<out T>
+) : Serializer<T> {
 
-	override val descriptor: SerialDescriptor<T>
-		get() = ReflectionSerialDescriptor(cls)
+	override val descriptor = ReflectionSerialDescriptor(cls)
 
 	init {
-		require(Modifier.isFinal(cls.modifiers)) { "type $cls is not final" }
+//		require(Modifier.isFinal(cls.modifiers)) { "type $cls is not final" }
 	}
 
 	override fun deserialize(decoder: Decoder): T {
 		val parameters = mutableListOf<Any>()
 		decoder.beginStructure(descriptor).use { struct ->
-			for(i in 0 ..< descriptor.elementsCount) {
-				val fieldTypeDescriptor = descriptor.getElementDescriptor(i)
-				val value = fieldTypeDescriptor.decode(struct.field(i))!!
-				parameters.add(value)
+			for(parameter in cls.kotlin.primaryConstructor!!.parameters) {
+				val field = cls.getDeclaredField(parameter.name)
+				field.trySetAccessible()
+				val serializer = serializer(field.type as Class<Any>)
+				parameters.add(serializer.deserialize(struct.field(field.name)))
 			}
 		}
 		return try {
@@ -35,7 +36,7 @@ class FinalClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 		} catch(e: NoSuchMethodException) {
 			try {
 				val constructor = cls.getSupportedConstructor(*parameters.map { it.javaClass.unboxing() }
-					.toTypedArray() + DefaultConstructorMarker::class.java)
+					.toTypedArray() + kotlin.jvm.internal.DefaultConstructorMarker::class.java)
 				constructor.trySetAccessible()
 				constructor.newInstance(*(parameters.toTypedArray() as Array<Any?> + null as Any?))
 			} catch(e1: Exception) {
@@ -47,11 +48,11 @@ class FinalClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 
 	override fun serialize(encoder: Encoder, value: T) {
 		encoder.beginStructure(descriptor).use { struct ->
-			for(i in 0 ..< descriptor.elementsCount) {
-				val fieldTypeDescriptor = descriptor.getElementDescriptor(i) as SerialDescriptor<Any>
-				val field = cls.getDeclaredField(descriptor.getElementName(i))
+			for(parameter in cls.kotlin.primaryConstructor!!.parameters) {
+				val field = cls.getDeclaredField(parameter.name)
 				field.trySetAccessible()
-				fieldTypeDescriptor.encode(struct.field(i), field.get(value))
+				val serializer = serializer(field.type as Class<Any>)
+				serializer.serialize(struct.field(field.name), field.get(value))
 			}
 		}
 	}

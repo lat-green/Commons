@@ -1,9 +1,8 @@
 package com.greentree.commons.serialization.descriptor
 
-import com.greentree.commons.serialization.data.Decoder
-import com.greentree.commons.serialization.data.Encoder
+import kotlin.reflect.KClass
 
-abstract class PrimitiveSerialDescriptor<T>(cls: Class<T>) : SerialDescriptor<T> {
+abstract class PrimitiveSerialDescriptor(cls: Class<*>) : SerialDescriptor {
 
 	override val serialName: String = cls.name
 	override val elementsCount: Int
@@ -19,68 +18,43 @@ abstract class PrimitiveSerialDescriptor<T>(cls: Class<T>) : SerialDescriptor<T>
 
 	override fun isElementOptional(index: Int) = false
 
-	override fun getElementDescriptor(index: Int): SerialDescriptor<*> {
+	override fun getElementDescriptor(index: Int): SerialDescriptor {
 		TODO("Not yet implemented")
 	}
 }
 
-object ByteSerialDescriptor : PrimitiveSerialDescriptor<Byte>(Byte::class.java) {
+object ByteSerialDescriptor : PrimitiveSerialDescriptor(Byte::class.java)
 
-	override fun encode(encoder: Encoder, value: Byte) = encoder.encodeByte(value)
-	override fun decode(decoder: Decoder) = decoder.decodeByte()
+object CharSerialDescriptor : PrimitiveSerialDescriptor(Char::class.java)
+
+object ShortSerialDescriptor : PrimitiveSerialDescriptor(Short::class.java)
+
+object IntSerialDescriptor : PrimitiveSerialDescriptor(Int::class.java)
+
+object LongSerialDescriptor : PrimitiveSerialDescriptor(Long::class.java)
+
+object FloatSerialDescriptor : PrimitiveSerialDescriptor(Float::class.java)
+
+object BooleanSerialDescriptor : PrimitiveSerialDescriptor(Boolean::class.java)
+
+object DoubleSerialDescriptor : PrimitiveSerialDescriptor(Double::class.java)
+
+object StringSerialDescriptor : PrimitiveSerialDescriptor(String::class.java)
+
+data class EnumSerialDescriptor(private val cls: Class<*>) : PrimitiveSerialDescriptor(cls) {
+
+	init {
+		require(cls.isEnum)
+	}
 }
 
-object ShortSerialDescriptor : PrimitiveSerialDescriptor<Short>(Short::class.java) {
-
-	override fun encode(encoder: Encoder, value: Short) = encoder.encodeShort(value)
-	override fun decode(decoder: Decoder) = decoder.decodeShort()
-}
-
-object IntSerialDescriptor : PrimitiveSerialDescriptor<Int>(Int::class.java) {
-
-	override fun encode(encoder: Encoder, value: Int) = encoder.encodeInt(value)
-	override fun decode(decoder: Decoder) = decoder.decodeInt()
-}
-
-object LongSerialDescriptor : PrimitiveSerialDescriptor<Long>(Long::class.java) {
-
-	override fun encode(encoder: Encoder, value: Long) = encoder.encodeLong(value)
-	override fun decode(decoder: Decoder) = decoder.decodeLong()
-}
-
-object FloatSerialDescriptor : PrimitiveSerialDescriptor<Float>(Float::class.java) {
-
-	override fun encode(encoder: Encoder, value: Float) = encoder.encodeFloat(value)
-	override fun decode(decoder: Decoder) = decoder.decodeFloat()
-}
-
-object BooleanSerialDescriptor : PrimitiveSerialDescriptor<Boolean>(Boolean::class.java) {
-
-	override fun encode(encoder: Encoder, value: Boolean) = encoder.encodeBoolean(value)
-	override fun decode(decoder: Decoder) = decoder.decodeBoolean()
-}
-
-object DoubleSerialDescriptor : PrimitiveSerialDescriptor<Double>(Double::class.java) {
-
-	override fun encode(encoder: Encoder, value: Double) = encoder.encodeDouble(value)
-	override fun decode(decoder: Decoder) = decoder.decodeDouble()
-}
-
-object StringSerialDescriptor : PrimitiveSerialDescriptor<String>(String::class.java) {
-
-	override fun encode(encoder: Encoder, value: String) = encoder.encodeString(value)
-	override fun decode(decoder: Decoder) = decoder.decodeString()
-}
-
-data class EnumSerialDescriptor<E : Enum<E>>(private val cls: Class<E>) : PrimitiveSerialDescriptor<E>(cls) {
-
-	override fun encode(encoder: Encoder, value: E) = encoder.encodeInt(value.ordinal)
-	override fun decode(decoder: Decoder) = cls.enumConstants[decoder.decodeInt()]
-}
+data class KotlinObjectSerialDescriptor<T : Any>(
+	private val cls: KClass<T>
+) : PrimitiveSerialDescriptor(cls.java)
 
 val <T : Any> Class<T>.descriptor
-	get() = run {
-		if(isPrimitive) when(this) {
+	get() = when {
+		isPrimitive -> when(this) {
 			String::class.java -> StringSerialDescriptor
 			Byte::class.java -> ByteSerialDescriptor
 			Short::class.java -> ShortSerialDescriptor
@@ -92,5 +66,7 @@ val <T : Any> Class<T>.descriptor
 			Boolean::class.java -> BooleanSerialDescriptor
 			else -> TODO("$this")
 		}
-		else ReflectionSerialDescriptor(this)
-	} as SerialDescriptor<T>
+
+		isEnum -> EnumSerialDescriptor(this as Class<out Enum<*>>)
+		else -> ReflectionSerialDescriptor(this)
+	}

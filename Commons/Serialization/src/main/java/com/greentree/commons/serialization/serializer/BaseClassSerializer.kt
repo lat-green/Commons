@@ -3,34 +3,24 @@ package com.greentree.commons.serialization.serializer
 import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.serialization.data.Encoder
 import com.greentree.commons.serialization.data.decodeSerializable
-import com.greentree.commons.serialization.data.decodeSerializableTo
 import com.greentree.commons.serialization.data.encodeSerializable
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.descriptor.StringSerialDescriptor
 import com.greentree.commons.serialization.descriptor.descriptor
-import java.lang.reflect.Modifier
 
-class BaseClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
+data class BaseClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 
-	override val descriptor: SerialDescriptor<T>
-		get() = SerialDescriptor.builder("type-value")
-			.element("t", StringSerialDescriptor)
-			.element("v", cls.descriptor)
-			.build()
+	override val descriptor = SerialDescriptor.builder("type-value")
+		.element("type", StringSerialDescriptor)
+		.element("value", cls.descriptor)
+		.build()
 
 	override fun deserialize(decoder: Decoder): T {
 		decoder.beginStructure(descriptor).use { struct ->
 			val type = struct.field(0).decodeString()
 			val cls = Class.forName(type) as Class<T>
 			return struct.field(1).decodeSerializable(cls)
-		}
-	}
-
-	override fun deserializeTo(decoder: Decoder, value: T): T {
-		decoder.beginStructure(descriptor).use { struct ->
-			val type = struct.field(0).decodeString()
-			val cls = Class.forName(type) as Class<T>
-			return struct.field(1).decodeSerializableTo(cls, value)
+//			return FinalClassSerializer(cls).deserialize(struct.field(1))
 		}
 	}
 
@@ -38,6 +28,7 @@ class BaseClassSerializer<T : Any>(private val cls: Class<T>) : Serializer<T> {
 		encoder.beginStructure(descriptor).use { struct ->
 			struct.field(0).encodeString(value::class.java.name)
 			struct.field(1).encodeSerializable(value)
+//			FinalClassSerializer(value::class.java).serialize(struct.field(1), value)
 		}
 	}
 }

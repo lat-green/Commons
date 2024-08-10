@@ -1,22 +1,16 @@
 package com.greentree.commons.serialization.descriptor
 
-import com.greentree.commons.serialization.data.Decoder
-import com.greentree.commons.serialization.data.Encoder
-
-interface SerialDescriptor<T> {
+interface SerialDescriptor {
 
 	val serialName: String
 	val elementsCount: Int
-
-	fun encode(encoder: Encoder, value: T)
-	fun decode(decoder: Decoder): T
 
 	fun getElementIndex(name: String): Int
 	fun getElementName(index: Int): String
 
 	fun isElementOptional(index: Int): Boolean
 
-	fun getElementDescriptor(index: Int): SerialDescriptor<*>
+	fun getElementDescriptor(index: Int): SerialDescriptor
 
 	companion object {
 
@@ -27,38 +21,30 @@ interface SerialDescriptor<T> {
 		val serialName: String,
 	) {
 
-		private val fields = mutableListOf<FieldSerialDescriptor<*>>()
+		private val fields = mutableListOf<FieldSerialDescriptor>()
 
-		fun element(name: String, descriptor: SerialDescriptor<*>, isOptional: Boolean = false): Builder {
+		fun element(name: String, descriptor: SerialDescriptor, isOptional: Boolean = false): Builder {
 			fields.add(FieldSerialDescriptor(name, descriptor, isOptional))
 			return this
 		}
 
-		data class FieldSerialDescriptor<T>(
+		data class FieldSerialDescriptor(
 			val name: String,
-			val descriptor: SerialDescriptor<T>,
+			val descriptor: SerialDescriptor,
 			val isOptional: Boolean,
 		)
 
-		fun <T> build(): SerialDescriptor<T> {
+		fun build(): SerialDescriptor {
 			return SimpleSerialDescriptor(serialName, fields)
 		}
 
-		class SimpleSerialDescriptor<T>(
+		class SimpleSerialDescriptor(
 			override val serialName: String,
-			private val fields: List<FieldSerialDescriptor<*>>,
-		) : SerialDescriptor<T> {
+			private val fields: List<FieldSerialDescriptor>,
+		) : SerialDescriptor {
 
 			override val elementsCount: Int
 				get() = fields.size
-
-			override fun encode(encoder: Encoder, value: T) {
-				TODO("Not yet implemented")
-			}
-
-			override fun decode(decoder: Decoder): T {
-				TODO("Not yet implemented")
-			}
 
 			override fun getElementIndex(name: String) = fields.map { it.name }.indexOf(name)
 

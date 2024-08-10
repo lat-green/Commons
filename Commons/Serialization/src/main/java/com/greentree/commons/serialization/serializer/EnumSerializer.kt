@@ -10,8 +10,7 @@ class EnumSerializer<T : Enum<T>>(
 	val cls: KClass<T>
 ) : Serializer<T> {
 
-	override val descriptor: SerialDescriptor<T>
-		get() = EnumSerialDescriptor(cls.java)
+	override val descriptor = EnumSerialDescriptor(cls.java)
 
 	override fun deserialize(decoder: Decoder): T {
 		val name = decoder.decodeString()

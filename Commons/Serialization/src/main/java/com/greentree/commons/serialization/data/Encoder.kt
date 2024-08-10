@@ -18,7 +18,8 @@ interface Encoder {
 
 	fun encodeString(value: String)
 
-	fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Encoder>
+	fun beginStructure(descriptor: SerialDescriptor): Structure<Encoder>
+	fun beginCollection(descriptor: SerialDescriptor): Structure<Encoder>
 }
 
 fun <T : Any> Encoder.encodeSerializable(baseClass: Class<T>, value: T) {

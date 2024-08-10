@@ -1,6 +1,7 @@
 package com.greentree.commons.serialization.data
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
+import com.greentree.commons.serialization.serializer.DeserializationStrategy
 import com.greentree.commons.serialization.serializer.serializer
 import kotlin.reflect.KClass
 
@@ -19,15 +20,13 @@ interface Decoder {
 
 	fun decodeString(): String
 
-	fun beginStructure(descriptor: SerialDescriptor<*>): Structure<Decoder>
+	fun beginStructure(descriptor: SerialDescriptor): Structure<Decoder>
+	fun beginCollection(descriptor: SerialDescriptor): Structure<Decoder>
+
+	fun <T> decodeSerializable(deserializator: DeserializationStrategy<T>): T = deserializator.deserialize(this)
 }
 
-fun <T : Any> Decoder.decodeSerializable(cls: KClass<T>) = decodeSerializable(cls.java)
-fun <T : Any> Decoder.decodeSerializable(cls: Class<T>) = serializer(cls).deserialize(this)
+fun <T : Any> Decoder.decodeSerializable(cls: KClass<T>) = decodeSerializable(serializer(cls))
+fun <T : Any> Decoder.decodeSerializable(cls: Class<T>) = decodeSerializable(serializer(cls))
 
-inline fun <reified T : Any> Decoder.decodeSerializable() = decodeSerializable(T::class.java)
-
-fun <T : Any> Decoder.decodeSerializableTo(cls: KClass<T>, value: T) = decodeSerializableTo(cls.java, value)
-fun <T : Any> Decoder.decodeSerializableTo(cls: Class<T>, value: T) = serializer(cls).deserializeTo(this, value)
-
-inline fun <reified T : Any> Decoder.decodeSerializableTo(value: T) = decodeSerializableTo(T::class.java, value)
+inline fun <reified T : Any> Decoder.decodeSerializable() = decodeSerializable(serializer<T>())
