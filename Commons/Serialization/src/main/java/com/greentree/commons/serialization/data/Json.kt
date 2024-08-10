@@ -1,29 +1,26 @@
 package com.greentree.commons.serialization.data
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonNull
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.serializer.DeserializationStrategy
 import com.greentree.commons.serialization.serializer.SerializationStrategy
 import com.greentree.commons.serialization.serializer.serializer
 import kotlin.reflect.KClass
 
-object Json : DecodeDataFormat<JsonElement> {
+object Json : DecodeDataFormat<JsonNode> {
 
-	override fun decoder(json: JsonElement) = JsonDecoder(json)
-	fun encoder(onResult: (JsonElement) -> Unit) = JsonEncoder(onResult)
+	override fun decoder(json: JsonNode) = JsonDecoder(json)
+	fun encoder(onResult: (JsonNode) -> Unit) = JsonEncoder(onResult)
 
 	inline fun <reified T : Any> encodeToString(value: T) =
 		encodeToString(serializer<T>(), value)
 
-	inline fun <reified T : Any> decodeFromString(value: JsonElement) =
+	inline fun <reified T : Any> decodeFromString(value: JsonNode) =
 		decodeFromString(serializer<T>(), value)
 
-	fun <T : Any> encodeToString(serializer: SerializationStrategy<T>, value: T): JsonElement {
-		lateinit var result: JsonElement
+	fun <T : Any> encodeToString(serializer: SerializationStrategy<T>, value: T): JsonNode {
+		lateinit var result: JsonNode
 		val encoder = encoder {
 			result = it
 		}
@@ -31,75 +28,78 @@ object Json : DecodeDataFormat<JsonElement> {
 		return result
 	}
 
-	fun <T : Any> decodeFromString(serializer: DeserializationStrategy<T>, value: JsonElement): T {
+	fun <T : Any> decodeFromString(serializer: DeserializationStrategy<T>, value: JsonNode): T {
 		val decoder = decoder(value)
 		return serializer.deserialize(decoder)
 	}
 
 	fun <T : Any> encodeToString(cls: KClass<in T>, value: T) = encodeToString(serializer(cls), value)
 
-	fun <T : Any> decodeFromString(cls: KClass<T>, value: JsonElement) =
+	fun <T : Any> decodeFromString(cls: KClass<T>, value: JsonNode) =
 		decodeFromString(serializer(cls), value)
 
 	fun <T : Any> encodeToString(cls: Class<in T>, value: T) = encodeToString(serializer(cls), value)
 
-	fun <T : Any> decodeFromString(cls: Class<T>, value: JsonElement) =
+	fun <T : Any> decodeFromString(cls: Class<T>, value: JsonNode) =
 		decodeFromString(serializer(cls), value)
 }
 
-class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {
+private val objectMapper = ObjectMapper()
+private val nodeFactory = objectMapper.nodeFactory
+
+class JsonEncoder(val onResult: (JsonNode) -> Unit) : Encoder {
 
 	private var isDone = false
 
-	private fun setResult(result: JsonElement) {
+	private fun setResult(result: JsonNode) {
 		require(!isDone)
 		isDone = true
 		onResult(result)
 	}
 
 	override fun encodeBoolean(value: Boolean) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.booleanNode(value))
 	}
 
 	override fun encodeByte(value: Byte) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.numberNode(value))
 	}
 
 	override fun encodeChar(value: Char) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.textNode(value.toString()))
 	}
 
 	override fun encodeShort(value: Short) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.numberNode(value))
 	}
 
 	override fun encodeInt(value: Int) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.numberNode(value))
 	}
 
 	override fun encodeLong(value: Long) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.numberNode(value))
 	}
 
 	override fun encodeFloat(value: Float) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.numberNode(value))
 	}
 
 	override fun encodeDouble(value: Double) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.numberNode(value))
 	}
 
 	override fun encodeString(value: String) {
-		setResult(JsonPrimitive(value))
+		setResult(nodeFactory.textNode(value))
 	}
 
 	override fun beginStructure(descriptor: SerialDescriptor): Structure<Encoder> {
-		val result = JsonObject()
+		val result = nodeFactory.objectNode()
 
 		return object : Structure<Encoder> {
 			override fun field(name: String): Encoder {
 				val res = JsonEncoder {
-					result.add(name, it)
+					result.put(name, it)
 				}
 				return res
 			}
@@ -113,7 +113,7 @@ class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {
 	}
 
 	override fun beginCollection(descriptor: SerialDescriptor): Structure<Encoder> {
-		val result = JsonArray()
+		val result = nodeFactory.arrayNode()
 
 		return object : Structure<Encoder> {
 			override fun field(name: String) = field(name.toInt())
@@ -132,28 +132,28 @@ class JsonEncoder(val onResult: (JsonElement) -> Unit) : Encoder {
 	}
 }
 
-class JsonDecoder(private val element: JsonElement) : Decoder {
+class JsonDecoder(private val element: JsonNode) : Decoder {
 
-	override fun decodeBoolean(): Boolean = element.asBoolean
+	override fun decodeBoolean(): Boolean = element.booleanValue()
 
-	override fun decodeByte(): Byte = element.asByte
+	override fun decodeByte(): Byte = element.numberValue().toByte()
 
-	override fun decodeChar(): Char = element.asCharacter
+	override fun decodeChar(): Char = element.textValue().get(0)
 
-	override fun decodeShort(): Short = element.asShort
+	override fun decodeShort(): Short = element.numberValue().toShort()
 
-	override fun decodeInt(): Int = element.asInt
+	override fun decodeInt(): Int = element.intValue()
 
-	override fun decodeLong(): Long = element.asLong
+	override fun decodeLong(): Long = element.longValue()
 
-	override fun decodeFloat(): Float = element.asFloat
+	override fun decodeFloat(): Float = element.floatValue()
 
-	override fun decodeDouble(): Double = element.asDouble
+	override fun decodeDouble(): Double = element.doubleValue()
 
-	override fun decodeString(): String = element.asString
+	override fun decodeString(): String = element.textValue()
 
 	override fun beginCollection(descriptor: SerialDescriptor): Structure<Decoder> {
-		val element = element.asJsonArray
+		val element = element
 
 		return object : Structure<Decoder> {
 			override fun field(name: String) = field(name.toInt())
@@ -163,14 +163,14 @@ class JsonDecoder(private val element: JsonElement) : Decoder {
 	}
 
 	override fun beginStructure(descriptor: SerialDescriptor): Structure<Decoder> {
-		val element = element.asJsonObject
+		val element = element
 
 		return object : Structure<Decoder> {
 			override fun field(name: String) = JsonDecoder(
 				if(element.has(name))
 					element.get(name)
 				else
-					JsonNull.INSTANCE
+					nodeFactory.nullNode()
 			)
 
 			override fun field(index: Int) = field(descriptor.getElementName(index))
