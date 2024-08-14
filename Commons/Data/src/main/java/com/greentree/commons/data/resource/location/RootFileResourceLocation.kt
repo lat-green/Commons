@@ -13,8 +13,10 @@ class RootFileResourceLocation(val root: File) : NamedResourceLocation, IOResour
 	constructor(path: Path) : this(path.toFile())
 
 	init {
-		require(root.exists()) { "root must by exists [root=$root]" }
-		require(root.isDirectory) { "root must by directory [root=$root]" }
+		if(root.exists())
+			require(root.isDirectory) { "root must by directory [root=$root]" }
+		else
+			root.mkdirs()
 	}
 
 	constructor(file: String) : this(File(file))
