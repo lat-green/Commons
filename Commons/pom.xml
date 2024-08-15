@@ -22,6 +22,9 @@
 
         <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+
+	<sonar.organization>lat-green</sonar.organization>
+	<sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <organization>

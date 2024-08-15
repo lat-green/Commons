@@ -18,8 +18,8 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
-              
+      - uses: actions/checkout@v4
+        
       - name: Maven Verify
         run: mvn -B clean verify -f Commons
 
@@ -27,8 +27,6 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
-
       - name: Test Coverage
         uses: codecov/codecov-action@v3
         with:
@@ -39,8 +37,6 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
-
       - name: Analyze with SonarCloud
 #       set environment variables:
         env:
