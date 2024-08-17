@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public abstract class FileUtil {
@@ -216,25 +216,18 @@ public abstract class FileUtil {
         }
     }
 
-    public static void zipToDir(File zip, File dir) throws IOException {
-        try (ZipInputStream zin = new ZipInputStream(new FileInputStream(zip))) {
-            ZipEntry entry;
-            while ((entry = zin.getNextEntry()) != null) {
-                File file = new File(dir, entry.getName());
-                if (!file.exists()) {
-                    file.getParentFile().mkdirs();
-                    file.createNewFile();
-                }
-                FileOutputStream fout = new FileOutputStream(file);
-                try {
-                    for (int c = zin.read(); c != -1; c = zin.read())
-                        fout.write(c);
-                } finally {
-                    fout.flush();
-                    zin.closeEntry();
-                    fout.close();
-                }
-            }
+    public static void zipToDir(File zip, File targetDirectory) throws IOException {
+        var zipFile = new ZipFile(zip);
+        var entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            var entry = entries.nextElement();
+            var inputStream = zipFile.getInputStream(entry);
+            var file = new File(targetDirectory, entry.getName());
+            String canonicalDestinationPath = file.getCanonicalPath();
+            if (!canonicalDestinationPath.startsWith(targetDirectory.toString()))
+                throw new RuntimeException("Zip Slip " + canonicalDestinationPath + " to " + targetDirectory);
+            Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING, LinkOption.NOFOLLOW_LINKS);
+
         }
     }
 
