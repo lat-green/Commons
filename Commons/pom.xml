@@ -25,7 +25,7 @@
 
         <sonar.organization>lat-green</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.projectKey>com.greentree.commons:commons</sonar.projectKey>
+        <sonar.projectKey>${groupId}:${artifactId}</sonar.projectKey>
     </properties>
 
     <organization>
