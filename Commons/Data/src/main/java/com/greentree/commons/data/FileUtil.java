@@ -217,17 +217,17 @@ public abstract class FileUtil {
     }
 
     public static void zipToDir(File zip, File targetDirectory) throws IOException {
-        var zipFile = new ZipFile(zip);
-        var entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            var entry = entries.nextElement();
-            var inputStream = zipFile.getInputStream(entry);
-            var file = new File(targetDirectory, entry.getName());
-            String canonicalDestinationPath = file.getCanonicalPath();
-            if (!canonicalDestinationPath.startsWith(targetDirectory.toString()))
-                throw new RuntimeException("Zip Slip " + canonicalDestinationPath + " to " + targetDirectory);
-            Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING, LinkOption.NOFOLLOW_LINKS);
-
+        try (var zipFile = new ZipFile(zip)) {
+            var entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                var entry = entries.nextElement();
+                var inputStream = zipFile.getInputStream(entry);
+                var file = new File(targetDirectory, entry.getName());
+                String canonicalDestinationPath = file.getCanonicalPath();
+                if (!canonicalDestinationPath.startsWith(targetDirectory.toString()))
+                    throw new RuntimeException("Zip Slip " + canonicalDestinationPath + " to " + targetDirectory);
+                Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING, LinkOption.NOFOLLOW_LINKS);
+            }
         }
     }
 
