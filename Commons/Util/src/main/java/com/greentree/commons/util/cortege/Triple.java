@@ -3,6 +3,7 @@ package com.greentree.commons.util.cortege;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Deprecated
 public class Triple<V1, V2, V3> implements Serializable {
 
 	private static final long serialVersionUID = 1L;

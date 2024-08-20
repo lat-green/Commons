@@ -59,16 +59,15 @@ public class FileWatcher {
         private static final long serialVersionUID = 1L;
 
         public FileResourceAction(FolderResourceAction action, Path file) {
-            final ListenerCloser lc1, lc2, lc3;
-            lc1 = action.getOnCreateAbsolute().addListener(f -> {
+            final ListenerCloser lc1 = action.getOnCreateAbsolute().addListener(f -> {
                 if (f.equals(file))
                     eventCreate();
             });
-            lc2 = action.getOnModifyAbsolute().addListener(f -> {
+            final ListenerCloser lc2 = action.getOnModifyAbsolute().addListener(f -> {
                 if (f.equals(file))
                     eventModify();
             });
-            lc3 = action.getOnDeleteAbsolute().addListener(f -> {
+            final ListenerCloser lc3 = action.getOnDeleteAbsolute().addListener(f -> {
                 if (f.equals(file))
                     eventDelete();
             });

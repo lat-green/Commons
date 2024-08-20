@@ -46,12 +46,10 @@ fun <V : Any> Graph<V>.findMin(start: V, comparator: Comparator<V>): V {
 		}
 
 		override fun startVisit(parent: V, v: V): Boolean {
-			if(comparator.compare(parent, v) > 0) {
+			val compareResult = comparator.compare(parent, v) > 0
+			if(compareResult)
 				result = v
-				return true
-			} else {
-				return false
-			}
+			return compareResult
 		}
 	}
 	visit(
