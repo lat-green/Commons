@@ -6,28 +6,29 @@ class ToListIterator<out T>(
 	val origin: Iterator<T>
 ) : ListIterator<T>, Iterator<T> by origin {
 
+	private val index
+		get() = previous.size
 	private val previous = Stack<T>()
-	private val next: Queue<T> = LinkedList()
+	private val next = Stack<T>()
 
 	override fun hasNext(): Boolean {
 		return origin.hasNext() || next.isNotEmpty()
 	}
 
 	override fun next(): T {
-		if(next.isNotEmpty())
-			return next.remove()
-		val next = origin.next()
+		val next = if(next.isNotEmpty())
+			next.pop()
+		else
+			origin.next()
 		previous.add(next)
 		return next
 	}
 
 	override fun hasPrevious(): Boolean {
-		TODO("Not yet implemented")
+		return previous.isNotEmpty()
 	}
 
-	override fun nextIndex(): Int {
-		TODO("Not yet implemented")
-	}
+	override fun nextIndex() = index
 
 	override fun previous(): T {
 		val previous = previous.pop()
@@ -35,9 +36,7 @@ class ToListIterator<out T>(
 		return previous
 	}
 
-	override fun previousIndex(): Int {
-		TODO("Not yet implemented")
-	}
+	override fun previousIndex() = index - 1
 }
 
 fun <T> Iterator<T>.toListIterator() = ToListIterator(this)
