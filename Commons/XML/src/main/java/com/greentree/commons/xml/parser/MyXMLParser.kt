@@ -1,6 +1,5 @@
 package com.greentree.commons.xml.parser
 
-import com.greentree.commons.util.cortege.Pair
 import com.greentree.commons.xml.XMLElement
 import java.io.InputStream
 import java.util.*
@@ -45,11 +44,11 @@ object MyXMLParser : XMLParser {
 
 	private fun getText(text: String): Pair<String, Map<String, String>> {
 		val i = text.indexOf(' ')
-		if(i != -1) {
+		return if(i != -1) {
 			val name = text.substring(0, i)
 			val attributes = text.substring(i)
-			return Pair(name, getAttributes(attributes))
-		} else return Pair(text, HashMap())
+			Pair(name, getAttributes(attributes))
+		} else Pair(text, HashMap())
 	}
 
 	private fun getAttributes(attributes: String): Map<String, String> {
@@ -77,7 +76,7 @@ object MyXMLParser : XMLParser {
 
 		constructor(name: String) : this(getText(name))
 
-		constructor(text: Pair<String, Map<String, String>>) : this(text.first, text.seconde)
+		constructor(text: Pair<String, Map<String, String>>) : this(text.first, text.second)
 
 		fun build(): XMLElement {
 			return XMLElement(childrens, attributes, name, context.toString())
