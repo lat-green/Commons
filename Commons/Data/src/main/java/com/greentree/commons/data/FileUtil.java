@@ -225,7 +225,7 @@ public abstract class FileUtil {
                 var file = new File(targetDirectory, entry.getName());
                 String canonicalDestinationPath = file.getCanonicalPath();
                 if (!canonicalDestinationPath.startsWith(targetDirectory.toString()))
-                    throw new RuntimeException("Zip Slip " + canonicalDestinationPath + " to " + targetDirectory);
+                    throw new SecurityException("Zip Slip " + canonicalDestinationPath + " to " + targetDirectory);
                 Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING, LinkOption.NOFOLLOW_LINKS);
             }
         }
