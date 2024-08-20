@@ -1,12 +1,13 @@
-package com.greentree.commons.xml
+package com.greentree.commons.xml.parser
 
 import com.greentree.commons.util.cortege.Pair
+import com.greentree.commons.xml.XMLElement
 import java.io.InputStream
 import java.util.*
 
 object MyXMLParser : XMLParser {
 
-	fun parse(text: String): XMLElement {
+	override fun parse(text: String): XMLElement {
 		val stack = Stack<BuilderXMLElement>()
 		stack.push(BuilderXMLElement())
 		var le = -1
@@ -68,25 +69,15 @@ object MyXMLParser : XMLParser {
 	private class BuilderXMLElement(
 		val name: String?,
 		val attributes: Map<String, String>,
+		val childrens: MutableCollection<XMLElement> = ArrayList(),
+		val context: StringBuilder = StringBuilder(),
 	) {
-
-		val childrens: MutableCollection<XMLElement> = ArrayList()
-		val context: StringBuilder = StringBuilder()
 
 		constructor() : this("", HashMap())
 
 		constructor(name: String) : this(getText(name))
 
 		constructor(text: Pair<String, Map<String, String>>) : this(text.first, text.seconde)
-
-		override fun toString(): String {
-			var str = ""
-			if(!childrens.isEmpty()) str += " childrens=$childrens"
-			if(!attributes.isEmpty()) str += " attributes=$attributes"
-			if(!context.isEmpty()) str += " context=$context"
-			if(str.isEmpty()) return "BuilderXMLElement [$name]"
-			return "BuilderXMLElement [" + name + "] (" + str.trim() + ")"
-		}
 
 		fun build(): XMLElement {
 			return XMLElement(childrens, attributes, name, context.toString())

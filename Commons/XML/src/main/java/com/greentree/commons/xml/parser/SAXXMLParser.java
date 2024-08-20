@@ -1,6 +1,7 @@
-package com.greentree.commons.xml;
+package com.greentree.commons.xml.parser;
 
 import com.greentree.commons.util.exception.WrappedException;
+import com.greentree.commons.xml.XMLElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
