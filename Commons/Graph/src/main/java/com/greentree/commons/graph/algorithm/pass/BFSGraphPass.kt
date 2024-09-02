@@ -43,4 +43,6 @@ class PlusList<out E>(
 			return element
 		return list[index]
 	}
+
+	override fun contains(element: @UnsafeVariance E) = element == this.element || element in list
 }
