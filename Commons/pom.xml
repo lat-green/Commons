@@ -4,7 +4,7 @@
 
     <groupId>com.greentree.commons</groupId>
     <artifactId>commons</artifactId>
-    <version>0.3.6</version>
+    <version>0.3.7</version>
 
     <packaging>pom</packaging>
 
@@ -48,14 +48,11 @@
         <module>Geometry</module>
         <module>Graph</module>
         <module>Injector</module>
-        <module>Logger</module>
         <module>Math</module>
-        <module>Property</module>
         <module>Reflection</module>
         <module>Serialization</module>
         <module>Tests</module>
         <module>Util</module>
-        <module>Web</module>
         <module>XML</module>
     </modules>
 
@@ -145,17 +142,7 @@
             </dependency>
             <dependency>
                 <groupId>com.greentree.commons</groupId>
-                <artifactId>logger</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.greentree.commons</groupId>
                 <artifactId>math</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.greentree.commons</groupId>
-                <artifactId>property</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -177,11 +164,6 @@
             <dependency>
                 <groupId>com.greentree.commons</groupId>
                 <artifactId>util</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.greentree.commons</groupId>
-                <artifactId>web</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
