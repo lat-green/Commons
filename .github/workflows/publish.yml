@@ -16,4 +16,5 @@ jobs:
       - name: Publish to GitHub Packages
         run: mvn --batch-mode deploy -f Commons
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ara2003
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
