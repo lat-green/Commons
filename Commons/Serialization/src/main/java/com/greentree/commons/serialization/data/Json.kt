@@ -120,7 +120,7 @@ class JsonEncoder(val onResult: (JsonNode) -> Unit) : Encoder {
 
 			override fun field(index: Int): JsonEncoder {
 				val res = JsonEncoder {
-					result[index] = it
+					result.insert(index, it)
 				}
 				return res
 			}

@@ -1,5 +1,6 @@
 package com.greentree.commons.serialization.serializer
 
+import com.greentree.commons.reflection.ClassUtil
 import com.greentree.commons.serialization.annotation.CustomSerializer
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import java.lang.reflect.Modifier
@@ -8,6 +9,18 @@ import kotlin.reflect.KClass
 interface Serializer<T : Any> : SerializationStrategy<T>, DeserializationStrategy<T> {
 
 	override val descriptor: SerialDescriptor
+}
+
+fun <T : Any> serializerFinal(cls: Class<T>) = serializerFinal(cls.kotlin)
+inline fun <reified T : Any> serializerFinal() = serializerFinal(T::class)
+fun <T : Any> serializerFinal(cls: KClass<T>): Serializer<T> {
+	val origin = serializer(cls)
+	if(origin is BaseClassSerializer)
+		return if(ClassUtil.isExtends(java.util.Collection::class.java, cls.java))
+			FinalCollectionClassSerializer(cls.java)
+		else
+			FinalClassSerializer(cls.java)
+	return origin
 }
 
 inline fun <reified T : Any> serializer() = serializer(T::class)
@@ -53,6 +66,9 @@ fun <T : Any> serializer(cls: KClass<T>): Serializer<T> =
 		cls == java.lang.Boolean::class -> BooleanSerializer
 		cls == java.lang.String::class -> StringSerializer
 		isKotlin(cls) && cls.objectInstance != null -> KotlinObjectSerializer(cls)
+		ClassUtil.isExtends(Collection::class.java, cls::class.java) && Modifier.isFinal(cls.java.modifiers) ->
+			FinalCollectionClassSerializer(cls.java)
+
 		Modifier.isFinal(cls.java.modifiers) -> FinalClassSerializer(cls.java)
 		else -> BaseClassSerializer(cls.java)
 	} as Serializer<T>

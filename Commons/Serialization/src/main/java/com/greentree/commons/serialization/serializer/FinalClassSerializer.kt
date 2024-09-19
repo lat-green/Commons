@@ -5,7 +5,6 @@ import com.greentree.commons.serialization.data.Decoder
 import com.greentree.commons.serialization.data.Encoder
 import com.greentree.commons.serialization.descriptor.ReflectionSerialDescriptor
 import java.lang.reflect.Constructor
-import java.lang.reflect.Modifier
 import kotlin.reflect.full.primaryConstructor
 
 class FinalClassSerializer<T : Any>(
@@ -15,6 +14,7 @@ class FinalClassSerializer<T : Any>(
 	override val descriptor = ReflectionSerialDescriptor(cls)
 
 	init {
+		require(cls.kotlin.primaryConstructor != null) { "type $cls is not supported" }
 //		require(Modifier.isFinal(cls.modifiers)) { "type $cls is not final" }
 	}
 

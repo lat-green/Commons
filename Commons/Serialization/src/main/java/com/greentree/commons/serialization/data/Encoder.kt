@@ -2,6 +2,7 @@ package com.greentree.commons.serialization.data
 
 import com.greentree.commons.serialization.descriptor.SerialDescriptor
 import com.greentree.commons.serialization.serializer.serializer
+import kotlin.reflect.KClass
 
 interface Encoder {
 
@@ -23,6 +24,10 @@ interface Encoder {
 }
 
 fun <T : Any> Encoder.encodeSerializable(baseClass: Class<T>, value: T) {
+	serializer(baseClass).serialize(this, value)
+}
+
+fun <T : Any> Encoder.encodeSerializable(baseClass: KClass<T>, value: T) {
 	serializer(baseClass).serialize(this, value)
 }
 

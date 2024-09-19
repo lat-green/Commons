@@ -9,6 +9,7 @@ import test.data.CustomPerson
 import test.data.NameImpl
 import test.data.NamePerson
 import test.data.ObjectPerson
+import test.data.OpenPerson
 import test.data.Person
 import test.data.PersonImpl
 import test.data.Status
@@ -40,9 +41,9 @@ object SerializationArgumentsProvider : ArgumentsProvider {
 			of(NamePerson(NameImpl("ara"), 12)),
 			of(Person("ara", 12)),
 			of(Status.CANCELLED),
-//			of(OpenPerson("ara", 12)),
-//			of(listOf("Hello", nextInt())),
-//			of(setOf("Hello", nextInt())),
+			of(OpenPerson("ara", 12)),
+			of(listOf("Hello", nextInt())),
+			of(setOf("Hello", nextInt())),
 //			of(mapOf("a" to nextInt(), "b" to nextInt()))
 		)
 	}

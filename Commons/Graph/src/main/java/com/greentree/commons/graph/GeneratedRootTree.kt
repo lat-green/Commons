@@ -24,10 +24,24 @@ class GeneratedRootTree<out V : Any>(
 
 fun <V : Any> generateTree(root: V, children: (V) -> Sequence<V>) = GeneratedRootTree(root, children)
 
+fun <V : Any> treeSequence(root: V, children: (V) -> Sequence<V>) = generateTree(root, children).toList()
+
 @OptIn(ExperimentalTypeInference::class)
 fun <V : Any> tree(root: V, @BuilderInference children: suspend SequenceScope<V>.(V) -> Unit) =
-	generateTree(root) { v ->
+	treeSequence(root) { v ->
 		sequence {
 			children(v)
 		}
-	}.toList()
+	}
+
+fun <R : Any, V : R> treeWithOutRootSequence(root: R, children: (R) -> Sequence<V>): List<V> {
+	return children(root).flatMap { treeSequence(it, children) }.toList()
+}
+
+@OptIn(ExperimentalTypeInference::class)
+fun <R : Any, V : R> treeWithOutRoot(root: R, @BuilderInference children: suspend SequenceScope<V>.(R) -> Unit) =
+	treeWithOutRootSequence(root) {
+		sequence {
+			children(it)
+		}
+	}

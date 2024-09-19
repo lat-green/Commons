@@ -5,15 +5,12 @@ import com.greentree.commons.injector.InjectionContainerImpl;
 import com.greentree.commons.injector.Injector;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Test1 {
+class Test1 {
 
     @Test
-    void test1() throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
+    void test1() throws Exception {
         var container = new InjectionContainerImpl();
         container.put("x", 1);
         container.put("y", 2);
