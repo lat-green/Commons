@@ -1,5 +1,6 @@
 package com.greentree.commons.graph
 
+import java.util.*
 import kotlin.experimental.ExperimentalTypeInference
 
 class GeneratedRootTree<out V : Any>(
@@ -24,7 +25,21 @@ class GeneratedRootTree<out V : Any>(
 
 fun <V : Any> generateTree(root: V, children: (V) -> Sequence<V>) = GeneratedRootTree(root, children)
 
-fun <V : Any> treeSequence(root: V, children: (V) -> Sequence<V>) = generateTree(root, children).toList()
+inline fun <V : Any> treeSequence(root: V, children: (V) -> Sequence<V>): List<V> {
+	val result = mutableListOf<V>()
+	val toAdd: Queue<V> = LinkedList()
+	toAdd.add(root)
+	while(toAdd.isNotEmpty()) {
+		val e = toAdd.remove()
+		children(e).forEach { to ->
+			if(to !in result) {
+				toAdd.add(e)
+				result.add(e)
+			}
+		}
+	}
+	return result
+}
 
 @OptIn(ExperimentalTypeInference::class)
 fun <V : Any> tree(root: V, @BuilderInference children: suspend SequenceScope<V>.(V) -> Unit) =
@@ -34,7 +49,7 @@ fun <V : Any> tree(root: V, @BuilderInference children: suspend SequenceScope<V>
 		}
 	}
 
-fun <R : Any, V : R> treeWithOutRootSequence(root: R, children: (R) -> Sequence<V>): List<V> {
+inline fun <R : Any, V : R> treeWithOutRootSequence(root: R, crossinline children: (R) -> Sequence<V>): List<V> {
 	return children(root).flatMap { treeSequence(it, children) }.toList()
 }
 
