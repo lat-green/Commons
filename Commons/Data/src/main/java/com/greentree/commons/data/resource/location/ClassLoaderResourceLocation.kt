@@ -1,20 +1,22 @@
 package com.greentree.commons.data.resource.location
 
+import com.greentree.commons.data.resource.FileResource
 import com.greentree.commons.data.resource.Resource
-import com.greentree.commons.data.resource.URLResource
+import com.greentree.commons.data.resource.ResourceNotFound
+import com.greentree.commons.data.resource.URLFileResource
 import java.net.URL
 
-class ClassLoaderResourceLocation(private val loader: ClassLoader) :
-	ResourceLocation {
+class ClassLoaderResourceLocation(private val loader: ClassLoader) : ResourceLocation {
 
 	constructor(cls: Class<*> = ClassLoaderResourceLocation::class.java) : this(cls.classLoader)
 
-	override val lastModified: Long
-		get() = URLResource(getURL("")!!).lastModified()
+	override fun getResourceOrNull(name: String): Resource? {
+		TODO("Not yet implemented")
+	}
 
-	override fun getResource(name: String): Resource {
-		val url = getURL(name) ?: return Resource.Null
-		return URLResource(url)
+	override fun getResource(name: String): FileResource {
+		val url = getURL(name) ?: throw ResourceNotFound(name)
+		return URLFileResource(url)
 	}
 
 	private fun getURL(name: String): URL? {

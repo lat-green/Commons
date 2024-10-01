@@ -20,3 +20,7 @@ val Sequence<*>.size: Int
 			size++
 		return size
 	}
+
+suspend fun <V> SequenceScope<V>.yieldAll(array: Array<V>) = array.forEach {
+	yield(it)
+}

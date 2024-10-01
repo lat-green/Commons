@@ -1,83 +1,53 @@
 package com.greentree.commons.data.resource.location
 
-import com.greentree.commons.data.resource.IOResource
-import com.greentree.commons.data.resource.Resource
-import com.greentree.commons.data.resource.ResourceAction
+import com.greentree.commons.data.resource.FileResource
+import com.greentree.commons.data.resource.MutableFileResource
+import com.greentree.commons.data.resource.ParentResource
 import com.greentree.commons.data.resource.writeTo
 import java.io.InputStream
-import java.io.OutputStream
-import java.net.MalformedURLException
-import java.net.URL
 
 class CacheResourceLocation(
 	private val sourceLocation: ResourceLocation,
-	private val cacheLocation: IOResourceLocation,
+	private val cacheLocation: MutableResourceLocation,
 ) : ResourceLocation {
 
-	override fun clear() {
-		cacheLocation.clear()
+	override fun getResourceOrNull(name: String): FileResource? {
+		val source = sourceLocation.getFileResourceOrNull(name) ?: return null
+		val cache = cacheLocation.getFileResource(name)
+		return CacheFileResource(source, cache)
 	}
 
-	@Synchronized
-	override fun getResource(name: String): Resource {
-		return if(cacheLocation.isExist(name)) {
-			if(sourceLocation.isExist(name)) {
-				val cache = cacheLocation.getResource(name)
-				val source = sourceLocation.getResource(name)
-				cacheLocation.deleteResource(name)
-				source.writeTo(cache, cache.lastModified())
-				CacheResource(source, cache)
-			} else {
-				cacheLocation.deleteResource(name)
-				IOResource.Null
+	override fun getFileResourceOrNull(name: String): FileResource? {
+		val source = sourceLocation.getFileResourceOrNull(name) ?: return null
+		val cache = cacheLocation.getFileResource(name)
+		return CacheFileResource(source, cache)
+	}
+
+	data class CacheFileResource(private val source: FileResource, private val cache: MutableFileResource) :
+		FileResource {
+
+		override fun exists() = source.exists()
+
+		override val length: Long
+			get() {
+				update()
+				return source.length
 			}
-		} else if(sourceLocation.isExist(name)) {
-			val cache = cacheLocation.createResource(name)
-			val source = sourceLocation.getResource(name)
-			source.writeTo(cache)
-			CacheResource(source, cache)
-		} else IOResource.Null
-	}
-
-	override val lastModified
-		get() = cacheLocation.lastModified
-
-	class CacheResource(private val source: Resource, private val cache: IOResource) : Resource {
-
-		override val action: ResourceAction
-			get() = source.action
-		override val name: String
-			get() = cache.name
-
-		override fun length(): Long {
-			return cache.length()
-		}
-
-		override fun lastModified(): Long {
-			return cache.lastModified()
-		}
 
 		override fun open(): InputStream {
+			update()
 			return cache.open()
 		}
 
-		@Throws(MalformedURLException::class)
-		override fun url(): URL {
-			return cache.url()
+		override val parent: ParentResource
+			get() = TODO("Not yet implemented")
+		override val name: String
+			get() = source.name
+
+		override fun lastModified() = source.lastModified()
+
+		private fun update() {
+			source.writeTo(cache, cache.lastModified())
 		}
-
-		override fun exists(): Boolean {
-			return cache.exists()
-		}
-
-		companion object {
-
-			private const val serialVersionUID = 1L
-		}
-	}
-
-	companion object {
-
-		private const val serialVersionUID = 1L
 	}
 }

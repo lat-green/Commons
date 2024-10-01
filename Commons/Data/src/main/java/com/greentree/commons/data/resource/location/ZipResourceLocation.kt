@@ -1,29 +1,29 @@
 package com.greentree.commons.data.resource.location
 
 import com.greentree.commons.data.FileUtil
+import com.greentree.commons.data.resource.FileResource
+import com.greentree.commons.data.resource.ParentResource
 import com.greentree.commons.data.resource.Resource
+import com.greentree.commons.data.resource.ResourceNotFound
 import com.greentree.commons.util.exception.WrappedException
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
-import java.net.URL
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-class ZipResourceLocation(private val zip: Resource) : NamedResourceLocation, ResourceLocation {
+class ZipResourceLocation(private val zip: FileResource) : NamedResourceLocation, ResourceLocation {
 
 	override val names: Iterable<String>
 		get() = _names
 	private val _names: MutableCollection<String> = ArrayList()
-	override val lastModified: Long
-		get() = zip.lastModified()
 
 	init {
 		zip.open().use { `in` ->
 			ZipInputStream(`in`).use { zip_in ->
-				var entry: ZipEntry
-				while(zip_in.nextEntry.also { entry = it } != null) {
+				while(true) {
+					val entry = zip_in.nextEntry ?: break
 					val name = entry.name
 					this._names.add(name)
 				}
@@ -31,12 +31,11 @@ class ZipResourceLocation(private val zip: Resource) : NamedResourceLocation, Re
 		}
 	}
 
-	override fun getResource(name: String): Resource {
+	override fun getResourceOrNull(name: String): Resource {
 		zip.open().use { `in` ->
 			ZipInputStream(`in`).use { zip_in ->
-				val entry = found(name, zip_in)
-				return when(entry) {
-					null -> Resource.Null
+				return when(val entry = found(name, zip_in)) {
+					null -> throw ResourceNotFound(name)
 					else -> ZipEntryResource(entry)
 				}
 			}
@@ -66,20 +65,25 @@ class ZipResourceLocation(private val zip: Resource) : NamedResourceLocation, Re
 		throw IllegalArgumentException()
 	}
 
-	inner class ZipEntryResource(private val entry: ZipEntry) : Resource {
+	inner class ZipEntryResource(private val entry: ZipEntry) : FileResource {
 
 		override val name: String
 			get() = zip.name + File.separator + entry.name
 
-		override fun length() = entry.size
-
-		override fun lastModified() = entry.lastModifiedTime.toMillis()
+		override fun lastModified(): Long {
+			return entry.lastModifiedTime.toMillis()
+		}
 
 		override fun exists() = true
+		override val parent: ParentResource
+			get() = TODO("Not yet implemented")
 
 		override fun toString(): String {
 			return "ZipEntryResource [$entry in $zip]"
 		}
+
+		override val length: Long
+			get() = entry.size
 
 		override fun open(): InputStream {
 			try {
@@ -93,10 +97,6 @@ class ZipResourceLocation(private val zip: Resource) : NamedResourceLocation, Re
 			} catch(e: IOException) {
 				throw WrappedException(e)
 			}
-		}
-
-		override fun url(): URL {
-			throw UnsupportedOperationException()
 		}
 	}
 

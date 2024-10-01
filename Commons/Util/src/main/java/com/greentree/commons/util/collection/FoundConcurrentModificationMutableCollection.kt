@@ -1,13 +1,19 @@
 package com.greentree.commons.util.collection
 
+import java.lang.ref.WeakReference
+
 data class FoundConcurrentModificationMutableCollection<E>(
-	private val origin: MutableCollection<E>
+	private val origin: MutableCollection<E>,
 ) : MutableCollection<E> by origin {
 
-	private val exceptions = mutableListOf<Exception>()
+	private val iterators = mutableListOf<WeakReference<FoundConcurrentModificationMutableIterator<E>>>()
 
 	private fun exception(exception: ConcurrentModificationException) {
-		exceptions.add(exception)
+		iterators.removeIf {
+			val iterator = it.get()
+			iterator?.exceptions?.add(exception)
+			iterator == null
+		}
 	}
 
 	override fun add(element: E): Boolean {
@@ -41,24 +47,16 @@ data class FoundConcurrentModificationMutableCollection<E>(
 	}
 
 	override fun iterator(): MutableIterator<E> {
-		return FoundConcurrentModificationMutableIterator(origin.iterator())
+		val iterator = FoundConcurrentModificationMutableIterator(origin.iterator())
+		iterators.add(WeakReference(iterator))
+		return iterator
 	}
 
-	private inline fun <R> checkConcurrentModification(block: () -> R): R {
-		try {
-			return block()
-		} catch(e: ConcurrentModificationException) {
-			for(exception in exceptions) {
-				e.addSuppressed(exception)
-			}
-			exceptions.clear()
-			throw e
-		}
-	}
-
-	private inner class FoundConcurrentModificationMutableIterator<E>(
-		val origin: MutableIterator<E>
+	private class FoundConcurrentModificationMutableIterator<E>(
+		val origin: MutableIterator<E>,
 	) : MutableIterator<E> {
+
+		val exceptions = mutableListOf<Exception>()
 
 		override fun hasNext(): Boolean {
 			return checkConcurrentModification {
@@ -76,6 +74,18 @@ data class FoundConcurrentModificationMutableCollection<E>(
 			exceptions.add(ConcurrentModificationException("remove"))
 			checkConcurrentModification {
 				origin.remove()
+			}
+		}
+
+		private inline fun <R> checkConcurrentModification(block: () -> R): R {
+			try {
+				return block()
+			} catch(e: ConcurrentModificationException) {
+				for(exception in exceptions) {
+					e.addSuppressed(exception)
+				}
+				exceptions.clear()
+				throw e
 			}
 		}
 	}

@@ -1,10 +1,8 @@
 package test.com.greentree.commons.data.resource;
 
 import com.greentree.commons.data.resource.location.ClassLoaderResourceLocation;
-import com.greentree.commons.data.resource.location.RecursionFileSystemLocation;
 import com.greentree.commons.data.resource.location.RootFileResourceLocation;
 import com.greentree.commons.data.resource.location.ZipResourceLocation;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static com.greentree.commons.data.resource.location.RecursionFileSystemLocationKt.RecursionFileSystemLocation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Arseny Latyshev
  * @see RootFileResourceLocation
  */
-public class FileSystemLocationTest {
+class FileSystemLocationTest {
 
     @TempDir
     Path tempDir;
@@ -46,8 +45,8 @@ public class FileSystemLocationTest {
         } catch (Exception e) {
             throw e;
         }
-        final var location = new RecursionFileSystemLocation(tempDir);
-        final var url = location.getResource(file);
+        final var location = RecursionFileSystemLocation(tempDir);
+        final var url = location.getFileResource(file);
         assertNotNull(url);
         try (final var inputStream = url.open()) {
             assertNotNull(inputStream);
@@ -55,13 +54,12 @@ public class FileSystemLocationTest {
         }
     }
 
-    @Disabled
     @Test
     void zip() throws IOException {
         final var ress = new ClassLoaderResourceLocation(FileSystemLocationTest.class);
         var zip = ress.getResource("test.zip");
         final var zipLoc = new ZipResourceLocation(zip);
-        final var res = zipLoc.getResource("1.txt");
+        final var res = zipLoc.getFileResource("1.txt");
         try (final var in = res.open()) {
             assertEqualsArrays(new byte[]{'1'}, in.readAllBytes());
         }

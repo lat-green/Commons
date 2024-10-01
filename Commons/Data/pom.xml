@@ -25,6 +25,10 @@
             <groupId>com.greentree.commons</groupId>
             <artifactId>tests</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
+            <artifactId>aop-tests</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

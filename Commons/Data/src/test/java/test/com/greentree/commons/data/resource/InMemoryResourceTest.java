@@ -1,6 +1,6 @@
 package test.com.greentree.commons.data.resource;
 
-import com.greentree.commons.data.resource.InMemoryResource;
+import com.greentree.commons.data.resource.InMemoryFileResource;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ class InMemoryResourceTest {
     @Test
     void testWriteRead() throws IOException {
         var text = "text";
-        var resource = new InMemoryResource("test.txt");
+        var resource = new InMemoryFileResource("test.txt");
         try (var out = resource.openWrite()) {
             out.write(text.getBytes());
         }

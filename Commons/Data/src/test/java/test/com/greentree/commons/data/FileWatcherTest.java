@@ -2,6 +2,7 @@ package test.com.greentree.commons.data;
 
 import com.greentree.commons.data.FileWatcher;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 
 import java.io.File;
@@ -12,7 +13,7 @@ import java.nio.file.Files;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FileWatcherTest {
+class FileWatcherTest {
 
     private static final int SLEEP = 5;
     private static final int REPEAT = 200;

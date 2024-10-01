@@ -31,10 +31,10 @@ inline fun <V : Any> treeSequence(root: V, children: (V) -> Sequence<V>): List<V
 	toAdd.add(root)
 	while(toAdd.isNotEmpty()) {
 		val e = toAdd.remove()
+		result.add(e)
 		children(e).forEach { to ->
-			if(to !in result) {
-				toAdd.add(e)
-				result.add(e)
+			if(to !in result && to !in toAdd) {
+				toAdd.add(to)
 			}
 		}
 	}
