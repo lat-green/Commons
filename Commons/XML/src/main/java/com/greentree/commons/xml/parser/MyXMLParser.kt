@@ -66,7 +66,7 @@ object MyXMLParser : XMLParser {
 	}
 
 	private class BuilderXMLElement(
-		val name: String?,
+		val name: String,
 		val attributes: Map<String, String>,
 		val childrens: MutableCollection<XMLElement> = ArrayList(),
 		val context: StringBuilder = StringBuilder(),

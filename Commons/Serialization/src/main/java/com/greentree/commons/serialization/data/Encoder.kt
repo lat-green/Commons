@@ -21,14 +21,9 @@ interface Encoder {
 
 	fun beginStructure(descriptor: SerialDescriptor): Structure<Encoder>
 	fun beginCollection(descriptor: SerialDescriptor): Structure<Encoder>
+
+	fun <T : Any> encodeSerializable(baseClass: Class<T>, value: T) =
+		serializer(baseClass).serialize(this, value)
 }
 
-fun <T : Any> Encoder.encodeSerializable(baseClass: Class<T>, value: T) {
-	serializer(baseClass).serialize(this, value)
-}
-
-fun <T : Any> Encoder.encodeSerializable(baseClass: KClass<T>, value: T) {
-	serializer(baseClass).serialize(this, value)
-}
-
-fun <T : Any> Encoder.encodeSerializable(value: T) = encodeSerializable(value.javaClass, value)
+fun <T : Any> Encoder.encodeSerializable(baseClass: KClass<T>, value: T) = encodeSerializable(baseClass.java, value)

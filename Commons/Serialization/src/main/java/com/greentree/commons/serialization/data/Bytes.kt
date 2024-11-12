@@ -7,10 +7,10 @@ import java.io.InputStream
 import java.io.OutputStream
 import kotlin.reflect.KClass
 
-object Bytes {
+object Bytes : DecodeDataFormat<InputStream> {
 
 	fun encoder(output: OutputStream) = BytesEncoder(output)
-	fun decoder(input: InputStream) = BytesDecoder(input)
+	override fun decoder(input: InputStream) = BytesDecoder(input)
 
 	fun <T : Any> encodeToSteam(cls: KClass<in T>, value: T, output: OutputStream) {
 		val encoder = encoder(output)
