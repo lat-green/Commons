@@ -1,6 +1,8 @@
 package com.greentree.commons.math.vector
 
+import com.greentree.commons.math.MathLine2D
 import com.greentree.commons.math.Mathf
+import com.greentree.commons.math.Mathf.Companion.abs
 import org.joml.Matrix2fc
 import org.joml.Matrix3fc
 
@@ -104,6 +106,12 @@ interface AbstractVector2f : AbstractFloatVector, AbstractVector2<Float> {
 		return (vec3f(this, 1f) * mat).xy()
 	}
 
+	fun projection(normal: AbstractVector2f): Float {
+		val m = MathLine2D(normal).minPoint(this)
+		val c = cross(normal)
+		return c * m.length() / abs(c)
+	}
+
 	fun toJoml(): org.joml.Vector2f {
 		return org.joml.Vector2f(x, y)
 	}
@@ -127,6 +135,8 @@ fun vec2f(other: AbstractVector<out Float>): AbstractVector2f {
 fun vec2f(x: Float, y: Float): AbstractVector2f {
 	return FinalVector2f(x, y)
 }
+
+fun vec2(x: Float, y: Float) = vec2f(x, y)
 
 fun org.joml.Vector2f.toMath(): AbstractVector2f {
 	return vec2f(x, y)

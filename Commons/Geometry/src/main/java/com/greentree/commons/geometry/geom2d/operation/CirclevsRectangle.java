@@ -1,6 +1,5 @@
 package com.greentree.commons.geometry.geom2d.operation;
 
-import com.greentree.commons.geometry.geom2d.AABB;
 import com.greentree.commons.geometry.geom2d.collision.CollisionEvent2D;
 import com.greentree.commons.geometry.geom2d.shape.Circle2D;
 import com.greentree.commons.geometry.geom2d.shape.Rectangle2D;
@@ -13,14 +12,14 @@ public class CirclevsRectangle extends Shape2DBinaryOperation<Circle2D, Rectangl
 
     @Override
     public CollisionEvent2D.Builder getCollisionEvent(Circle2D a, Rectangle2D b) {
-        AABB box = b.getAABB();
-        float x_delta = box.getCenterX() - a.getCenter().x();
-        float y_delta = box.getCenterY() - b.getCenter().y();
+        var circle = b.getBoundingCircle();
+        float x_delta = circle.getCenter().x() - a.getCenter().x();
+        float y_delta = circle.getCenter().y() - a.getCenter().y();
         // Ближайшая к центру B точка A
         Vector2f closest = new Vector2f(x_delta, y_delta);
         // Вычисление половины ширины вдоль каждой оси
-        float x_extent = box.getWidth() / 2;
-        float y_extent = box.getHeight() / 2;
+        float x_extent = b.getWidth() / 2;
+        float y_extent = b.getHeight() / 2;
         // Ограничиваем точку ребром AABB
         closest.setX(Mathf.clamp(-x_extent, x_extent, closest.getX()));
         closest.setY(Mathf.clamp(-y_extent, y_extent, closest.getY()));

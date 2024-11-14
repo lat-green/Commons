@@ -1,6 +1,7 @@
 package com.greentree.commons.geometry.geom3d;
 
-import com.greentree.commons.geometry.geom2d.shape.Poligon2D;
+import com.greentree.commons.geometry.geom2d.Shape2DKt;
+import com.greentree.commons.geometry.geom2d.shape.Polygon2D;
 import com.greentree.commons.geometry.geom3d.operation.Shape3DBinaryOperations;
 import com.greentree.commons.math.Mathf;
 import com.greentree.commons.math.vector.AbstractVector3f;
@@ -17,12 +18,8 @@ public final class Shape3DUtil extends Shape3DBinaryOperations {
         return result;
     }
 
-    public static float getProjectionArea(IShape3D shape, AbstractVector3f normal) {
-        return getProjectionPoligon(shape, normal).getArea();
-    }
-
-    public static Poligon2D getProjectionPoligon(IShape3D shape, AbstractVector3f normal) {
-        return new Poligon2D(shape.getProjection(normal));
+    public static Polygon2D getProjectionPoligon(IShape3D shape, AbstractVector3f normal) {
+        return new Polygon2D(shape.getProjection(normal));
     }
 
     public static float getRadius(AbstractVector3f center, AbstractVector3f[] points) {
@@ -42,14 +39,17 @@ public final class Shape3DUtil extends Shape3DBinaryOperations {
 
     public static boolean isRight(AbstractVector3f a, AbstractVector3f b, AbstractVector3f c) {
         return new Matrix3f(a.x(), a.y(), a.z(), b.x(), b.y(), b.z(), c.x(), c.y(), c.z())
-                .determinant() > 0;
+                       .determinant() > 0;
     }
 
     public static <A extends IShape3D, B extends IShape3D> boolean isIntersectOnNormalProjection(
             A a, B b) {
-        for (var an : a.getNormals())
-            if (!new Poligon2D(a.getProjection(an)).isIntersect(new Poligon2D(b.getProjection(an))))
+        for (var an : a.getNormals()) {
+            var ap = new Polygon2D(a.getProjection(an));
+            var bp = new Polygon2D(a.getProjection(an));
+            if (!Shape2DKt.isIntersect(ap, bp))
                 return false;
+        }
         return true;
     }
     //	public static AbstractVector3f getCollisionNormalOnNormalProjection(IShape3D a, IShape3D b) {

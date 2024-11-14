@@ -3,9 +3,7 @@ package com.greentree.commons.geometry.geom2d;
 import com.greentree.commons.geometry.geom2d.collision.Collidable2D;
 import com.greentree.commons.geometry.geom2d.collision.CollisionEvent2D;
 import com.greentree.commons.geometry.geom2d.operation.*;
-import com.greentree.commons.geometry.geom2d.shape.Circle2D;
-import com.greentree.commons.geometry.geom2d.shape.Poligon2D;
-import com.greentree.commons.geometry.geom2d.shape.Rectangle2D;
+import com.greentree.commons.geometry.geom2d.shape.*;
 import com.greentree.commons.geometry.geom2d.util.VectorGeometryUtil;
 import com.greentree.commons.math.MathLine2D;
 import com.greentree.commons.math.Mathf;
@@ -21,7 +19,7 @@ import java.util.function.Predicate;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class Shape2DUtil extends VectorGeometryUtil {
 
-    private final static Table<Class<? extends IShape2D>, Class<? extends IShape2D>, Shape2DBinaryOperation> table = new Table<>();
+    private final static Table<Class<? extends Shape2D>, Class<? extends Shape2D>, Shape2DBinaryOperation> table = new Table<>();
 
     static {
         add(Circle2D.class, Circle2D.class, new CirclevsCircle());
@@ -32,14 +30,7 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
     protected Shape2DUtil() {
     }
 
-    public static IShape2D getMinkowskiSub(IShape2D a, IMovableShape2D other) {
-        other.scale(-1);
-        var res = getMinkowskiAdd(a, other);
-        other.scale(-1);
-        return res;
-    }
-
-    public static IShape2D getMinkowskiAdd(IShape2D a, IShape2D b) {
+    public static Shape2D getMinkowskiAdd(FiniteShape2D a, FiniteShape2D b) {
         List<AbstractVector2f> list = new ArrayList<>();
         for (var p1 : a.getPoints())
             for (var p2 : b.getPoints()) {
@@ -47,17 +38,17 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
                 if (!list.contains(point))
                     list.add(point);
             }
-        return new Poligon2D(list);
+        return new Polygon2D(list);
     }
 
-    public static <A extends IShape2D, B extends IShape2D> void add(Class<A> classA,
-                                                                    Class<B> classB, Shape2DBinaryOperation<A, B> collisionHendler2D) {
+    public static <A extends Shape2D, B extends Shape2D> void add(Class<A> classA,
+                                                                  Class<B> classB, Shape2DBinaryOperation<A, B> collisionHendler2D) {
         if (classA != classB)
             table.put(classB, classA, new SwapBinaryOperation2D<>(collisionHendler2D));
         table.put(classA, classB, collisionHendler2D);
     }
 
-    public static AbstractVector2f contactLine(final ILine2D line, final ILine2D line_no_border) {
+    public static AbstractVector2f contactLine(final Line2D line, final Line2D line_no_border) {
         final var p = Shape2DUtil.contact(line, line_no_border);
         final var max_x = Math.max(line.p1().x(), line.p2().x());
         final var min_x = line.p1().x() + line.p2().x() - max_x;
@@ -68,20 +59,20 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
         return p;
     }
 
-    public static Vector2f contact(final ILine2D a, final ILine2D b) {
+    public static Vector2f contact(final Line2D a, final Line2D b) {
         return MathLine2D.contact(a.getMathLine(), a.getMathLine());
     }
 
-    public static AbstractVector2f contactWithBorder(final ILine2D a, final ILine2D b) {
+    public static AbstractVector2f contactWithBorder(final Line2D a, final Line2D b) {
         final var res = contact(a, b);
-        if (res == null || !a.getAABB().isInside(res.x(), res.y()) || !b.getAABB().isInside(res.x(), res.y()))
+        if (res == null || !a.getBoundingBox().isInside(res) || !b.getBoundingBox().isInside(res))
             return null;
         return res;
     }
 
-    public static float distanse(final AbstractVector2f p, final Collection<? extends IShape2D> a) {
+    public static float distanse(final AbstractVector2f p, final Collection<? extends Shape2D> a) {
         float dis = Float.MAX_VALUE;
-        for (final IShape2D l : a)
+        for (final Shape2D l : a)
             dis = Math.min(dis, l.distance(p));
         return dis;
     }
@@ -117,30 +108,30 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
         return new CollisionEvent2D<>(a, b, getHandler(sa, sb).getCollisionEvent(sa, sb));
     }
 
-    private static Shape2DBinaryOperation getHandler(IShape2D a, IShape2D b) {
+    private static Shape2DBinaryOperation getHandler(Shape2D a, Shape2D b) {
         return getHandler(a.getClass(), b.getClass());
     }
 
-    private static Shape2DBinaryOperation getHandler(Class<? extends IShape2D> a,
-                                                     Class<? extends IShape2D> b) {
+    private static Shape2DBinaryOperation getHandler(Class<? extends Shape2D> a,
+                                                     Class<? extends Shape2D> b) {
         var res = table.get(a, b);
         if (res != null)
             return res;
         return Shape2DBinaryOperation.DEFAULT;
     }
 
-    public static <A extends IShape2D, B extends IShape2D> Collection<AbstractVector2f> getContactPoint(
+    public static <A extends Shape2D, B extends Shape2D> Collection<AbstractVector2f> getContactPoint(
             A a, B b) {
         return getHandler(a, b).getContactPoint(a, b);
     }
 
-    public static <A extends IShape2D, B extends IShape2D> boolean isIntersect(final A a,
-                                                                               final B b) {
+    public static <A extends Shape2D, B extends Shape2D> boolean isIntersect(final A a,
+                                                                             final B b) {
         return getHandler(a, b).isIntersect(a, b);
     }
 
     @Deprecated
-    public static Poligon2D toClockwisePoligon(AbstractVector2f... collection) {
+    public static Polygon2D toClockwisePoligon(AbstractVector2f... collection) {
         var c = getCenter(collection);
         List<AbstractVector2f> list = new ArrayList<>(collection.length);
         Collections.addAll(list, collection);
@@ -158,7 +149,7 @@ public abstract class Shape2DUtil extends VectorGeometryUtil {
                 ang *= -1;
             return ang;
         }));
-        return new Poligon2D(list);
+        return new Polygon2D(list);
     }
 
 }

@@ -12,7 +12,7 @@ public class MathLine1D {
         max = Float.MIN_VALUE;
     }
 
-    public <T, C> MathLine1D(float... fs) {
+    public MathLine1D(float... fs) {
         min = Float.MAX_VALUE;
         max = Float.MIN_VALUE;
         for (float t : fs) {

@@ -1,9 +1,9 @@
 package com.greentree.commons.geometry.geom2d.util;
 
-import com.greentree.commons.geometry.geom2d.ILine2D;
-import com.greentree.commons.geometry.geom2d.IShape2D;
-import com.greentree.commons.geometry.geom2d.Line2DImpl;
+import com.greentree.commons.geometry.geom2d.Shape2D;
 import com.greentree.commons.geometry.geom2d.Shape2DUtil;
+import com.greentree.commons.geometry.geom2d.shape.FiniteShape2D;
+import com.greentree.commons.geometry.geom2d.shape.Line2D;
 import com.greentree.commons.geometry.geom2d.shape.Triangle2D;
 import com.greentree.commons.geometry.geom3d.IShape3D;
 import com.greentree.commons.math.MathLine1D;
@@ -73,7 +73,7 @@ public abstract class VectorGeometryUtil {
         return vectors;
     }
 
-    public static AbstractVector2f getCollisionNormalOnNormalProjection(IShape2D a, IShape2D b) {
+    public static AbstractVector2f getCollisionNormalOnNormalProjection(FiniteShape2D a, FiniteShape2D b) {
         final var n1 = getCollisionNormalOnNormalProjection0(a, b);
         final var n2 = getCollisionNormalOnNormalProjection0(b, a).times(-1);
         final float o1 = getProjectionOverlay(a, b, n1);
@@ -84,9 +84,9 @@ public abstract class VectorGeometryUtil {
             return n2;
     }
 
-    public static AbstractVector2f getCollisionNormalOnNormalProjection0(IShape2D a, IShape2D b) {
+    public static AbstractVector2f getCollisionNormalOnNormalProjection0(FiniteShape2D a, FiniteShape2D b) {
         Vector2f[] normals;
-        var rv = b.getCenter().minus(a.getCenter()).normalize(1);
+        var rv = b.getBoundingCircle().getCenter().minus(a.getBoundingCircle().getCenter()).normalize(1);
         {
             Collection<AbstractVector2f> normals0;
             if (rv.lengthSquared() > 0)
@@ -117,11 +117,11 @@ public abstract class VectorGeometryUtil {
         return res_normal;
     }
 
-    public static float getProjectionOverlay(IShape2D a, IShape2D b, AbstractVector2f normal) {
-        return a.getProjection(normal).getOverlay(b.getProjection(normal));
+    public static float getProjectionOverlay(Shape2D a, Shape2D b, AbstractVector2f normal) {
+        return a.projection(normal).getOverlay(b.projection(normal));
     }
 
-    public static AbstractVector2f getCollisionPoint(IShape2D a, IShape2D b) {
+    public static AbstractVector2f getCollisionPoint(FiniteShape2D a, FiniteShape2D b) {
         Collection<AbstractVector2f> points = new ArrayList<>();
         for (AbstractVector2f p : a.getPoints())
             if (b.isInside(p))
@@ -169,7 +169,7 @@ public abstract class VectorGeometryUtil {
 
     public static AbstractVector2f[] getMinimalConvexHullGraham(AbstractVector2f... points) {
         AbstractVector2f[] clone = new AbstractVector2f[points.length];
-		System.arraycopy(points, 0, clone, 0, points.length);
+        System.arraycopy(points, 0, clone, 0, points.length);
         {
             int i = Mathf.minIndex(AbstractVector2f::x, clone);
             var temp = clone[0];
@@ -297,20 +297,20 @@ public abstract class VectorGeometryUtil {
         return points;
     }
 
-    public static boolean isIntersectOnNormalProjection(IShape2D a, IShape2D b) {
+    public static boolean isIntersectOnNormalProjection(FiniteShape2D a, FiniteShape2D b) {
         Set<AbstractVector2f> normals = new HashSet<>();
         normals.addAll(a.getNormals());
         normals.addAll(b.getNormals());
         for (var n : normals) {
-            var pa = a.getProjection(n);
-            var pb = b.getProjection(n);
+            var pa = a.projection(n);
+            var pb = b.projection(n);
             if (!pa.isIntersect(pb))
                 return false;
         }
         return true;
     }
 
-    public static boolean isIntersectOnPointInside(IShape2D a, IShape2D b) {
+    public static boolean isIntersectOnPointInside(FiniteShape2D a, FiniteShape2D b) {
         for (var p : a.getPoints())
             if (b.isInside(p))
                 return true;
@@ -320,21 +320,21 @@ public abstract class VectorGeometryUtil {
         return false;
     }
 
-    public static ILine2D[] toLineLoop(final AbstractVector2f[] points) {
-        ILine2D[] dest = new ILine2D[points.length];
-        dest[dest.length - 1] = new Line2DImpl(points[points.length - 1], points[0]);
+    public static Line2D[] toLineLoop(final AbstractVector2f[] points) {
+        Line2D[] dest = new Line2D[points.length];
+        dest[dest.length - 1] = new Line2D(points[points.length - 1], points[0]);
         toLineStrip(points, dest);
         return dest;
     }
 
-    public static ILine2D[] toLineStrip(final AbstractVector2f[] points, ILine2D[] dest) {
+    public static Line2D[] toLineStrip(final AbstractVector2f[] points, Line2D[] dest) {
         for (int i = 0; i < points.length - 1; i++)
-            dest[i] = new Line2DImpl(points[i], points[i + 1]);
+            dest[i] = new Line2D(points[i], points[i + 1]);
         return dest;
     }
 
-    public static ILine2D[] toLineStrip(final AbstractVector2f[] points) {
-        ILine2D[] dest = new ILine2D[points.length - 1];
+    public static Line2D[] toLineStrip(final AbstractVector2f[] points) {
+        Line2D[] dest = new Line2D[points.length - 1];
         toLineStrip(points, dest);
         return dest;
     }
@@ -343,7 +343,7 @@ public abstract class VectorGeometryUtil {
         return triangulation0(points.clone());
     }
 
-    public static Collection<Triangle2D> triangulation(IShape2D shape) {
+    public static Collection<Triangle2D> triangulation(FiniteShape2D shape) {
         return triangulation(shape.getPoints());
     }
 

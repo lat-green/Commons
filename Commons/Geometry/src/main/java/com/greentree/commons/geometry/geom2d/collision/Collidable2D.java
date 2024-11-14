@@ -1,9 +1,9 @@
 package com.greentree.commons.geometry.geom2d.collision;
 
-import com.greentree.commons.geometry.geom2d.IShape2D;
+import com.greentree.commons.geometry.geom2d.Shape2D;
 
 public interface Collidable2D {
-	
-	IShape2D getShape();
-	
+
+    Shape2D getShape();
+
 }

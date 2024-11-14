@@ -1,8 +1,9 @@
 package com.greentree.commons.geometry.geom2d.collision.strategy;
 
-import com.greentree.commons.geometry.geom2d.AABB;
 import com.greentree.commons.geometry.geom2d.Shape2DUtil;
 import com.greentree.commons.geometry.geom2d.collision.Collidable2D;
+import com.greentree.commons.geometry.geom2d.shape.Rectangle2D;
+import com.greentree.commons.geometry.geom3d.AABB;
 import com.greentree.commons.util.cortege.Pair;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Comparator;
 public class SortCollisionStrategy extends AbstractCollisionStrategy {
 
     private static final Comparator<Collidable2D> comparator = Comparator
-            .comparing(c -> c.getShape().getAABB().getMinX());
+            .comparing(c -> c.getShape().getBoundingBox().getMinX());
     //	private final static Timer t = new Timer();
 
     public SortCollisionStrategy() {
@@ -28,10 +29,10 @@ public class SortCollisionStrategy extends AbstractCollisionStrategy {
         Arrays.sort(world, comparator);
         //		var t1 = t.finish(1);
         //		t.start(2);
-        var aabbs = new AABB[world.length];
+        var aabbs = new Rectangle2D[world.length];
         for (var i = world.length - 1; i >= 0; i--) {
             var a = world[i];
-            var aAABB = a.getShape().getAABB();
+            var aAABB = a.getShape().getBoundingBox();
             aabbs[i] = aAABB;
             for (var j = i + 1; j < world.length; j++) {
                 //			class A {

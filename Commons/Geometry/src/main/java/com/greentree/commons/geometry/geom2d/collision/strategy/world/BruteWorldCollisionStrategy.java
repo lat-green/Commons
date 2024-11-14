@@ -12,7 +12,7 @@ import java.util.Comparator;
 public class BruteWorldCollisionStrategy<T extends Collidable2D> extends WorldCollisionStrategy<T> {
 
     private static final Comparator<Collidable2D> comparator = Comparator
-            .comparing(c -> c.getShape().getAABB().getMinX());
+            .comparing(c -> c.getShape().getBoundingBox().getMinX());
     private Collidable2D[] world = new Collidable2D[10];
     private int size = 0;
 
@@ -22,7 +22,7 @@ public class BruteWorldCollisionStrategy<T extends Collidable2D> extends WorldCo
         for (int i = size - 1; i >= 0; i--) {
             T a = (T) world[i];
             final var sa = a.getShape();
-            var aAABB = sa.getAABB();
+            var aAABB = sa.getBoundingBox();
             for (int j = i + 1; j < size; j++) {
                 T b = (T) world[j];
                 final var sb = b.getShape();
