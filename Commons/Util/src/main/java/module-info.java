@@ -12,6 +12,7 @@ open module commons.util {
     exports com.greentree.commons.util.concurent;
     exports com.greentree.commons.util.pool;
     exports com.greentree.commons.util.pool.ref;
+    exports com.greentree.commons.util.react;
     exports com.greentree.commons.util.iterator;
     exports com.greentree.commons.util.string;
 }

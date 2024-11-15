@@ -3,6 +3,7 @@ package com.greentree.commons.util.reference;
 import java.io.Serializable;
 import java.util.concurrent.locks.StampedLock;
 
+@Deprecated
 public final class StampedLockVarReference<T, V extends VarReference<T>>
 		implements VarReference<T>, Serializable {
 	

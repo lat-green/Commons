@@ -1,5 +1,6 @@
 package com.greentree.commons.data.resource
 
+import com.greentree.commons.action.ListenerCloser
 import com.greentree.commons.data.asScattering
 import java.io.InputStream
 import java.io.Reader
@@ -21,6 +22,10 @@ interface FileResource : ChildResource {
 	fun open(): InputStream
 
 	fun openChannel(): ScatteringByteChannel = Channels.newChannel(open()).asScattering
+
+	fun onModify(listener: Runnable): ListenerCloser {
+		TODO("Not yet implemented")
+	}
 }
 
 fun FileResource.readBytes() = open().use { it.readBytes() }
