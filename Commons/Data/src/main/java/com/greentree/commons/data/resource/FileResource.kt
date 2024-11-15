@@ -1,6 +1,6 @@
 package com.greentree.commons.data.resource
 
-import com.greentree.commons.action.ListenerCloser
+import com.greentree.commons.action.observable.RunObservable
 import com.greentree.commons.data.asScattering
 import java.io.InputStream
 import java.io.Reader
@@ -23,10 +23,15 @@ interface FileResource : ChildResource {
 
 	fun openChannel(): ScatteringByteChannel = Channels.newChannel(open()).asScattering
 
-	fun onModify(listener: Runnable): ListenerCloser {
-		TODO("Not yet implemented")
-	}
+	val onCreate: RunObservable
+		get() = TODO("Not yet implemented")
+	val onModify: RunObservable
+		get() = TODO("Not yet implemented")
+	val onDelete: RunObservable
+		get() = TODO("Not yet implemented")
 }
+
+fun FileResource.onModify(listener: Runnable) = onModify.addListener(listener)
 
 fun FileResource.readBytes() = open().use { it.readBytes() }
 

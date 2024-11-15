@@ -9,5 +9,6 @@ open module commons.action {
     exports com.greentree.commons.action.observer.pair;
     exports com.greentree.commons.action.observer.type;
     exports com.greentree.commons.action.observer.integer;
+    exports com.greentree.commons.action.react;
     exports com.greentree.commons.action.container;
 }

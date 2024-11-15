@@ -12,6 +12,7 @@ open module commons.data {
     exports com.greentree.commons.data.resource.location;
     exports com.greentree.commons.data.file;
     exports com.greentree.commons.data.file.serializer;
+    exports com.greentree.commons.data.react;
     uses DataSerializer;
     provides DataSerializer with StringSerializer, IntSerializer, FloatSerializer, DoubleSerializer,
             MapSerializer, ArraySerializer, FieldsSerializer, BooleanSerializer, ClassSerializer,

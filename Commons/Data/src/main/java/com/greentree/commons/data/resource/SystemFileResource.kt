@@ -1,5 +1,7 @@
 package com.greentree.commons.data.resource
 
+import com.greentree.commons.action.observable.RunObservable
+import com.greentree.commons.data.FileWatcher
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -43,4 +45,11 @@ data class SystemFileResource(
 	override fun delete(): Boolean {
 		return file.delete()
 	}
+
+	override val onCreate: RunObservable
+		get() = FileWatcher.getFileAction(file).onCreate
+	override val onModify: RunObservable
+		get() = FileWatcher.getFileAction(file).onModify
+	override val onDelete: RunObservable
+		get() = FileWatcher.getFileAction(file).onDelete
 }
