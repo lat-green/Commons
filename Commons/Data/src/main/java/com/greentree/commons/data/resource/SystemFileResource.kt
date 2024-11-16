@@ -15,9 +15,9 @@ data class SystemFileResource(
 	val path: Path
 		get() = file.toPath()
 
-	override fun createFile() = file.createNewFile()
+	override fun createThisFile() = file.createNewFile()
 
-	override fun createFolder() = file.mkdirs()
+	override fun createThisFolder() = file.mkdirs()
 
 	override fun openWrite() = FileOutputStream(file)
 
@@ -47,9 +47,9 @@ data class SystemFileResource(
 	}
 
 	override val onCreate: RunObservable
-		get() = FileWatcher.getFileAction(file).onCreate
+		get() = FileWatcher.onFileCreate(file)
 	override val onModify: RunObservable
-		get() = FileWatcher.getFileAction(file).onModify
+		get() = FileWatcher.onFileModify(file)
 	override val onDelete: RunObservable
-		get() = FileWatcher.getFileAction(file).onDelete
+		get() = FileWatcher.onFileDelete(file)
 }

@@ -10,7 +10,7 @@ import java.nio.charset.Charset
 
 interface MutableFileResource : FileResource, MutableResource, MutableChildResource {
 
-	fun createFile(): Boolean
+	fun createThisFile(): Boolean
 
 	fun openWrite(): OutputStream
 	fun openWriteChannel(): GatheringByteChannel = Channels.newChannel(openWrite()).asGathering

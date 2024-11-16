@@ -16,7 +16,7 @@ class InMemoryFileResource(
 	private val lock = StampedLock()
 	private var lastModified: Long = System.currentTimeMillis()
 
-	override fun createFile(): Boolean {
+	override fun createThisFile(): Boolean {
 		if(exists())
 			return false
 		array = ByteArray(0)

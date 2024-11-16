@@ -9,7 +9,7 @@ data class URLFileResource(
 	val url: URL,
 ) : MutableFileResource {
 
-	override fun createFile(): Boolean {
+	override fun createThisFile(): Boolean {
 		TODO("Not yet implemented")
 	}
 

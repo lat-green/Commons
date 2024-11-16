@@ -1,10 +1,10 @@
 package com.greentree.commons.util.react
 
-class SimpleReactContextProvider : ReactContextProvider, () -> Unit {
+class FlagReactContextProvider : ReactContextProvider, () -> Unit {
 
 	private val refs = mutableListOf<DataRef<*>>()
 	private var next: ReactContext = HeadReactContext(refs, this)
-	override var requireRefresh: Boolean = false
+	var requireRefresh: Boolean = false
 		private set
 
 	override fun next(): ReactContext {

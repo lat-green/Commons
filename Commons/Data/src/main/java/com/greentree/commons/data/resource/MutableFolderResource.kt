@@ -2,7 +2,7 @@ package com.greentree.commons.data.resource
 
 interface MutableFolderResource : FolderResource, MutableChildResource, MutableParentResource {
 
-	fun createFolder(): Boolean
+	fun createThisFolder(): Boolean
 
 	override fun getChildren(name: String): MutableChildResource
 }

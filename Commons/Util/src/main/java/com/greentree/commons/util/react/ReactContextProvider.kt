@@ -2,7 +2,6 @@ package com.greentree.commons.util.react
 
 interface ReactContextProvider : AutoCloseable {
 
-	val requireRefresh: Boolean
 	fun next(): ReactContext
 }
 
