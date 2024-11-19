@@ -40,6 +40,7 @@ object BooleanSerialDescriptor : PrimitiveSerialDescriptor(Boolean::class.java)
 object DoubleSerialDescriptor : PrimitiveSerialDescriptor(Double::class.java)
 
 object StringSerialDescriptor : PrimitiveSerialDescriptor(String::class.java)
+object ClassSerialDescriptor : PrimitiveSerialDescriptor(Class::class.java)
 
 data class EnumSerialDescriptor(private val cls: Class<*>) : PrimitiveSerialDescriptor(cls) {
 
@@ -49,7 +50,7 @@ data class EnumSerialDescriptor(private val cls: Class<*>) : PrimitiveSerialDesc
 }
 
 data class KotlinObjectSerialDescriptor<T : Any>(
-	private val cls: KClass<T>
+	private val cls: KClass<T>,
 ) : PrimitiveSerialDescriptor(cls.java)
 
 val <T : Any> Class<T>.descriptor

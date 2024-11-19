@@ -65,6 +65,9 @@ fun <T : Any> serializer(cls: KClass<T>): Serializer<T> =
 		cls == java.lang.Float::class -> FloatSerializer
 		cls == java.lang.Boolean::class -> BooleanSerializer
 		cls == java.lang.String::class -> StringSerializer
+
+		cls == java.lang.Class::class -> ClassSerializer
+
 		isKotlin(cls) && cls.objectInstance != null -> KotlinObjectSerializer(cls)
 		ClassUtil.isExtends(Collection::class.java, cls::class.java) && Modifier.isFinal(cls.java.modifiers) ->
 			FinalCollectionClassSerializer(cls.java)

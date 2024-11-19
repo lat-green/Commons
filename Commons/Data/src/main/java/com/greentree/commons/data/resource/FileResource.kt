@@ -31,7 +31,9 @@ interface FileResource : ChildResource {
 		get() = TODO("Not yet implemented")
 }
 
+fun FileResource.onCreate(listener: Runnable) = onCreate.addListener(listener)
 fun FileResource.onModify(listener: Runnable) = onModify.addListener(listener)
+fun FileResource.onDelete(listener: Runnable) = onDelete.addListener(listener)
 
 fun FileResource.readBytes() = open().use { it.readBytes() }
 

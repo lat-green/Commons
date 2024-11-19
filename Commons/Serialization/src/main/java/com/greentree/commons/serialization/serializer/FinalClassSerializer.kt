@@ -8,7 +8,7 @@ import java.lang.reflect.Constructor
 import kotlin.reflect.full.primaryConstructor
 
 class FinalClassSerializer<T : Any>(
-	private val cls: Class<out T>
+	private val cls: Class<out T>,
 ) : Serializer<T> {
 
 	override val descriptor = ReflectionSerialDescriptor(cls)
@@ -49,7 +49,7 @@ class FinalClassSerializer<T : Any>(
 	override fun serialize(encoder: Encoder, value: T) {
 		encoder.beginStructure(descriptor).use { struct ->
 			for(parameter in cls.kotlin.primaryConstructor!!.parameters) {
-				val field = cls.getDeclaredField(parameter.name)
+				val field = cls.getDeclaredField(parameter.name ?: throw NullPointerException("$parameter"))
 				field.trySetAccessible()
 				val serializer = serializer(field.type as Class<Any>)
 				serializer.serialize(struct.field(field.name), field.get(value))
@@ -60,7 +60,8 @@ class FinalClassSerializer<T : Any>(
 
 fun <T> Class<T>.getSupportedConstructor(vararg array: Class<*>): Constructor<T> {
 	return declaredConstructors.first { constructor ->
-		constructor.parameters.zip(array).all { (param, argument) -> ClassUtil.isExtends(param.type, argument) }
+		constructor.parameterCount == array.size &&
+				constructor.parameters.zip(array).all { (param, argument) -> ClassUtil.isExtends(param.type, argument) }
 	} as Constructor<T>
 }
 

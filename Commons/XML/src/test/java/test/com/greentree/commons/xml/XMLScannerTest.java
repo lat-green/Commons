@@ -1,4 +1,4 @@
-package com.greentree.xml;
+package test.com.greentree.commons.xml;
 
 import com.greentree.commons.util.iterator.IteratorUtil;
 import com.greentree.commons.xml.parser.token.*;

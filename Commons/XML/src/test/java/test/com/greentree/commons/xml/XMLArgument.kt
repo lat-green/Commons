@@ -1,4 +1,4 @@
-package com.greentree.xml
+package test.com.greentree.commons.xml
 
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments

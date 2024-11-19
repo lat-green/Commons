@@ -1,6 +1,7 @@
 package com.greentree.commons.data
 
 import com.greentree.commons.action.ListenerCloser
+import com.greentree.commons.action.container.MultiContainer
 import com.greentree.commons.action.observable.RunObservable
 import java.io.File
 import java.nio.file.FileSystems
@@ -9,29 +10,29 @@ import java.nio.file.StandardWatchEventKinds.*
 import java.nio.file.WatchEvent
 import java.nio.file.WatchKey
 import java.nio.file.WatchService
-import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.io.path.absolute
 import kotlin.io.path.exists
 
-data object FileWatcher {
+interface FileKeyWatcher {
 
-	private val watchService: WatchService = FileSystems.getDefault().newWatchService()
-	private val keys: MutableMap<WatchKey, Path> = WeakHashMap()
-	private val watchers = mutableListOf<FileEventWatcher>()
+	fun take()
 
-	fun onFile(file: File, vararg events: WatchEvent.Kind<*>): RunObservable {
-		require(!file.exists() || file.isFile)
-		return OnKindFileWatcher(
-			file.toPath(),
-			*events
-		)
-	}
+	fun poll(): Boolean
+	fun poll(timeout: Long, unit: TimeUnit): Boolean
+}
 
-	fun onFile(file: Path, vararg events: WatchEvent.Kind<*>): RunObservable {
+data object FileWatcher : FileKeyWatcher {
+
+	private val watchers = MultiContainer<FileKeyWatcher>()
+
+	private fun onFile(file: File, vararg events: WatchEvent.Kind<*>) = onFile(file.toPath(), *events)
+
+	private fun onFile(file: Path, vararg events: WatchEvent.Kind<*>): RunObservable {
 		require(!file.exists() || file.toFile().isFile)
 		return OnKindFileWatcher(
-			file,
-			*events
+			file.absolute(),
+			arrayOf(*events)
 		)
 	}
 
@@ -46,60 +47,83 @@ data object FileWatcher {
 
 	class OnKindFileWatcher(
 		val file: Path,
-		vararg val kind: WatchEvent.Kind<*>,
+		val events: Array<WatchEvent.Kind<*>>,
 	) : RunObservable {
 
+		val directory: Path
+			get() = file.parent
+
+		init {
+			require(file.isAbsolute)
+		}
+
 		override fun addListener(listener: Runnable): ListenerCloser {
-			val key = registerDirectory(file.parent, *kind)
-			val watcher = object : FileEventWatcher {
-				override fun onEvent() {
+			val watchService: WatchService = FileSystems.getDefault().newWatchService()
+			val thisKey = directory.register(watchService, events)
+			val lc = watchers.add(object : FileKeyWatcher {
+				override fun take() {
+					val key = watchService.take()
+					resolveKey(key)
+				}
+
+				override fun poll(): Boolean {
+					val key = watchService.poll()
+					if(key != null) {
+						resolveKey(key)
+						return true
+					}
+					return false
+				}
+
+				override fun poll(timeout: Long, unit: TimeUnit): Boolean {
+					val key = watchService.poll(timeout, unit)
+					if(key != null) {
+						resolveKey(key)
+						return true
+					}
+					return false
+				}
+
+				fun resolveKey(key: WatchKey) {
 					for(event in key.pollEvents()) {
-						val path = file.parent.resolve(event.context() as Path)
-						if(path == file)
+						if(event.kind() !in events)
+							continue
+						val path = directory.resolve(event.context() as Path)
+						if(file == path)
 							listener.run()
 					}
 					key.reset()
 				}
-			}
-			watchers.add(watcher)
+			})
 			return ListenerCloser {
-				watchers.remove(watcher)
-				key.cancel()
+				lc.close()
+				thisKey.cancel()
+				watchService.close()
 			}
 		}
 	}
 
-	fun take() {
-		val key = watchService.take()
-		resolveKey(key)
-	}
-
-	fun poll() {
-		val key = watchService.poll()
-		if(key != null)
-			resolveKey(key)
-	}
-
-	fun poll(timeout: Long, unit: TimeUnit) {
-		val key = watchService.poll(timeout, unit)
-		if(key != null)
-			resolveKey(key)
-	}
-
-	private fun resolveKey(key: WatchKey) {
-		for(watcher in watchers) {
-			watcher.onEvent()
+	override fun take() {
+		while(!poll()) {
 		}
 	}
 
-	private fun registerDirectory(directory: Path, vararg events: WatchEvent.Kind<*>): WatchKey {
-		val key = directory.register(watchService, events)
-		keys[key] = directory
-		return key
+	override fun poll(): Boolean {
+		var result = false
+		for(watcher in watchers) {
+			result = watcher.poll() || result
+		}
+		return result
 	}
-}
 
-interface FileEventWatcher {
-
-	fun onEvent()
+	override fun poll(timeout: Long, unit: TimeUnit): Boolean {
+		val time = System.currentTimeMillis() + unit.toMillis(timeout)
+		var result = false
+		while(!result || time > System.currentTimeMillis()) {
+			for(watcher in watchers) {
+				result = watcher.poll(timeout, unit) || result
+			}
+		}
+		return result
+	}
 }

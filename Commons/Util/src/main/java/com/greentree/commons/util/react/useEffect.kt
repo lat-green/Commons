@@ -1,8 +1,9 @@
 package com.greentree.commons.util.react
 
 inline fun ReactContext.useEffect(dependency: Any, block: () -> Unit) {
-	val previous = usePrevious(dependency)
-	if(previous == null || previous != dependency) {
+	val code = dependency.hashCode()
+	val previous = usePrevious(code)
+	if(previous == null || previous != code) {
 		block()
 	}
 }
