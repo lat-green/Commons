@@ -12,7 +12,7 @@ class InMemoryResourceTest {
     @Test
     void testWriteRead() throws IOException {
         var text = "text";
-        var resource = new InMemoryFileResource("test.txt");
+        var resource = new InMemoryFileResource("test.txt", null);
         try (var out = resource.openWrite()) {
             out.write(text.getBytes());
         }

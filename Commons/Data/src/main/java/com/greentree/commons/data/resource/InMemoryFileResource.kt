@@ -2,18 +2,24 @@ package com.greentree.commons.data.resource
 
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.util.concurrent.locks.StampedLock
 
 class InMemoryFileResource(
 	override val name: String,
-) : MutableFileResource {
+	private var parentResource: InMemoryFolderResource? = null,
+) : MutableFileResource, InMemoryResource {
 
-	constructor(name: String, array: ByteArray) : this(name) {
+	private var array: ByteArray? = null
+	override val parent: ParentResource
+		get() = parentResource ?: throw RuntimeException("parent not found")
+
+	constructor(
+		name: String,
+		array: ByteArray,
+		parentResource: InMemoryFolderResource? = null,
+	) : this(name, parentResource) {
 		this.array = array
 	}
 
-	private var array: ByteArray? = null
-	private val lock = StampedLock()
 	private var lastModified: Long = System.currentTimeMillis()
 
 	override fun createThisFile(): Boolean {
@@ -39,9 +45,6 @@ class InMemoryFileResource(
 
 	private fun checkExists() = array ?: throw ResourceNotFound(name)
 
-	override val parent: ParentResource
-		get() = TODO("Not yet implemented")
-
 	override fun exists() = array != null
 
 	override fun lastModified() = lastModified
@@ -50,6 +53,8 @@ class InMemoryFileResource(
 		if(array == null)
 			return false
 		array = null
+		parentResource?.removeChild(this)
+		parentResource = null
 		lastModified = System.currentTimeMillis()
 		return true
 	}
@@ -69,17 +74,14 @@ class InMemoryFileResource(
 		other as InMemoryFileResource
 
 		if(name != other.name) return false
-		if(array != null) {
-			if(other.array == null) return false
-			if(!array.contentEquals(other.array)) return false
-		} else if(other.array != null) return false
+		if(parentResource != other.parentResource) return false
 
 		return true
 	}
 
 	override fun hashCode(): Int {
 		var result = name.hashCode()
-		result = 31 * result + (array?.contentHashCode() ?: 0)
+		result = 31 * result + (parentResource?.hashCode() ?: 0)
 		return result
 	}
 }
