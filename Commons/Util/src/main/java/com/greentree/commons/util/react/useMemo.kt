@@ -2,8 +2,9 @@ package com.greentree.commons.util.react
 
 inline fun <R> ReactContext.useMemo(dependency: Any, block: () -> R): R {
 	var valueRef by useRef<R>() as Ref<R>
-	val previous = usePrevious(dependency)
-	if(previous == null || previous != dependency) {
+	val code = dependency.hashCode()
+	val previous = usePrevious(code)
+	if(previous == null || previous != code) {
 		valueRef = block()
 	}
 	return valueRef
