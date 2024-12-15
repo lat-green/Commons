@@ -1,10 +1,12 @@
+
 import com.greentree.commons.data.file.DataSerializer;
 import com.greentree.commons.data.file.serializer.*;
 
 open module commons.data {
     requires transitive commons.action;
     requires transitive commons.reflection;
-    requires kotlin.stdlib;
+    requires transitive commons.coroutine;
+    requires transitive kotlinx.coroutines.core;
     requires jdk.jfr;
     exports com.greentree.commons.data;
     exports com.greentree.commons.data.externalizable;
