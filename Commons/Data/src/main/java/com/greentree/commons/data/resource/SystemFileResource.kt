@@ -2,11 +2,14 @@ package com.greentree.commons.data.resource
 
 import com.greentree.commons.action.observable.RunObservable
 import com.greentree.commons.data.FileWatcher
+import com.greentree.commons.data.channel.AsynchronousFileChannelAsyncByteChannel
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.nio.channels.AsynchronousFileChannel
 import java.nio.channels.FileChannel
 import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 
 data class SystemFileResource(
 	val file: File,
@@ -26,7 +29,16 @@ data class SystemFileResource(
 
 	override fun open() = FileInputStream(file)
 
-	override fun openChannel(): FileChannel = FileChannel.open(path)
+	override fun openAsyncChannel() =
+		AsynchronousFileChannelAsyncByteChannel(
+			AsynchronousFileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.CREATE)
+		)
+
+	override fun openWriteChannel(): FileChannel =
+		FileChannel.open(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE)
+
+	override fun openChannel(): FileChannel =
+		FileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.CREATE)
 
 	override fun exists() = file.exists()
 
