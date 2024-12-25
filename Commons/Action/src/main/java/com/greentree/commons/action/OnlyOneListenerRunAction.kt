@@ -10,7 +10,7 @@ data class OnlyOneListenerRunAction(
 	private var originCloser: ListenerCloser? = null
 	private val action = RunAction()
 
-	override fun addListener(listener: Runnable?): ListenerCloser {
+	override fun addListener(listener: Runnable): ListenerCloser {
 		if(originCloser == null) {
 			originCloser = origin.addListener {
 				action.event()
@@ -25,4 +25,7 @@ data class OnlyOneListenerRunAction(
 			}
 		}
 	}
+
+	override val listenerCount: Int
+		get() = action.listenerCount
 }

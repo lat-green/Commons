@@ -1,16 +1,16 @@
-package com.greentree.action.observer.integer;
+package test.com.greentree.commons.action.observer.integer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.function.IntConsumer;
 
+import com.greentree.commons.action.observer.integer.IntAction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.greentree.commons.action.container.ListenerNotCloseException;
-import com.greentree.commons.action.observer.integer.IntAction;
 
 public class IntActionTest {
 	

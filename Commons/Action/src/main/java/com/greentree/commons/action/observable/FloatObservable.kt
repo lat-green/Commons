@@ -1,25 +1,21 @@
 package com.greentree.commons.action.observable
 
+import com.greentree.commons.action.FloatConsumer
 import com.greentree.commons.action.ListenerCloser
 
 interface FloatObservable : RunObservable {
 
 	override fun addListener(listener: Runnable) = addListener { _ -> listener.run() }
 
-	fun addListener(listener: (Float) -> Unit): ListenerCloser
+	fun addListener(listener: FloatConsumer): ListenerCloser
 
-	companion object {
+	data object Empty : FloatObservable {
 
-		val NULL: FloatObservable = object : FloatObservable {
-			private val serialVersionUID = 1L
+		override val listenerCount: Int
+			get() = 0
 
-			override fun listenerSize(): Int {
-				return 0
-			}
-
-			override fun addListener(listener: (Float) -> Unit): ListenerCloser {
-				return ListenerCloser.EMPTY
-			}
+		override fun addListener(listener: FloatConsumer): ListenerCloser {
+			return ListenerCloser.Empty
 		}
 	}
 }

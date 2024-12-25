@@ -1,30 +1,39 @@
 package com.greentree.commons.action.event.bus
 
-class EventBusImpl<K, L> : EventBus<K, L> {
+import com.greentree.commons.action.ListenerCloser
+import com.greentree.commons.action.observer.`object`.EventAction
 
-	private val topics = mutableMapOf<K, TopicImpl<L>>()
+class EventBusImpl<T> : EventBus<T> {
 
-	private class TopicImpl<L> : EventBus.Topic<L> {
+	private val topics = mutableListOf<TopicImpl<*, T>>()
 
-		private val listeners = mutableListOf<L>()
-
-		override fun addListener(listener: L) {
-			listeners.add(listener)
-		}
-
-		override fun removeListener(listener: L) {
-			listeners.remove(listener)
-		}
-
-		override fun event(block: (L) -> Unit) {
-			for(listener in listeners)
-				try {
-					block(listener)
-				} catch(e: Exception) {
-					e.printStackTrace()
-				}
+	override fun event(event: T) {
+		for(topic in topics) {
+			topic.event(event)
 		}
 	}
 
-	override fun topic(key: K): EventBus.Topic<L> = topics.getOrPut(key) { TopicImpl() }
+	override fun <K> topic(keyExtractor: (T) -> K): EventBus.Topic<K, T> {
+		return topics.firstOrNull { it.keyExtractor == keyExtractor } as EventBus.Topic<K, T>? ?: run {
+			val topic = TopicImpl(keyExtractor)
+			topics.add(topic)
+			return topic
+		}
+	}
+
+	class TopicImpl<K, T>(
+		val keyExtractor: (T) -> K,
+	) : EventBus.Topic<K, T> {
+
+		private val listeners = mutableMapOf<K, EventAction<T>>()
+
+		override fun addListener(key: K, listener: (T) -> Unit): ListenerCloser {
+			return listeners.getOrPut(key) { EventAction() }.addListener(listener)
+		}
+
+		fun event(event: T) {
+			val key = keyExtractor(event)
+			listeners[key]?.event(event)
+		}
+	}
 }

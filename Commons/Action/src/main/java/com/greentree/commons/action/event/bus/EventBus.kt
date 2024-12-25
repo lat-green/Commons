@@ -1,38 +1,21 @@
 package com.greentree.commons.action.event.bus
 
-interface EventBus<K, L> {
+import com.greentree.commons.action.ListenerCloser
+import kotlin.reflect.KClass
 
-	fun topic(key: K): Topic<L>
+interface EventBus<T> {
 
-	interface Topic<L> {
+	fun <K> topic(keyExtractor: (T) -> K): Topic<K, T>
 
-		fun addListener(listener: L)
-		fun removeListener(listener: L)
+	fun event(event: T)
 
-		fun event(block: (L) -> Unit)
-	}
+	interface Topic<K, T> {
 
-	companion object {
-
-		fun <K> newSimpleEventBus() = EventBusImpl<K, () -> Unit>()
-		fun newClassEventBus() = EventBusImpl<Class<*>, (Any) -> Unit>()
+		fun addListener(key: K, listener: (T) -> Unit): ListenerCloser
 	}
 }
 
-fun <K, L> EventBus<K, L>.addListener(key: K, listener: L) = topic(key).addListener(listener)
-fun <K, L> EventBus<K, L>.removeListener(key: K, listener: L) = topic(key).removeListener(listener)
-
-fun <K, L> EventBus<K, L>.event(key: K, block: (L) -> Unit) = topic(key).event(block)
-
-fun <K> EventBus<K, () -> Unit>.event(key: K) = topic(key).event { it() }
-
-inline fun <reified T> EventBusImpl<Class<*>, (Any) -> Unit>.addListener(noinline block: (T) -> Unit) =
-	topic(T::class.java).addListener {
-		if(it is T)
-			block(it)
+inline fun <E : Any, reified T : E> EventBus.Topic<KClass<out E>, E>.addListener(noinline listener: (T) -> Unit) =
+	addListener(T::class) {
+		listener(it as T)
 	}
-
-inline fun <reified T : Any> EventBusImpl<Class<*>, (Any) -> Unit>.event(argument: T) =
-	topic(T::class.java).event { it(argument) }
-
-fun <K, A, L : (A) -> Unit> EventBus<K, L>.event(key: K, argument: A) = topic(key).event { it(argument) }

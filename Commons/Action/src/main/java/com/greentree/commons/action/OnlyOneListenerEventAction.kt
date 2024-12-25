@@ -2,7 +2,6 @@ package com.greentree.commons.action
 
 import com.greentree.commons.action.observable.ObjectObservable
 import com.greentree.commons.action.observer.`object`.EventAction
-import java.util.function.Consumer
 
 data class OnlyOneListenerEventAction<T>(
 	val origin: ObjectObservable<T>,
@@ -11,7 +10,7 @@ data class OnlyOneListenerEventAction<T>(
 	private var originCloser: ListenerCloser? = null
 	private val action = EventAction<T>()
 
-	override fun addListener(listener: Consumer<in T>): ListenerCloser {
+	override fun addListener(listener: (T) -> Unit): ListenerCloser {
 		if(originCloser == null) {
 			originCloser = origin.addListener { it ->
 				action.event(it)

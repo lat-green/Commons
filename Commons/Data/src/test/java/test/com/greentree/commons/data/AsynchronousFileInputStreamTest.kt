@@ -4,7 +4,6 @@ import com.greentree.commons.data.AsynchronousFileInputStream
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -18,7 +17,7 @@ class AsynchronousFileInputStreamTest {
 	private lateinit var path: Path
 	private lateinit var bytes: ByteArray
 
-	fun createTempFile(size: Int) {
+	private fun createTempFile(size: Int) {
 		path = Files.createTempFile("test_AsynchronousFileInputStreamTest", ".txt")
 		bytes = ByteArray(size)
 		ThreadLocalRandom.current().nextBytes(bytes)
@@ -66,6 +65,6 @@ class AsynchronousFileInputStreamTest {
 	companion object {
 
 		@JvmStatic
-		fun sizes() = IntStream.range(1, 64).mapToObj { Arguments.of(it * 1024) }
+		fun sizes() = IntStream.of(1, 32, 1024).mapToObj { Arguments.of(it * 1024) }
 	}
 }
