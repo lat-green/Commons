@@ -11,12 +11,12 @@
     <name>Commons</name>
 
     <properties>
-        <kotlin.version>1.9.0-Beta</kotlin.version>
-        <kotlinx-coroutines.version>1.9.0</kotlinx-coroutines.version>
+        <kotlin.version>2.1.0</kotlin.version>
+        <kotlinx-coroutines.version>1.10.1</kotlinx-coroutines.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <java.version.source>20</java.version.source>
+        <java.version.source>21</java.version.source>
         <java.version.target>${java.version.source}</java.version.target>
 
         <junit.version>5.10.0</junit.version>
