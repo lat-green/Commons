@@ -28,19 +28,19 @@ public class NCObjectOutputSream extends OutputStream {
 			final var wm = cls.getDeclaredMethod("writeObject", ObjectOutput.class);
 //			System.out.println(wm);
 			return;
-		}catch(NoSuchMethodException | SecurityException e) {
+		}catch(NoSuchMethodException | SecurityException ignore) {
 		}
 		try {
 			final var wm = cls.getDeclaredMethod("writeObject", ObjectOutputStream.class);
 
 			return;
-		}catch(NoSuchMethodException | SecurityException e) {
+		}catch(NoSuchMethodException | SecurityException ignore) {
 		}
 		try {
 			final var wm = cls.getDeclaredMethod("writeObject", OutputStream.class);
 //			System.out.println(wm);
 			return;
-		}catch(NoSuchMethodException | SecurityException e) {
+		}catch(NoSuchMethodException | SecurityException ignore) {
 		}
 //		System.out.println(obj);
 		for(var f : ClassUtil.getAllNotStaticFields(obj.getClass())) {

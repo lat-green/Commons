@@ -14,8 +14,9 @@ open class MultiFiniteGraph<V : Any> : MutableFiniteGraph<V> {
 		addAll(graph)
 	}
 
-	override fun getAdjacencyIterable(v: V): Iterable<V> {
-		if(all_arcs.containsKey(v)) return all_arcs[v]!!
+	override fun getAdjacencySequence(v: V): Sequence<V> {
+		if(all_arcs.containsKey(v))
+			return all_arcs[v]!!.asSequence()
 		throw IllegalArgumentException("not vertex v:$v")
 	}
 
@@ -84,9 +85,5 @@ open class MultiFiniteGraph<V : Any> : MutableFiniteGraph<V> {
 
 	override fun iterator(): Iterator<V> {
 		return all_arcs.keys.iterator()
-	}
-
-	override fun getAdjacencySequence(v: V): Sequence<V> {
-		return getAdjacencyIterable(v).asSequence()
 	}
 }

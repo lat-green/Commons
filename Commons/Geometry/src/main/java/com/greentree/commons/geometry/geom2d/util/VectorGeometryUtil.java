@@ -85,7 +85,7 @@ public abstract class VectorGeometryUtil {
     }
 
     public static AbstractVector2f getCollisionNormalOnNormalProjection0(FiniteShape2D a, FiniteShape2D b) {
-        Vector2f[] normals;
+        AbstractVector2f[] normals;
         var rv = b.getBoundingCircle().getCenter().minus(a.getBoundingCircle().getCenter()).normalize(1);
         {
             Collection<AbstractVector2f> normals0;
@@ -94,14 +94,13 @@ public abstract class VectorGeometryUtil {
                         .collect(Collectors.toList());
             else
                 normals0 = a.getNormals();
-            normals = new Vector2f[normals0.size()];
-            normals0.toArray(normals);
+            normals = normals0.toArray(new AbstractVector2f[0]);
         }
-        Vector2f res_normal = normals[0];
+        AbstractVector2f res_normal = normals[0];
         {
             float res_overlay = getProjectionOverlay(a, b, res_normal);
             for (int i = 1; i < normals.length; i++) {
-                final Vector2f normal = normals[i];
+                final var normal = normals[i];
                 final float overlay = getProjectionOverlay(a, b, normal);
                 if (overlay <= 0)
                     continue;
@@ -212,9 +211,9 @@ public abstract class VectorGeometryUtil {
             temp.remove(v);
             final var fv = v;
             v = Mathf.minElement(temp, a -> {
+                assert fv != null;
                 var vec = a.minus(fv);
-                float sin = vec.cross(vec2f(1, 0));
-                return sin;
+                return vec.cross(vec2f(1, 0));
             });
         } while (v != v0);
         AbstractVector2f[] copy = new AbstractVector2f[res.size()];

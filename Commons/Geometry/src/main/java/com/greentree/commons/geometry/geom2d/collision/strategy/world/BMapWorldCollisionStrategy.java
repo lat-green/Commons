@@ -35,7 +35,7 @@ public class BMapWorldCollisionStrategy<T extends Collidable2D> extends WorldCol
         min = -area;
         this.size = size;
         count = (int) (((double) max - (double) min) / size);
-        DELTHA = count / 2 * size;
+        DELTHA = count / 2f * size;
         map = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             map.add(new ArrayList<>(count));

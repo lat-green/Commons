@@ -130,9 +130,9 @@ public class IteratorUtil {
 		while(true) {
 			h1 = iter1.hasNext();
 			h2 = iter2.hasNext();
-			if(h1 ^ h2)
+			if(h1 != h2)
 				return false; // size1 != size2
-			if(!h1 && !h2)
+			if(!h1)
 				return true;
 			
 			final var n1 = iter1.next();

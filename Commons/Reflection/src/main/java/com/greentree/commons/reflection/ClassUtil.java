@@ -46,7 +46,7 @@ public final class ClassUtil {
     }
 
     public static Stream<Class<?>> getAllClasses() {
-        if (classes == null) classes = sources().stream().flatMap(x -> x.getAllClasses()).toList();
+        if (classes == null) classes = sources().stream().flatMap(CodeSource::getAllClasses).toList();
         return classes.stream();
     }
 
@@ -93,7 +93,7 @@ public final class ClassUtil {
                 clone.setAccessible(true);
                 clone.invoke(t);
                 clone.setAccessible(flag);
-            } catch (NoSuchMethodException e) {
+            } catch (NoSuchMethodException ignorede) {
             } catch (IllegalAccessException | IllegalArgumentException
                      | InvocationTargetException e) {
                 e.printStackTrace();
@@ -123,15 +123,12 @@ public final class ClassUtil {
     public static <T> void copyAllFieldsTo(T t, T dest) throws Exception {
         for (Field f : ClassUtil.getAllFields(t.getClass())) {
             var m = f.getModifiers();
-            if (!(isStatic(m) | isTransient(m)))
-                try {
-                    var flag = f.canAccess(t);
-                    f.setAccessible(true);
-                    f.set(dest, f.get(t));
-                    f.setAccessible(flag);
-                } catch (IllegalArgumentException | IllegalAccessException e) {
-                    throw e;
-                }
+            if (!(isStatic(m) | isTransient(m))) {
+                var flag = f.canAccess(t);
+                f.setAccessible(true);
+                f.set(dest, f.get(t));
+                f.setAccessible(flag);
+            }
         }
     }
 
@@ -270,24 +267,20 @@ public final class ClassUtil {
         field.setAccessible(true);
         try {
             return field.get(object);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            throw e;
         } finally {
             field.setAccessible(accessible);
         }
 
     }
 
-    public static Field getFields(Class<?> clazz, String field) {
-        if (clazz == null)
+    public static Field getFields(Class<?> cls, String field) {
+        if (cls == null)
             return null;
         try {
-            var f = clazz.getDeclaredField(field);
-            if (f != null)
-                return f;
-        } catch (NoSuchFieldException | SecurityException e) {
+            return cls.getDeclaredField(field);
+        } catch (NoSuchFieldException | SecurityException ignored) {
         }
-        return getFields(clazz.getSuperclass(), field);
+        return getFields(cls.getSuperclass(), field);
     }
 
     @SuppressWarnings("unchecked")
@@ -328,7 +321,7 @@ public final class ClassUtil {
     }
 
     public static Class<?> hca(Class<?> a, Class<?> b) {
-        if (!a.isInterface() && !b.isInterface() || a == null || b == null)
+        if (a == null || b == null || (!a.isInterface() && !b.isInterface()))
             return null;
         throw new UnsupportedOperationException("this method mast full list of class");
     }
@@ -391,7 +384,7 @@ public final class ClassUtil {
             try {
                 if (isMutableClass(t))
                     return true;
-            } catch (StackOverflowError e) {
+            } catch (StackOverflowError ignore) {
             }
         }
         return false;
@@ -403,8 +396,8 @@ public final class ClassUtil {
 
     public static boolean isPrimitive(Class<?> type) {
         return type.isPrimitive() || type == Integer.class || type == Short.class
-                || type == Boolean.class || type == Double.class || type == Float.class
-                || type == Character.class || type == Byte.class;
+               || type == Boolean.class || type == Double.class || type == Float.class
+               || type == Character.class || type == Byte.class;
     }
 
     public static Class<?> lca(Class<?> a, Class<?> b) {
@@ -449,8 +442,7 @@ public final class ClassUtil {
     }
 
     public static int extendsDepth(Class<?> clazz, Class<?> superClass) {
-        if (superClass.isInterface()) {
-        } else {
+        if (!superClass.isInterface()) {
             var res = 0;
             while (clazz != null) {
                 if (superClass == clazz)
@@ -504,8 +496,6 @@ public final class ClassUtil {
         field.setAccessible(true);
         try {
             field.set(object, value);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            throw e;
         } finally {
             field.setAccessible(accessible);
         }
@@ -536,35 +526,35 @@ public final class ClassUtil {
     private static int getArrayLength(Object obj) {
         try {
             return ((Object[]) obj).length;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
         }
         try {
             return ((int[]) obj).length;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
         }
         try {
             return ((short[]) obj).length;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
         }
         try {
             return ((float[]) obj).length;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
         }
         try {
             return ((double[]) obj).length;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
         }
         try {
             return ((boolean[]) obj).length;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
         }
         try {
             return ((char[]) obj).length;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
         }
         try {
             return ((byte[]) obj).length;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
         }
         throw new ClassCastException(obj + " is not array");
     }
@@ -598,7 +588,7 @@ public final class ClassUtil {
             return (Constructor<T>) c;
         }
         throw new NoSuchMethodException("not found constructor " + clazz + "<init>"
-                + Arrays.toString(classes) + " " + Arrays.toString(clazz.getConstructors()));
+                                        + Arrays.toString(classes) + " " + Arrays.toString(clazz.getConstructors()));
     }
 
 }

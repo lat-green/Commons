@@ -48,7 +48,7 @@ public class WindowsShortcut {
 	public static boolean isPotentialValidLink(File file) throws IOException {
 		final int minimum_length = 0x64;
 		InputStream fis = new FileInputStream(file);
-		boolean isPotentiallyValid = false;
+		boolean isPotentiallyValid;
 		try {
 			isPotentiallyValid = file.isFile()
 					&& file.getName().toLowerCase().endsWith(".lnk")

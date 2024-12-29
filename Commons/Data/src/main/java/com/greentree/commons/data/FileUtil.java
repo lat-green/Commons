@@ -58,19 +58,21 @@ public abstract class FileUtil {
         return file.delete();
     }
 
+    public static void strongDelete(File file) throws IOException {
+        strongDelete(file.toPath());
+    }
+
     public static void strongDelete(Path path) throws IOException {
         if (Files.exists(path))
             return;
         if (Files.isDirectory(path)) {
-            final var list = Files.list(path).iterator();
-            while (list.hasNext())
-                strongDelete(list.next());
+            try (var pathList = Files.list(path)) {
+                final var list = pathList.toList();
+                for (var it : list)
+                    strongDelete(it);
+            }
         }
         Files.delete(path);
-    }
-
-    public static void strongDelete(File file) throws IOException {
-        strongDelete(file.toPath());
     }
 
     public static void dirToZip(File dir, File zipFile) throws IOException {

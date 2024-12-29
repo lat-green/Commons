@@ -149,7 +149,7 @@ public class AnnotationInvocationHandler implements InvocationHandler, Serializa
                 continue;
             String member = memberMethod.getName();
             Object ourValue = memberValues.get(member);
-            Object hisValue = null;
+            Object hisValue;
             AnnotationInvocationHandler hisHandler = asOneOfUs(o);
             if (hisHandler != null) {
                 hisValue = hisHandler.memberValues.get(member);
@@ -299,8 +299,7 @@ public class AnnotationInvocationHandler implements InvocationHandler, Serializa
                 break;
             }
         }
-        if (valid) {
-        } else
+        if (!valid)
             throw new AnnotationFormatError("Malformed method on an annotation type: " +
                     currentMethod);
     }

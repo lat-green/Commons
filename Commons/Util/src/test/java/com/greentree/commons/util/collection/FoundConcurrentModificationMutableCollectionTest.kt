@@ -1,6 +1,5 @@
-package com.greentree.commons.tests
+package com.greentree.commons.util.collection
 
-import com.greentree.commons.util.collection.FoundConcurrentModificationMutableCollection
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

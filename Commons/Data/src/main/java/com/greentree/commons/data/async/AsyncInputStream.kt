@@ -31,7 +31,7 @@ interface AsyncInputStream : AsyncCloseable {
 				b[off + i] = c.toByte()
 				i++
 			}
-		} catch(ee: IOException) {
+		} catch(_: IOException) {
 		}
 		return i
 	}

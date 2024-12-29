@@ -104,7 +104,9 @@ data object FileWatcher : FileKeyWatcher {
 	}
 
 	override fun take() {
-		while(!poll()) {
+		while(true) {
+			if(poll())
+				return
 		}
 	}
 

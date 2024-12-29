@@ -42,12 +42,12 @@ data class Line2D(
 
 	val mathLine
 		get() = MathLine2D(p1, p2)
-	val normal
+	val normal: AbstractVector2f
 		get() = mathLine.normal
-	override val normals
+	override val normals: List<AbstractVector2f>
 		get() = listOf(normal)
-	val length
+	val length: Float
 		get() = sqrt(lengthSquared)
-	val lengthSquared
+	val lengthSquared: Float
 		get() = p1.distanceSquared(p2)
 }

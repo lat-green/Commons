@@ -22,7 +22,7 @@ public record PathCodeSource(URL url) implements CodeSource {
 						var len = x.length();
 						return x.substring(0, len - 6).substring(length);
 					}).map(x -> x.replace('\\', '.').replace('/', '.'));
-		}catch(RuntimeException e) {
+		}catch(RuntimeException ignore) {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -24,6 +24,10 @@ data class JointCycle<out E : Any>(
 		return true
 	}
 
+	override fun hashCode(): Int {
+		return sumOf { it.hashCode() }
+	}
+
 	fun toVertex() = VertexCycle<E>(origin.map { it.begin })
 }
 
