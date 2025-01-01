@@ -10,6 +10,8 @@ import java.nio.charset.Charset
 
 interface MutableFileResource : FileResource, MutableResource, MutableChildResource {
 
+	fun setLastModified(time: Long)
+
 	fun createThisFile(): Boolean
 
 	fun openWrite(): OutputStream

@@ -1,21 +1,12 @@
 package com.greentree.commons.data.resource
 
 import java.io.InputStream
-import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
 data class URLFileResource(
 	val url: URL,
-) : MutableFileResource {
-
-	override fun createThisFile(): Boolean {
-		TODO("Not yet implemented")
-	}
-
-	override fun openWrite(): OutputStream {
-		TODO("Not yet implemented")
-	}
+) : FileResource {
 
 	override val length: Long
 		get() {
@@ -42,9 +33,5 @@ data class URLFileResource(
 		if(connection is HttpURLConnection)
 			connection.requestMethod = "HEAD"
 		return connection.lastModified
-	}
-
-	override fun delete(): Boolean {
-		TODO("Not yet implemented")
 	}
 }

@@ -18,6 +18,10 @@ data class SystemFileResource(
 	val path: Path
 		get() = file.toPath()
 
+	override fun setLastModified(time: Long) {
+		file.setLastModified(time)
+	}
+
 	override fun createThisFile() = file.createNewFile()
 
 	override fun createThisFolder() = file.mkdirs()
