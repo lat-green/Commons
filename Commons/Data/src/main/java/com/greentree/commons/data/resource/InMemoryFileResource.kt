@@ -22,6 +22,10 @@ class InMemoryFileResource(
 
 	private var lastModified: Long = System.currentTimeMillis()
 
+	override fun setLastModified(time: Long) {
+		lastModified = time
+	}
+
 	override fun createThisFile(): Boolean {
 		if(exists())
 			return false
