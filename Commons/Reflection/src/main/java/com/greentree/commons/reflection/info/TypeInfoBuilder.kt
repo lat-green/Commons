@@ -7,6 +7,7 @@ import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
 import java.lang.reflect.WildcardType
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 data object TypeInfoBuilder {
 
@@ -37,6 +38,15 @@ data object TypeInfoBuilder {
 				"type mast by instance of ParameterizedType or Class $type ${type.javaClass}"
 			)
 		} as TypeInfo<C>
+	}
+
+	@JvmStatic
+	fun <C> getTypeInfo(type: KType): TypeInfo<C> {
+		return when(type) {
+			else -> throw UnsupportedOperationException(
+				"type mast by instance of ParameterizedType or Class $type ${type.javaClass}"
+			)
+		}
 	}
 
 	fun <C> getTypeInfo(type: WildcardType): TypeInfo<C> {

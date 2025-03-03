@@ -1,6 +1,7 @@
 package com.greentree.commons.annotation
 
 import java.lang.reflect.AnnotatedElement
+import kotlin.reflect.KAnnotatedElement
 
 interface AnnotationFilter {
 

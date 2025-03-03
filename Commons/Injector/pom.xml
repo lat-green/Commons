@@ -14,8 +14,9 @@
     <dependencies>
         <dependency>
             <groupId>com.greentree.commons</groupId>
-            <artifactId>reflection</artifactId>
+            <artifactId>annotation</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>com.greentree.commons</groupId>
             <artifactId>tests</artifactId>
