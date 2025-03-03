@@ -82,16 +82,17 @@ data class ParameterizedTypeInfo<C> private constructor(
 	override val name: String
 		get() = parameterizedType.typeName
 
-	override fun isSuperOf(superType: TypeInfo<in C>): Boolean {
-		if(superType is ParameterizedTypeInfo<in C>) {
-			if(ClassUtil.isExtends(superType.toClass(), toClass())) return dfsTo(this, superType)
-			return false
-		}
-		return superType.toClass().isAssignableFrom(toClass())
+	override fun isParentFor(child: TypeInfo<*>): Boolean {
+		return dfsTo(child, this)
 	}
 
-	override fun isSuperTo(type: TypeInfo<out C>): Boolean {
-		return dfsTo(type, this)
+	override fun isChildFor(parent: TypeInfo<*>): Boolean {
+		if(parent is ParameterizedTypeInfo<*>) {
+			if(ClassUtil.isExtends(parent.toClass(), toClass()))
+				return dfsTo(this, parent)
+			return false
+		}
+		return parent.toClass().isAssignableFrom(toClass())
 	}
 
 	override val typeName: CharSequence
@@ -130,7 +131,7 @@ data class ParameterizedTypeInfo<C> private constructor(
 
 		private fun dfsTo(type: ClassInfo<*>, superType: ParameterizedTypeInfo<*>): Boolean {
 			if(!ClassUtil.isExtends(superType.toClass(), type.toClass())) return false
-			for(s in TypeUtil.getSuperClassAndInterfaces(type)) if(dfsTo(s, superType)) return true
+			for(s in type.getSuperClassAndInterfaces()) if(dfsTo(s, superType)) return true
 			return false
 		}
 
@@ -140,7 +141,7 @@ data class ParameterizedTypeInfo<C> private constructor(
 		): Boolean {
 			if(!ClassUtil.isExtends(superType.toClass(), type.toClass())) return false
 			if(superType == type) return true
-			for(s in TypeUtil.getSuperClassAndInterfaces(type)) if(dfsTo(s, superType)) return true
+			for(s in type.getSuperClassAndInterfaces()) if(dfsTo(s, superType)) return true
 			return false
 		}
 

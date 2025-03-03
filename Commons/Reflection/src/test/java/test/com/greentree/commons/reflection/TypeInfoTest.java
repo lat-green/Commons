@@ -29,28 +29,28 @@ public class TypeInfoTest {
     void GArrayList_GCollection_isSuper_true() {
         final var a = TypeInfoBuilder.getTypeInfo(ArrayList.class, String.class);
         final var b = TypeInfoBuilder.getTypeInfo(Collection.class, String.class);
-        assertTrue(a.isSuperOf(b));
+        assertTrue(a.isChildFor(b));
     }
 
     @Test
     void ArrayList_GCollection_isSuper_false() {
         final var a = TypeInfoBuilder.getTypeInfo(ArrayList.class);
         final var b = TypeInfoBuilder.getTypeInfo(Collection.class, String.class);
-        assertFalse(a.isSuperOf(b));
+        assertFalse(a.isChildFor(b));
     }
 
     @Test
     void GArrayList_Collection_isSuper_false() {
         final var a = TypeInfoBuilder.getTypeInfo(FloatArrayList.class);
         final var b = TypeInfoBuilder.getTypeInfo(Collection.class, String.class);
-        assertFalse(a.isSuperOf(b));
+        assertFalse(a.isChildFor(b));
     }
 
     @Test
     void ArrayList_Collection_isSuper_false() {
         final var a = TypeInfoBuilder.getTypeInfo(ArrayList.class, String.class);
         final var b = TypeInfoBuilder.getTypeInfo(Collection.class, Integer.class);
-        assertFalse(a.isSuperOf(b));
+        assertFalse(a.isChildFor(b));
     }
 
     @SuppressWarnings("rawtypes")

@@ -1,12 +1,13 @@
 package com.greentree.commons.reflection.info
 
+import com.greentree.commons.reflection.info.TypeInfoBuilder.getTypeInfo
 import java.io.Serializable
 import java.lang.reflect.Type
 
-interface TypeInfo<T> : Serializable {
+sealed interface TypeInfo<T> : Serializable {
 
 	fun <R> asExtends(type: TypeInfo<R>): TypeInfo<R> {
-		return TypeInfoBuilder.getTypeInfo(toClass(), *type.typeArguments) as TypeInfo<R>
+		return getTypeInfo(toClass(), *type.typeArguments) as TypeInfo<R>
 	}
 
 	fun toClass(): Class<T>
@@ -24,11 +25,14 @@ interface TypeInfo<T> : Serializable {
 	val isInterface: Boolean
 		get() = toClass().isInterface
 
-	fun isSuperOf(superType: TypeInfo<in T>): Boolean {
-		return superType.isSuperTo(this)
+	fun isChildFor(parent: TypeInfo<*>): Boolean {
+		return parent.isParentFor(this)
 	}
 
-	fun isSuperTo(type: TypeInfo<out T>): Boolean
+	fun isParentFor(child: TypeInfo<*>): Boolean
+
+	fun isChildFor(parent: Class<*>): Boolean = isChildFor(getTypeInfo(parent))
+	fun isParentFor(child: Class<*>): Boolean = isParentFor(getTypeInfo(child))
 
 	val typeName: CharSequence
 		get() = type.typeName
@@ -37,6 +41,25 @@ interface TypeInfo<T> : Serializable {
 	fun isInstance(obj: Any?): Boolean {
 		return toClass().isInstance(obj)
 	}
+
+	fun getSuperType(base: Class<*>): TypeInfo<*>? {
+		if(base == toClass())
+			return this
+		if(!isChildFor(base))
+			return null
+		return getSuperClassAndInterfaces().mapNotNull {
+			it.getSuperType(base)
+		}.firstOrNull()
+	}
+
+	fun getSuperClassAndInterfaces(): Iterable<TypeInfo<in T>> = buildList {
+		superType?.let {
+			add(it)
+		}
+		addAll(interfaces)
+	}
+
+	fun getSuperClassAndInterfacesAsClass(): Iterable<Class<in T>> = getSuperClassAndInterfaces().map { it.toClass() }
 }
 
 val <T> TypeInfo<T>.superTypes: Array<TypeInfo<in T>>

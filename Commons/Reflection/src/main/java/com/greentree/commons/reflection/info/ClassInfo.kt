@@ -37,17 +37,20 @@ class ClassInfo<C> private constructor(private val cls: Class<C>) : TypeInfo<C> 
 		return cls
 	}
 
-	override fun isSuperOf(superType: TypeInfo<in C>): Boolean {
-		if(superType is ClassInfo<*>) return superType.toClass().isAssignableFrom(
-			cls
-		)
-		return superType.isSuperTo(this)
+	override fun isChildFor(parent: TypeInfo<*>): Boolean {
+		if(parent is ClassInfo<*>)
+			return parent.toClass().isAssignableFrom(cls)
+		return parent.isParentFor(this)
 	}
 
-	override fun isSuperTo(type: TypeInfo<out C>): Boolean {
-		if(type is ClassInfo<*>) return cls.isAssignableFrom(type.toClass())
-		return type.isSuperOf(this)
+	override fun isParentFor(child: TypeInfo<*>): Boolean {
+		if(child is ClassInfo<*>)
+			return cls.isAssignableFrom(child.toClass())
+		return child.isChildFor(this)
 	}
+
+	override fun isChildFor(parent: Class<*>): Boolean = parent.isAssignableFrom(cls)
+	override fun isParentFor(child: Class<*>): Boolean = cls.isAssignableFrom(child)
 
 	override val typeName: CharSequence
 		get() = cls.typeName

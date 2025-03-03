@@ -53,6 +53,7 @@
         <module>Tests</module>
         <module>Util</module>
         <module>XML</module>
+        <module>Context</module>
     </modules>
 
     <distributionManagement>
