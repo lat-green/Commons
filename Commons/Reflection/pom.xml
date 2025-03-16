@@ -10,6 +10,8 @@
 
     <artifactId>reflection</artifactId>
 
+    <name>Reflection</name>
+
     <dependencies>
         <dependency>
             <groupId>com.greentree.commons</groupId>

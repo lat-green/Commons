@@ -21,10 +21,6 @@
             <groupId>com.greentree.commons</groupId>
             <artifactId>reflection</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.greentree.commons</groupId>
-            <artifactId>coroutine</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.greentree.commons</groupId>

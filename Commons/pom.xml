@@ -12,7 +12,7 @@
 
     <properties>
         <kotlin.version>1.9.0</kotlin.version>
-        <kotlinx-coroutines.version>1.10.1</kotlinx-coroutines.version>
+        <kotlinx-coroutines.version>1.9.0</kotlinx-coroutines.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -42,7 +42,6 @@
         <module>Action</module>
         <module>Annotations</module>
         <module>AOP Tests</module>
-        <module>Coroutine</module>
         <module>Data</module>
         <module>Geometry</module>
         <module>Graph</module>
@@ -133,11 +132,6 @@
                 <artifactId>aop-tests</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.greentree.commons</groupId>
-                <artifactId>coroutine</artifactId>
-                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.greentree.commons</groupId>

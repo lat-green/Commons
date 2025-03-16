@@ -1,16 +1,13 @@
 package com.greentree.commons.util.react
 
 inline fun ReactContext.useEffect(dependency: Any, block: () -> Unit) {
-	val previous = usePrevious(dependency)
-	if(previous != dependency) {
+	if(useDependency(dependency)) {
 		block()
 	}
 }
 
 inline fun ReactContext.useEffectByHash(dependency: Any, block: () -> Unit) {
-	val hash = dependency.hashCode()
-	val previous = usePrevious(hash)
-	if(previous != hash) {
+	if(useDependencyByHash(dependency)) {
 		block()
 	}
 }
@@ -24,8 +21,7 @@ inline fun ReactContext.useEffectClose(dependency: Any, block: () -> AutoCloseab
 	var closeablePrevious by useRef<AutoCloseable> {
 		it?.close()
 	}
-	val previous = usePrevious(dependency)
-	if(previous != dependency) {
+	if(useDependency(dependency)) {
 		closeablePrevious = block()
 	}
 }
@@ -34,9 +30,7 @@ inline fun ReactContext.useEffectCloseByHash(dependency: Any, block: () -> AutoC
 	var closeablePrevious by useRef<AutoCloseable> {
 		it?.close()
 	}
-	val hash = dependency.hashCode()
-	val previous = usePrevious(hash)
-	if(previous != hash) {
+	if(useDependencyByHash(dependency)) {
 		closeablePrevious = block()
 	}
 }

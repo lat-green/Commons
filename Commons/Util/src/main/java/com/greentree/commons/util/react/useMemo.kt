@@ -2,9 +2,15 @@ package com.greentree.commons.util.react
 
 inline fun <R> ReactContext.useMemo(dependency: Any, block: () -> R): R {
 	var valueRef by useRef<R>() as Ref<R>
-	val code = dependency.hashCode()
-	val previous = usePrevious(code)
-	if(previous == null || previous != code) {
+	if(useDependency(dependency)) {
+		valueRef = block()
+	}
+	return valueRef
+}
+
+inline fun <R> ReactContext.useMemoByHash(dependency: Any, block: () -> R): R {
+	var valueRef by useRef<R>() as Ref<R>
+	if(useDependencyByHash(dependency)) {
 		valueRef = block()
 	}
 	return valueRef
@@ -14,8 +20,17 @@ inline fun <R : AutoCloseable> ReactContext.useMemoClose(dependency: Any = Unit,
 	var valueRef: R by useRef<R> {
 		it?.close()
 	} as Ref<R>
-	val previous = usePrevious(dependency)
-	if(previous == null || previous != dependency) {
+	if(useDependency(dependency)) {
+		valueRef = block()
+	}
+	return valueRef
+}
+
+inline fun <R : AutoCloseable> ReactContext.useMemoCloseByHash(dependency: Any = Unit, block: () -> R): R {
+	var valueRef: R by useRef<R> {
+		it?.close()
+	} as Ref<R>
+	if(useDependencyByHash(dependency)) {
 		valueRef = block()
 	}
 	return valueRef
