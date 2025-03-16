@@ -1,6 +1,6 @@
 package com.greentree.commons.context.layer
 
-import com.greentree.commons.context.BeanContext
+import com.greentree.commons.context.MutableBeanContext
 import com.greentree.commons.graph.tree
 
 fun interface BeanLayer {
@@ -8,7 +8,7 @@ fun interface BeanLayer {
 	val dependencies: Sequence<BeanLayer>
 		get() = sequenceOf()
 
-	fun BeanContext.Builder.register()
+	fun MutableBeanContext.register()
 
 	companion object {
 
@@ -18,17 +18,17 @@ fun interface BeanLayer {
 			override val dependencies: Sequence<BeanLayer>
 				get() = layers
 
-			override fun BeanContext.Builder.register() {
+			override fun MutableBeanContext.register() {
 			}
 		}
 	}
 }
 
-fun BeanContext.Builder.registerLayer(layer: BeanLayer) = registerLayer(sequenceOf(layer))
-fun BeanContext.Builder.registerLayer(vararg layers: BeanLayer) = registerLayer(sequenceOf(*layers))
-fun BeanContext.Builder.registerLayer(layers: Iterable<BeanLayer>) = registerLayer(layers.asSequence())
+fun MutableBeanContext.registerLayer(layer: BeanLayer) = registerLayer(sequenceOf(layer))
+fun MutableBeanContext.registerLayer(vararg layers: BeanLayer) = registerLayer(sequenceOf(*layers))
+fun MutableBeanContext.registerLayer(layers: Iterable<BeanLayer>) = registerLayer(layers.asSequence())
 
-fun BeanContext.Builder.registerLayer(layers: Sequence<BeanLayer>) {
+fun MutableBeanContext.registerLayer(layers: Sequence<BeanLayer>) {
 	val all = layers.flatMap { layer ->
 		tree(layer) {
 			yieldAll(it.dependencies)

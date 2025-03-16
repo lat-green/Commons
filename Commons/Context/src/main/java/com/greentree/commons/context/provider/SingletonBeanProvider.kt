@@ -4,7 +4,7 @@ import com.greentree.commons.context.BeanContext
 import com.greentree.commons.context.BeanRegistration
 import com.greentree.commons.context.resolveBean
 import com.greentree.commons.context.type
-import com.greentree.engine.rex.context.argument.MethodCaller
+import com.greentree.commons.injector.MethodCaller
 import java.lang.ref.SoftReference
 
 private typealias Reference<T> = SoftReference<T>

@@ -1,32 +1,32 @@
 package com.greentree.commons.context.layer
 
-import com.greentree.commons.context.BeanContext
+import com.greentree.commons.context.MutableBeanContext
+import com.greentree.commons.context.argument.BeanDependencyResolver
+import com.greentree.commons.context.argument.EnvironmentArgumentResolver
+import com.greentree.commons.context.argument.SequenceAllBeanDependencyResolver
+import com.greentree.commons.context.environment.EnvironmentImpl
 import com.greentree.commons.context.provider.BeanContextPrototypeBeanProvider
 import com.greentree.commons.context.registerSingleton
 import com.greentree.commons.context.registerTransient
 import com.greentree.commons.context.resolveAllBeans
 import com.greentree.commons.context.resolveBean
-import com.greentree.engine.rex.context.argument.BeanArgumentResolver
-import com.greentree.engine.rex.context.argument.EnvironmentArgumentResolver
-import com.greentree.engine.rex.context.argument.MethodCaller
-import com.greentree.engine.rex.context.argument.SequenceAllBeanArgumentResolver
-import com.greentree.engine.rex.context.environment.MapEnvironment
+import com.greentree.commons.injector.MethodCallerImpl
 
 object FuseBeanLayer : BeanLayer {
 
-	override fun BeanContext.Builder.register() {
+	override fun MutableBeanContext.register() {
 		register("beanContext", BeanContextPrototypeBeanProvider)
 		registerTransient {
-			MethodCaller(resolveAllBeans())
+			MethodCallerImpl(resolveAllBeans())
 		}
 		registerTransient {
-			BeanArgumentResolver(resolveBean())
+			BeanDependencyResolver(resolveBean())
 		}
 		registerTransient {
-			SequenceAllBeanArgumentResolver(resolveBean())
+			SequenceAllBeanDependencyResolver(resolveBean())
 		}
 
-		registerInstance("environment", MapEnvironment())
+		registerSingleton("environment", EnvironmentImpl::class)
 		registerSingleton {
 			EnvironmentArgumentResolver(resolveBean())
 		}

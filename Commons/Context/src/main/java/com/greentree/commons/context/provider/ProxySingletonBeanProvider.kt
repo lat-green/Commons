@@ -3,7 +3,7 @@ package com.greentree.commons.context.provider
 import com.greentree.commons.context.BeanContext
 import com.greentree.commons.context.BeanRegistration
 import com.greentree.commons.context.type
-import com.greentree.engine.rex.context.proxy.ProxyUtil
+import com.greentree.commons.reflection.ProxyUtil
 
 data class ProxySingletonBeanProvider<T : Any>(
 	val registration: BeanRegistration<T>,
@@ -29,7 +29,7 @@ data class ProxySingletonBeanProvider<T : Any>(
 					}
 				}.flatMap { it.interfaces.asSequence() }.toList().toTypedArray()
 				if(interfaces.isNotEmpty()) {
-					proxy = ProxyUtil.newLazyInstance(*interfaces) { instance }
+					proxy = ProxyUtil.newLazyInstance(*interfaces) { instance } as T
 				}
 			}
 			instance = try {

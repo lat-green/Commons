@@ -4,7 +4,7 @@ import com.greentree.commons.annotation.Annotations
 import com.greentree.commons.annotation.filter
 import com.greentree.commons.reflection.info.TypeInfo
 import com.greentree.commons.reflection.info.TypeInfoBuilder.getTypeInfo
-import com.greentree.commons.reflection.info.TypeUtil.*
+import com.greentree.commons.reflection.info.TypeUtil.isExtends
 import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Field
 import java.lang.reflect.Parameter

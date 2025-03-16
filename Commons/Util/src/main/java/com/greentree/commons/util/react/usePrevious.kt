@@ -10,13 +10,9 @@ fun <T> ReactContext.usePreviousNotEquals(value: T): T? {
 	return previousRef
 }
 
-fun <T> usePreviousNotEquals(value: T): T? = REACT.get().usePreviousNotEquals(value)
-
 fun <T> ReactContext.usePrevious(value: T): T? {
 	var previous by useRef<T>()
 	val result = previous
 	previous = value
 	return result
 }
-
-fun <T> usePrevious(value: T): T? = REACT.get().usePrevious(value)

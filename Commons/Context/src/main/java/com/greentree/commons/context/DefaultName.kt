@@ -1,6 +1,5 @@
 package com.greentree.commons.context
 
-import com.greentree.engine.rex.context.proxy.cls
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -14,7 +13,7 @@ fun defaultName(cls: Class<*>): String = defaultName(cls.name)
 
 fun defaultName(obj: Any) = defaultName(obj.javaClass)
 
-fun defaultName(factory: BeanRegistration<*>) = defaultName(cls(factory))
+fun defaultName(factory: BeanRegistration<*>) = defaultName(factory.type)
 
 private fun firstToLowerCase(str: String): String {
 	if(str.isBlank())

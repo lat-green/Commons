@@ -1,17 +1,19 @@
 package com.greentree.commons.util.react
 
-fun <T> ReactContext.useState() = useState<T?>(null)
+data class State<T>(
+	val context: ReactContext,
+	val ref: Ref<T>,
+) : Ref<T> {
 
-fun <T> useState() = REACT.get().useState<T>()
-
-fun <T> ReactContext.useState(initialValue: T) = object : Ref<T> {
-	var ref by useRef(initialValue)
+	private val refValue = ref.value
 	override var value: T
-		get() = ref
+		get() = refValue
 		set(value) {
-			ref = value
-			refresh()
+			ref.value = value
+			context.refresh()
 		}
 }
 
-fun <T> useState(initialValue: T) = REACT.get().useState(initialValue)
+fun <T> ReactContext.useState() = useState<T?>(null)
+
+fun <T> ReactContext.useState(initial: T) = State(this, useRef(initial))

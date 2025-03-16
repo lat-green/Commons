@@ -5,8 +5,8 @@ import com.greentree.commons.reflection.info.TypeUtil
 
 interface BeanProvider<T> {
 
-	val type: Class<T>
-		get() = TypeUtil.getFirstArgument(this::class, BeanProvider::class) as Class<T>
+	val type
+		get() = TypeUtil.getFirstArgument<BeanProvider<*>, T>(this::class, BeanProvider::class)
 
 	fun get(context: BeanContext): T
 }

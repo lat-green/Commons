@@ -1,13 +1,7 @@
 package com.greentree.commons.context
 
-import com.greentree.commons.reflection.info.TypeUtil
-import com.greentree.engine.rex.context.argument.MethodCaller
 import com.greentree.commons.context.provider.BeanProvider
-import com.greentree.commons.context.provider.InstanceBeanProvider
-import com.greentree.commons.context.provider.PrototypeBeanProvider
-import com.greentree.commons.context.provider.SingletonBeanProvider
-import com.greentree.commons.context.provider.SingletonClassBeanProvider
-import com.greentree.commons.context.provider.TransientBeanProvider
+import com.greentree.commons.reflection.info.TypeUtil
 import kotlin.reflect.KClass
 
 interface BeanContext {
@@ -34,34 +28,10 @@ interface BeanContext {
 	fun <T> resolveAllProviders(type: Class<T>): Sequence<BeanProvider<T>>
 	fun <T> resolveAllBeans(type: Class<T>): Sequence<T> = resolveAllProviders(type).map { it.get(this) }
 
-	interface Builder {
+	companion object : () -> MutableBeanContext {
 
-		fun register(name: String, provider: BeanProvider<*>): Builder
-
-		fun registerInstance(name: String, instance: Any) =
-			register(name, InstanceBeanProvider(instance))
-
-		fun <T> registerPrototype(name: String, factory: BeanRegistration<T>) =
-			register(name, PrototypeBeanProvider(factory))
-
-		fun <T> registerSingleton(name: String, factory: BeanRegistration<T>) =
-			register(name, SingletonBeanProvider(factory))
-
-		fun <T> registerTransient(name: String, factory: BeanRegistration<T>) =
-			register(name, TransientBeanProvider(factory))
-
-		fun <T> registerSingleton(name: String, type: Class<T>) =
-			register(name, SingletonClassBeanProvider(type))
-
-		fun build(): BeanContext
-
-		companion object {
-
-			operator fun invoke() = BeanContextImpl.Builder()
-		}
+		override operator fun invoke() = BeanContextImpl()
 	}
-
-	companion object
 }
 
 fun <T> BeanContext.resolveBeanOrNull(name: String): T? =
@@ -87,18 +57,6 @@ fun <T : Any> BeanContext.resolveBean(name: String, type: KClass<T>) = resolveBe
 fun <T : Any> BeanContext.resolveBean(type: KClass<T>) = resolveBean(type.java)
 fun <T : Any> BeanContext.resolveAllBeans(type: KClass<T>) = resolveAllBeans(type.java)
 
-fun BeanContext.Builder.registerInstance(instance: Any) =
-	registerInstance(defaultName(instance), instance)
-
-fun <T : Any> BeanContext.Builder.registerTransient(factory: BeanRegistration<T>) =
-	registerTransient(defaultName(factory), factory)
-
-fun <T : Any> BeanContext.Builder.registerSingleton(factory: BeanRegistration<T>) =
-	registerSingleton(defaultName(factory), factory)
-
-fun <T : Any> BeanContext.Builder.registerPrototype(factory: BeanRegistration<T>) =
-	registerPrototype(defaultName(factory), factory)
-
 inline fun <T> Sequence<T>.one(errorMessage: (String) -> String): T? {
 	val iter = iterator()
 	if(!iter.hasNext())
@@ -108,10 +66,3 @@ inline fun <T> Sequence<T>.one(errorMessage: (String) -> String): T? {
 		throw NullPointerException(errorMessage(toList().toString()))
 	return first
 }
-
-fun <T : Any> MethodCaller.newInstance(type: KClass<out T>): T = newInstance(type.java)
-
-fun BeanContext.Builder.registerSingleton(type: Class<*>) = registerSingleton(defaultName(type), type)
-
-fun BeanContext.Builder.registerSingleton(type: KClass<*>) = registerSingleton(type.java)
-fun BeanContext.Builder.registerSingleton(name: String, type: KClass<*>) = registerSingleton(name, type.java)

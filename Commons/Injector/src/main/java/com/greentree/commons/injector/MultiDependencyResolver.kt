@@ -8,11 +8,11 @@ data class MultiDependencyResolver(
 		vararg resolvers: DependencyResolver,
 	) : this(sequenceOf(*resolvers))
 
-	override fun supportsArgument(dependency: Dependency) = resolvers.any { it.supportsArgument(dependency) }
+	override fun supportsDependency(dependency: Dependency) = resolvers.any { it.supportsDependency(dependency) }
 
-	override fun resolveArgument(dependency: Dependency) = resolvers.filter {
-		it.supportsArgument(dependency)
+	override fun resolveDependency(dependency: Dependency) = resolvers.filter {
+		it.supportsDependency(dependency)
 	}.map {
-		it.resolveArgument(dependency)
+		it.resolveDependency(dependency)
 	}.firstOrNull() ?: throw NoSuchElementException("no one resolver can not resolve argument $dependency")
 }

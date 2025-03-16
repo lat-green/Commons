@@ -1,10 +1,10 @@
 package com.greentree.commons.context.layer
 
-import com.greentree.commons.context.BeanContext
+import com.greentree.commons.context.MutableBeanContext
 
 data class PlusBeanLayer(val first: BeanLayer, val second: BeanLayer) : BeanLayer {
 
-	override fun BeanContext.Builder.register() {
+	override fun MutableBeanContext.register() {
 		first.run {
 			register()
 		}

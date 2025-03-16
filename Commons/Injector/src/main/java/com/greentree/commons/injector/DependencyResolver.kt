@@ -2,12 +2,14 @@ package com.greentree.commons.injector
 
 import java.lang.reflect.Field
 import java.lang.reflect.Parameter
+import kotlin.reflect.KParameter
 
 interface DependencyResolver {
 
-	fun supportsArgument(dependency: Dependency): Boolean
-	fun resolveArgument(dependency: Dependency): Any
+	fun supportsDependency(dependency: Dependency): Boolean
+	fun resolveDependency(dependency: Dependency): Any
 }
 
-fun DependencyResolver.resolveArgument(argument: Parameter) = resolveArgument(ParameterDependency(argument))
-fun DependencyResolver.resolveArgument(argument: Field) = resolveArgument(FieldDependency(argument))
+fun DependencyResolver.resolveDependency(argument: KParameter) = resolveDependency(KParameterDependency(argument))
+fun DependencyResolver.resolveDependency(argument: Parameter) = resolveDependency(ParameterDependency(argument))
+fun DependencyResolver.resolveDependency(argument: Field) = resolveDependency(FieldDependency(argument))

@@ -1,23 +1,22 @@
 package com.greentree.commons.util.react
 
 inline fun ReactContext.useEffect(dependency: Any, block: () -> Unit) {
-	val code = dependency.hashCode()
-	val previous = usePrevious(code)
-	if(previous == null || previous != code) {
+	val previous = usePrevious(dependency)
+	if(previous != dependency) {
 		block()
 	}
 }
 
-inline fun useEffect(dependency: Any, block: () -> Unit) = REACT.get().useEffect(dependency, block)
-
-@Deprecated("", ReplaceWith("block()"))
-inline fun ReactContext.useEffect(block: () -> Unit) {
-	block()
+inline fun ReactContext.useEffectByHash(dependency: Any, block: () -> Unit) {
+	val hash = dependency.hashCode()
+	val previous = usePrevious(hash)
+	if(previous != hash) {
+		block()
+	}
 }
 
 @Deprecated("", ReplaceWith("block()"))
-inline fun useEffect(block: () -> Unit) {
-	REACT.get()
+inline fun ReactContext.useEffect(block: () -> Unit) {
 	block()
 }
 
@@ -25,22 +24,27 @@ inline fun ReactContext.useEffectClose(dependency: Any, block: () -> AutoCloseab
 	var closeablePrevious by useRef<AutoCloseable> {
 		it?.close()
 	}
-	val dependencyPrevious = usePrevious(dependency)
-	if(dependencyPrevious != dependency) {
-		closeablePrevious?.close()
+	val previous = usePrevious(dependency)
+	if(previous != dependency) {
 		closeablePrevious = block()
 	}
 }
 
-inline fun useEffectClose(dependency: Any, block: () -> AutoCloseable) = REACT.get().useEffectClose(dependency, block)
+inline fun ReactContext.useEffectCloseByHash(dependency: Any, block: () -> AutoCloseable) {
+	var closeablePrevious by useRef<AutoCloseable> {
+		it?.close()
+	}
+	val hash = dependency.hashCode()
+	val previous = usePrevious(hash)
+	if(previous != hash) {
+		closeablePrevious = block()
+	}
+}
 
 inline fun ReactContext.useEffectClose(block: () -> AutoCloseable) {
 	var previousCloseable by useRef<AutoCloseable> {
 		it?.close()
 	}
-	previousCloseable?.close()
 	previousCloseable = block()
 }
-
-inline fun useEffectClose(block: () -> AutoCloseable) = REACT.get().useEffectClose(block)
 

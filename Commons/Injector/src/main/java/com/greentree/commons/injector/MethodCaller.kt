@@ -1,31 +1,124 @@
+@file:JvmName("MethodCallerImplKt")
+
 package com.greentree.commons.injector
 
-class MethodCaller(
-	resolvers: Sequence<DependencyResolver>,
-) : Injector {
+import java.lang.reflect.Constructor
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+import java.lang.reflect.Modifier
+import java.lang.reflect.Parameter
+import kotlin.reflect.KClass
 
-	private val resolver = MultiDependencyResolver(resolvers)
+interface MethodCaller {
 
-	constructor(resolvers: Iterable<DependencyResolver>) : this(resolvers.asSequence())
-	constructor(vararg resolvers: DependencyResolver) : this(sequenceOf(*resolvers))
+	fun <T> call(constructor: Constructor<T>): T {
+		require(constructor.trySetAccessible()) { "$constructor not accessible" }
+		return constructor.newInstance(*Array(constructor.parameterCount) { index ->
+			resolve(constructor.parameters[index])
+		})
+	}
 
-	override fun resolve(
-		dependency: Dependency,
-	) = resolver.resolveArgument(dependency)
+	fun callStatic(
+		method: Method,
+	): Any {
+		require(method.trySetAccessible()) { "$method not accessible" }
+		val result = method.invoke(null, *Array(method.parameterCount) { index ->
+			resolve(method.parameters[index])
+		})
+		if(result == null && method.returnType == Void.TYPE)
+			return Unit
+		return result
+	}
 
-	override fun isSupports(dependency: Dependency) = resolver.supportsArgument(dependency)
+	fun call(
+		method: Method,
+		thisRef: Any,
+	): Any {
+		require(method.trySetAccessible()) { "$method not accessible" }
+		val result = method.invoke(thisRef, *Array(method.parameterCount) { index ->
+			resolve(method.parameters[index])
+		})
+		if(result == null && method.returnType == Void.TYPE)
+			return Unit
+		return result
+	}
 
-	override fun builder() = Builder(resolver)
+	fun setField(
+		field: Field,
+		thisRef: Any,
+	) {
+		require(!Modifier.isStatic(field.modifiers)) { "$field is static" }
+		require(field.trySetAccessible()) { "$field not accessible" }
+		val value = resolve(field)
+		field.set(thisRef, value)
+	}
 
-	class Builder(vararg resolvers: DependencyResolver) : Injector.Builder {
+	fun setStaticField(
+		field: Field,
+	) {
+		require(Modifier.isStatic(field.modifiers)) { "$field is not static" }
+		require(field.trySetAccessible()) { "$field not accessible" }
+		val value = resolve(field)
+		field.set(null, value)
+	}
 
-		private val resolvers = mutableListOf(*resolvers)
-
-		override fun add(resolver: DependencyResolver): Builder {
-			resolvers.add(resolver)
-			return this
+	fun setFieldIfResolve(
+		field: Field,
+		thisRef: Any,
+	) {
+		if(isSupports(field)) {
+			return setField(field, thisRef)
 		}
+	}
 
-		override fun build() = MethodCaller(resolvers)
+	fun setStaticFieldIfResolve(
+		field: Field,
+	) {
+		if(isSupports(field)) {
+			return setStaticField(field)
+		}
+	}
+
+	fun <T> newInstance(type: Class<T>): T = ((type as Class<Any>).kotlin.objectInstance as T) ?: run {
+		val constructors = type.constructors.filter { constructor ->
+			isSupports(constructor)
+		}
+		require(constructors.isNotEmpty()) {
+			"$type not support constructors parameters ${
+				type.constructors.flatMap { const ->
+					const.parameters.filter {
+						!isSupports(it)
+					}
+				}
+			}"
+		}
+		val constructor = constructors.maxBy { it.parameterCount } as Constructor<out T>
+		return call(constructor)
+	}
+
+	fun isSupports(dependency: Dependency): Boolean
+
+	fun resolve(dependency: Dependency): Any?
+
+	fun builder(): Builder
+
+	interface Builder {
+
+		fun add(resolver: DependencyResolver): Builder
+
+		fun build(): MethodCaller
 	}
 }
+
+fun <T : Any> MethodCaller.newInstance(type: KClass<out T>): T = newInstance(type.java)
+
+fun MethodCaller.isSupports(method: Method) = method.parameters.all { isSupports(it) }
+fun MethodCaller.isSupports(constructor: Constructor<*>) = constructor.parameters.all { isSupports(it) }
+
+fun MethodCaller.isSupports(cls: Class<*>) = isSupports(Dependency.of(cls))
+fun MethodCaller.isSupports(field: Field) = isSupports(Dependency.of(field))
+fun MethodCaller.isSupports(parameter: Parameter) = isSupports(Dependency.of(parameter))
+
+fun <T> MethodCaller.resolve(cls: Class<T>): T = resolve(Dependency.of(cls)) as T
+fun MethodCaller.resolve(field: Field): Any? = resolve(Dependency.of(field))
+fun MethodCaller.resolve(parameter: Parameter): Any? = resolve(Dependency.of(parameter))

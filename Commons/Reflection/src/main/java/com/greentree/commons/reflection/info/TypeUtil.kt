@@ -5,33 +5,40 @@ import kotlin.reflect.KClass
 
 object TypeUtil {
 
+	@JvmStatic
 	fun isExtends(superType: Class<*>, type: TypeInfo<*>): Boolean {
 		return isExtends(getTypeInfo(superType), type)
 	}
 
+	@JvmStatic
 	fun isExtends(superType: TypeInfo<*>, type: TypeInfo<*>): Boolean {
 		if(superType == type)
 			return true
 		return superType.isParentFor(type)
 	}
 
+	@JvmStatic
 	fun isExtends(superType: TypeInfo<*>, type: Class<*>): Boolean {
 		return isExtends(superType, getTypeInfo(type))
 	}
 
+	@JvmStatic
 	fun isExtends(superType: Class<*>, type: Class<*>): Boolean {
 		return isExtends(getTypeInfo(superType), getTypeInfo(type))
 	}
 
+	@JvmStatic
 	fun <S> getSuperType(type: TypeInfo<out S>, superClass: Class<S>): TypeInfo<S> =
 		type.getSuperType(superClass) as TypeInfo<S>
 
-	fun <S : T, T> getFirstArgument(
+	@JvmStatic
+	fun <S, T> getFirstArgument(
 		type: TypeInfo<out S>,
 		superClass: Class<S>
-	): Class<T> = getSuperType(type, superClass).typeArguments[0].toClass() as Class<T>
+	): Class<out T> = getSuperType(type, superClass).typeArguments[0].toClass() as Class<out T>
 
-	fun <S : T, T : Any> getFirstArgument(
+	@JvmStatic
+	fun <S : Any, T> getFirstArgument(
 		type: KClass<out S>,
 		superClass: KClass<S>
 	) = getFirstArgument<S, T>(getTypeInfo(type), superClass.java)
