@@ -1,7 +1,7 @@
 package com.greentree.commons.geometry.geom2d.collision.strategy;
 
 import com.greentree.commons.geometry.geom2d.collision.Collidable2D;
-import com.greentree.commons.util.cortege.Pair;
+import kotlin.Pair;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,12 +14,12 @@ public class BMapCollisionStrategy extends AbstractCollisionStrategy {
     private static final SortCollisionStrategy SORT_COLLISION_STRATEGY = new SortCollisionStrategy();
 
     public BMapCollisionStrategy() {
-    }    private static final float max = 1000, min = -max, size = 40;
+    }
 
     @SuppressWarnings({"unchecked"})
     @Override
     public <T extends Collidable2D> Collection<Pair<T, T>> getCollisionContact(T[] world) {
-        final List<Pair<Collidable2D, Collidable2D>> res = new CopyOnWriteArrayList<>();
+        final List<Pair<T, T>> res = new CopyOnWriteArrayList<>();
         final List<List<Set<Collidable2D>>> map = new ArrayList<>(count);
         for (int i = 0; i < count; i++)
             map.add(new CopyOnWriteArrayList<>());
@@ -52,7 +52,7 @@ public class BMapCollisionStrategy extends AbstractCollisionStrategy {
             var a = get(map, x, y);
             if (a.isEmpty())
                 return;
-            Collidable2D[] array = new Collidable2D[a.size()];
+            T[] array = (T[]) new Collidable2D[a.size()];
             var a0 = SORT_COLLISION_STRATEGY.getCollisionContact(a.toArray(array));
             synchronized (res) {
                 res.addAll(a0);
@@ -65,8 +65,8 @@ public class BMapCollisionStrategy extends AbstractCollisionStrategy {
         //				sum += map.get(i).get(j).size();
         //			}
         //		}
-        return res.parallelStream().map(p -> (Pair<T, T>) p).collect(Collectors.toList());
-    }    private static final int count = (int) (((double) max - (double) min) / size);
+        return res.parallelStream().collect(Collectors.toList());
+    }
 
     private void add(List<List<Set<Collidable2D>>> map, int x, int y, Collidable2D t) {
         if (x < 0 || x >= count || y < 0 || y >= count)
@@ -77,12 +77,12 @@ public class BMapCollisionStrategy extends AbstractCollisionStrategy {
         }
     }
 
-    private Set<Collidable2D> get(List<List<Set<Collidable2D>>> map, int i, int j) {
+    private <T> Set<T> get(List<List<Set<T>>> map, int i, int j) {
         return map.get(i).get(j);
     }
 
+    private static final float max = 1000, min = -max, size = 40;
 
-
-
+    private static final int count = (int) (((double) max - (double) min) / size);
 
 }

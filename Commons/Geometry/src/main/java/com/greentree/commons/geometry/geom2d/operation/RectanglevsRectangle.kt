@@ -2,7 +2,7 @@ package com.greentree.commons.geometry.geom2d.operation
 
 import com.greentree.commons.geometry.geom2d.shape.Rectangle2D
 
-class RectanglevsRectangle : Shape2DBinaryOperation<Rectangle2D, Rectangle2D>() {
+class RectangleVsRectangle : Shape2DBinaryOperation<Rectangle2D, Rectangle2D>() {
 
 	override fun isIntersect(a: Rectangle2D, b: Rectangle2D): Boolean {
 		return a.maxX >= b.minX && a.minX <= b.maxX && a.maxY >= b.minY && a.minY <= b.maxY

@@ -1,13 +1,13 @@
 package com.greentree.commons.math;
 
-import com.greentree.commons.math.vector.AbstractVector3f;
-import com.greentree.commons.math.vector.Vector3f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 public class MathPlane3D {
 
     public final float a, b, c, d;
 
-    public MathPlane3D(AbstractVector3f point, AbstractVector3f normal) {
+    public MathPlane3D(Vector3fc point, Vector3fc normal) {
         a = normal.x();
         b = normal.y();
         c = normal.z();
@@ -16,7 +16,7 @@ public class MathPlane3D {
         d = -(a * point.x() + b * point.y() + c * point.z());
     }
 
-    public MathPlane3D(AbstractVector3f p0, AbstractVector3f p1, AbstractVector3f p2) {
+    public MathPlane3D(Vector3fc p0, Vector3fc p1, Vector3fc p2) {
         float x1 = p1.x() - p0.x();
         float y1 = p1.y() - p0.y();
         float z1 = p1.z() - p0.z();
@@ -64,11 +64,11 @@ public class MathPlane3D {
         return new Vector3f(a, b, c);
     }
 
-    public float distanse(AbstractVector3f point) {
+    public float distanse(Vector3fc point) {
         return Mathf.abs(a * point.x() + b * point.y() + c * point.z() + d) / (a * a + b * b + c * c);
     }
 
-    public float get(AbstractVector3f point) {
+    public float get(Vector3fc point) {
         return a * point.x() + b * point.y() + c * point.z() + d;
     }
 
@@ -100,11 +100,11 @@ public class MathPlane3D {
         return new MathLine2D(b, c, x0 * a + d);
     }
 
-    public boolean isCoplanar(AbstractVector3f vector) {
+    public boolean isCoplanar(Vector3fc vector) {
         return Mathf.equals(0, vector.dot(getNormal()));
     }
 
-    public AbstractVector3f minPoint(AbstractVector3f point) {
+    public Vector3fc minPoint(Vector3fc point) {
         float t = -(a * point.x() + b * point.y() + c * point.z() + d) / (a * a + b * b + c * c);
         return new Vector3f(point.x() + a * t, point.y() + b * t, point.z() + c * t);
     }

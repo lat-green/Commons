@@ -50,13 +50,6 @@ public class ClassUtilTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("objs")
-	void CloneEquals(Object obj) {
-		final var clone = ClassUtil.clone(obj);
-		assertEquals(obj, clone);
-	}
-
-	@ParameterizedTest
 	@MethodSource("unmutable")
 	void isMutableFalse(Object obj) {
 		assertFalse(isMutable(obj), obj + " is not unmutable");

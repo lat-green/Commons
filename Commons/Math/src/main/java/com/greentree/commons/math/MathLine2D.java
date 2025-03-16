@@ -1,13 +1,13 @@
 package com.greentree.commons.math;
 
-import com.greentree.commons.math.vector.AbstractVector2f;
-import com.greentree.commons.math.vector.Vector2f;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 
 public class MathLine2D {
 
     public final float a, b, c;
 
-    public MathLine2D(AbstractVector2f normal) {
+    public MathLine2D(Vector2fc normal) {
         this(normal.x(), normal.y(), 0);
     }
 
@@ -19,7 +19,7 @@ public class MathLine2D {
         this.c = c;
     }
 
-    public MathLine2D(AbstractVector2f p1, AbstractVector2f p2) {
+    public MathLine2D(Vector2fc p1, Vector2fc p2) {
         //		(x-x1)/(x2-x1)=(y-y1)/(y2-y1)
         //		(y2-y1)(x-x1)=(y-y1)(x2-x1)
         //		(y2-y1)(x-x1)+(y-y1)(x1-x2)=0
@@ -43,7 +43,7 @@ public class MathLine2D {
         return new Vector2f(x, y);
     }
 
-    public static MathLine2D createPointAndNormal(AbstractVector2f point, AbstractVector2f normal) {
+    public static MathLine2D createPointAndNormal(Vector2fc point, Vector2fc normal) {
         return new MathLine2D(normal.x(), normal.y(), -point.x() * normal.x() - point.y() * normal.y());
     }
 
@@ -59,7 +59,7 @@ public class MathLine2D {
         return c;
     }
 
-    public AbstractVector2f getNormal() {
+    public Vector2fc getNormal() {
         return new Vector2f(a, b).normalize(1f);
     }
 
@@ -79,7 +79,7 @@ public class MathLine2D {
         return -(a * x + c) / b;
     }
 
-    public Vector2f minPoint(AbstractVector2f p) {
+    public Vector2f minPoint(Vector2fc p) {
         float a2, b2, c2;
         a2 = -b;
         b2 = a;
@@ -97,7 +97,7 @@ public class MathLine2D {
         return "MathLine2D [a=" + a + ", b=" + b + ", c=" + c + "]";
     }
 
-    protected Vector2f minPoint0(AbstractVector2f p) {
+    protected Vector2f minPoint0(Vector2fc p) {
         float a2, b2, c2;
         a2 = -b;
         b2 = a;

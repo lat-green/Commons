@@ -4,32 +4,31 @@ import com.greentree.commons.geometry.geom2d.shape.Circle2D
 import com.greentree.commons.geometry.geom2d.shape.Rectangle2D
 import com.greentree.commons.math.MathLine1D
 import com.greentree.commons.math.Mathf
-import com.greentree.commons.math.vector.AbstractVector2f
-import com.greentree.commons.math.vector.vec2
+import com.greentree.commons.math.vec2f
+import org.joml.Vector2fc
 
 interface Shape2D {
 
-	fun distance(point: AbstractVector2f): Float {
+	fun distance(point: Vector2fc): Float {
 		return Mathf.sqrt(distanceSquared(point))
 	}
 
-	fun distanceSquared(point: AbstractVector2f): Float {
+	fun distanceSquared(point: Vector2fc): Float {
 		return point.distanceSquared(nearestPoint(point))
 	}
 
-	fun nearestPoint(point: AbstractVector2f): AbstractVector2f
+	fun nearestPoint(point: Vector2fc): Vector2fc
 
-	fun projection(normal: AbstractVector2f): MathLine1D
+	fun projection(normal: Vector2fc): MathLine1D
 	val projectionX
-		get() = projection(vec2(0f, 1f))
+		get() = projection(vec2f(0f, 1f))
 	val projectionY
-		get() = projection(vec2(1f, 0f))
+		get() = projection(vec2f(1f, 0f))
 
-	fun isInside(point: AbstractVector2f): Boolean
+	fun isInside(point: Vector2fc): Boolean
 
 	val boundingBox: Rectangle2D
 	val boundingCircle: Circle2D
-
 	val width: Float
 		get() = maxX - minX
 	val height: Float

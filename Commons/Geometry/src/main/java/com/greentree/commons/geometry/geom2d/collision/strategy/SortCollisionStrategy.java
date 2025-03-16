@@ -3,8 +3,7 @@ package com.greentree.commons.geometry.geom2d.collision.strategy;
 import com.greentree.commons.geometry.geom2d.Shape2DUtil;
 import com.greentree.commons.geometry.geom2d.collision.Collidable2D;
 import com.greentree.commons.geometry.geom2d.shape.Rectangle2D;
-import com.greentree.commons.geometry.geom3d.AABB;
-import com.greentree.commons.util.cortege.Pair;
+import kotlin.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,18 +1,19 @@
 package com.greentree.commons.geometry.geom2d.shape
 
-import com.greentree.commons.math.vector.AbstractVector2f
-import com.greentree.commons.math.vector.vec2
-import com.greentree.commons.math.vector.vec2f
+import com.greentree.commons.math.vec2f
+import com.greentree.commons.math.x
+import com.greentree.commons.math.y
+import org.joml.Vector2fc
 
 data class Rectangle2D(
-	val p1: AbstractVector2f,
-	val p2: AbstractVector2f,
+	val p1: Vector2fc,
+	val p2: Vector2fc,
 ) : FiniteShape2D {
 
 	constructor(
 		x1: Float, y1: Float,
 		x2: Float, y2: Float,
-	) : this(vec2(x1, y1), vec2(x2, y2))
+	) : this(vec2f(x1, y1), vec2f(x2, y2))
 
 	override val width: Float
 		get() = p2.x - p1.x
@@ -38,6 +39,6 @@ data class Rectangle2D(
 
 	override val boundingBox
 		get() = this
-	override val points: Array<AbstractVector2f>
+	override val points: Array<Vector2fc>
 		get() = arrayOf(p1, vec2f(p1.x, p2.y), p2, vec2f(p2.x, p1.y))
 }

@@ -6,8 +6,8 @@ import com.greentree.commons.geometry.geom2d.collision.CollisionEvent2D
 import com.greentree.commons.geometry.geom2d.isIntersect
 import com.greentree.commons.geometry.geom2d.shape.FiniteShape2D
 import com.greentree.commons.math.MathLine2D
-import com.greentree.commons.math.vector.AbstractVector2f
-import com.greentree.commons.math.vector.Vector2f
+import org.joml.Vector2f
+import org.joml.Vector2fc
 
 open class Shape2DBinaryOperation<A : Shape2D, B : Shape2D> {
 
@@ -21,10 +21,10 @@ open class Shape2DBinaryOperation<A : Shape2D, B : Shape2D> {
 		)
 	}
 
-	open fun getContactPoint(a: A, b: B): Collection<AbstractVector2f>? {
+	open fun getContactPoint(a: A, b: B): Collection<Vector2fc> {
 		a as FiniteShape2D
 		b as FiniteShape2D
-		val res: MutableSet<AbstractVector2f> = HashSet()
+		val res: MutableSet<Vector2fc> = HashSet()
 		for(al in a.linesLoop)
 			for(bl in b.linesLoop) {
 				val c = MathLine2D.contact(al.mathLine, bl.mathLine)

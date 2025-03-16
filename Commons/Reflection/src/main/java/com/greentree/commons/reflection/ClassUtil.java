@@ -67,59 +67,6 @@ public final class ClassUtil {
         return sources;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T clone(T t) {
-        if (t == null)
-            return null;
-        var type = (Class<T>) t.getClass();
-        if (!isMutable(t))
-            return t;
-        if (type.isArray()) {
-            final var len = Array.getLength(t);
-            final var arr = (T) Array.newInstance(type.componentType(), len);
-            for (var i = 0; i < len; i++) {
-                final var e = Array.get(arr, i);
-                final var c = clone(e);
-                Array.set(arr, i, c);
-            }
-            return arr;
-        }
-        {//use methor clone
-            Method clone;
-            boolean flag;
-            try {
-                clone = type.getMethod("clone");
-                flag = clone.canAccess(t);
-                clone.setAccessible(true);
-                clone.invoke(t);
-                clone.setAccessible(flag);
-            } catch (NoSuchMethodException ignorede) {
-            } catch (IllegalAccessException | IllegalArgumentException
-                     | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        {
-            try (final var bout = new ByteArrayOutputStream();
-                 final var out = new ObjectOutputStream(bout)) {
-                out.writeObject(t);
-                try (final var bin = new ByteArrayInputStream(bout.toByteArray());
-                     final var in = new ObjectInputStream(bin)) {
-                    return (T) in.readObject();
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        T copy;
-        try {
-            copy = ObjectBuilder.get(type, ObjectBuilder.getArgumentsMap(t), obj -> clone(obj.v3));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("method clone not accessible " + t, e);
-        }
-        return copy;
-    }
-
     public static <T> void copyAllFieldsTo(T t, T dest) throws Exception {
         for (Field f : ClassUtil.getAllFields(t.getClass())) {
             var m = f.getModifiers();

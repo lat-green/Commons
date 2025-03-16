@@ -5,8 +5,7 @@ import com.greentree.commons.geometry.geom2d.collision.Collidable2D;
 import com.greentree.commons.geometry.geom2d.shape.Rectangle2D;
 import com.greentree.commons.math.Mathf;
 import com.greentree.commons.util.collection.FunctionAutoGenerateMap;
-import com.greentree.commons.util.cortege.Pair;
-import com.greentree.commons.util.cortege.UnOrentetPair;
+import kotlin.Pair;
 
 import java.util.*;
 
@@ -51,49 +50,29 @@ public class BMapWorldCollisionStrategy<T extends Collidable2D> extends WorldCol
         }
     }
 
-    @Override
-    public Collection<? extends Pair<T, T>> getCollisionContact() {
-        final Collection<UnOrentetPair<T>> res = new HashSet<>();
-        for (int x = 0; x < count; x++)
-            for (int y = 0; y < count; y++) {
-                var a = get0(x, y);
-                if (a.size() < 2)
-                    continue;
-                Collidable2D[] array = new Collidable2D[a.size()];
-                Collection<UnOrentetPair<T>> a0 = getCollisionContact(a.toArray(array));
-                if (a0.isEmpty())
-                    continue;
-                synchronized (res) {
-                    res.addAll(a0);
-                }
-            }
-        return res;
+    public String list() {
+        return removeTable.keySet().toString();
     }
 
-    private Collection<Collidable2D> get0(int x, int y) {
-        return map.get(x).get(y);
+    public int size() {
+        return removeTable.size();
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends Collidable2D> Collection<UnOrentetPair<T>> getCollisionContact(
-            Collidable2D... world) {
-        final Collection<UnOrentetPair<T>> res = new ArrayList<>();
-        Arrays.sort(world, Comparator.comparing(s -> aabb_cache.get(s).getMinX()));
-        Rectangle2D[] aabbs = new Rectangle2D[world.length];
-        for (int i = world.length - 1; i >= 0; i--) {
-            T a = (T) world[i];
-            var aAABB = aabb_cache.get(a);
-            aabbs[i] = aAABB;
-            for (int j = i + 1; j < world.length; j++) {
-                T b = (T) world[j];
-                var bAABB = aabbs[j];
-                if (aAABB.getMaxX() < bAABB.getMinX())
-                    break;
-                if (Shape2DUtil.isIntersect(a.getShape(), b.getShape()))
-                    res.add(new UnOrentetPair<>(a, b));
-            }
+    private class AABBi {
+
+        public final int minx, maxx, miny, maxy;
+
+        public AABBi(Rectangle2D aabb) {
+            minx = (int) Mathf.clamp(0, count - 1, (int) ((aabb.getMinX() + DELTHA) / size));
+            maxx = (int) Mathf.clamp(0, count - 1, (int) ((aabb.getMaxX() + DELTHA) / size));
+            miny = (int) Mathf.clamp(0, count - 1, (int) ((aabb.getMinY() + DELTHA) / size));
+            maxy = (int) Mathf.clamp(0, count - 1, (int) ((aabb.getMaxY() + DELTHA) / size));
         }
-        return res;
+
+        public int size() {
+            return (maxx - minx + 1) * (maxy - miny + 1);
+        }
+
     }
 
     @Override
@@ -130,6 +109,51 @@ public class BMapWorldCollisionStrategy<T extends Collidable2D> extends WorldCol
     }
 
     @Override
+    public Collection<? extends Pair<T, T>> getCollisionContact() {
+        final Collection<Pair<T, T>> res = new HashSet<>();
+        for (int x = 0; x < count; x++)
+            for (int y = 0; y < count; y++) {
+                var a = get0(x, y);
+                if (a.size() < 2)
+                    continue;
+                Collidable2D[] array = new Collidable2D[a.size()];
+                Collection<Pair<T, T>> a0 = getCollisionContact(a.toArray(array));
+                if (a0.isEmpty())
+                    continue;
+                synchronized (res) {
+                    res.addAll(a0);
+                }
+            }
+        return res;
+    }
+
+    private Collection<Collidable2D> get0(int x, int y) {
+        return map.get(x).get(y);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Collidable2D> Collection<Pair<T, T>> getCollisionContact(
+            Collidable2D... world) {
+        final var res = new ArrayList<Pair<T, T>>();
+        Arrays.sort(world, Comparator.comparing(s -> aabb_cache.get(s).getMinX()));
+        Rectangle2D[] aabbs = new Rectangle2D[world.length];
+        for (int i = world.length - 1; i >= 0; i--) {
+            T a = (T) world[i];
+            var aAABB = aabb_cache.get(a);
+            aabbs[i] = aAABB;
+            for (int j = i + 1; j < world.length; j++) {
+                T b = (T) world[j];
+                var bAABB = aabbs[j];
+                if (aAABB.getMaxX() < bAABB.getMinX())
+                    break;
+                if (Shape2DUtil.isIntersect(a.getShape(), b.getShape()))
+                    res.add(new Pair<>(a, b));
+            }
+        }
+        return res;
+    }
+
+    @Override
     protected void remove0(Collidable2D shape) {
         aabbi_cache.remove(shape);
         aabb_cache.remove(shape);
@@ -147,31 +171,6 @@ public class BMapWorldCollisionStrategy<T extends Collidable2D> extends WorldCol
                     s.remove(shape);
                 }
             }
-    }
-
-    public String list() {
-        return removeTable.keySet().toString();
-    }
-
-    public int size() {
-        return removeTable.size();
-    }
-
-    private class AABBi {
-
-        public final int minx, maxx, miny, maxy;
-
-        public AABBi(Rectangle2D aabb) {
-            minx = (int) Mathf.clamp(0, count - 1, (int) ((aabb.getMinX() + DELTHA) / size));
-            maxx = (int) Mathf.clamp(0, count - 1, (int) ((aabb.getMaxX() + DELTHA) / size));
-            miny = (int) Mathf.clamp(0, count - 1, (int) ((aabb.getMinY() + DELTHA) / size));
-            maxy = (int) Mathf.clamp(0, count - 1, (int) ((aabb.getMaxY() + DELTHA) / size));
-        }
-
-        public int size() {
-            return (maxx - minx + 1) * (maxy - miny + 1);
-        }
-
     }
     //	@Override
     //	protected void reset0(T shape) {

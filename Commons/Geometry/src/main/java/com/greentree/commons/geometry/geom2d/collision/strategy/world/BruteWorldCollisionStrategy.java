@@ -2,7 +2,7 @@ package com.greentree.commons.geometry.geom2d.collision.strategy.world;
 
 import com.greentree.commons.geometry.geom2d.Shape2DUtil;
 import com.greentree.commons.geometry.geom2d.collision.Collidable2D;
-import com.greentree.commons.util.cortege.Pair;
+import kotlin.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,13 @@ public class BruteWorldCollisionStrategy<T extends Collidable2D> extends WorldCo
             .comparing(c -> c.getShape().getBoundingBox().getMinX());
     private Collidable2D[] world = new Collidable2D[10];
     private int size = 0;
+
+    @Override
+    protected void add0(T shape) {
+        if (world.length <= size)
+            world = Arrays.copyOf(world, size * 2);
+        world[size++] = shape;
+    }
 
     @Override
     public Collection<Pair<T, T>> getCollisionContact() {
@@ -31,13 +38,6 @@ public class BruteWorldCollisionStrategy<T extends Collidable2D> extends WorldCo
             }
         }
         return res;
-    }
-
-    @Override
-    protected void add0(T shape) {
-        if (world.length <= size)
-            world = Arrays.copyOf(world, size * 2);
-        world[size++] = shape;
     }
 
     @Override

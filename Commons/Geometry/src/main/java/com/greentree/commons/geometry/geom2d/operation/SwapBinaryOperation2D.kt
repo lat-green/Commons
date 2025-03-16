@@ -2,7 +2,7 @@ package com.greentree.commons.geometry.geom2d.operation
 
 import com.greentree.commons.geometry.geom2d.Shape2D
 import com.greentree.commons.geometry.geom2d.collision.CollisionEvent2D
-import com.greentree.commons.math.vector.AbstractVector2f
+import org.joml.Vector2fc
 
 data class SwapBinaryOperation2D<A : Shape2D, B : Shape2D>(
 	private val origin: Shape2DBinaryOperation<B, A>,
@@ -13,7 +13,7 @@ data class SwapBinaryOperation2D<A : Shape2D, B : Shape2D>(
 		return e.inverse()
 	}
 
-	override fun getContactPoint(a: A, b: B): Collection<AbstractVector2f>? {
+	override fun getContactPoint(a: A, b: B): Collection<Vector2fc> {
 		return origin.getContactPoint(b, a)
 	}
 

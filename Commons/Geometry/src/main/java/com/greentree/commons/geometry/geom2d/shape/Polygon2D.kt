@@ -1,12 +1,12 @@
 package com.greentree.commons.geometry.geom2d.shape
 
-import com.greentree.commons.math.vector.AbstractVector2f
+import org.joml.Vector2fc
 
 data class Polygon2D(
-	override val points: Array<AbstractVector2f>,
+	override val points: Array<Vector2fc>,
 ) : FiniteShape2D {
 
-	constructor(points: Iterable<AbstractVector2f>) : this(points.asCollection().toTypedArray())
+	constructor(points: Iterable<Vector2fc>) : this(points.asCollection().toTypedArray())
 
 	override fun equals(other: Any?): Boolean {
 		if(this === other) return true

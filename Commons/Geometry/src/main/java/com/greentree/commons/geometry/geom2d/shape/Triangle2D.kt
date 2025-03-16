@@ -1,12 +1,12 @@
 package com.greentree.commons.geometry.geom2d.shape
 
-import com.greentree.commons.math.vector.AbstractVector2f
-import com.greentree.commons.math.vector.vec2
+import com.greentree.commons.math.vec2f
+import org.joml.Vector2fc
 
 data class Triangle2D(
-	val p1: AbstractVector2f,
-	val p2: AbstractVector2f,
-	val p3: AbstractVector2f,
+	val p1: Vector2fc,
+	val p2: Vector2fc,
+	val p3: Vector2fc,
 ) : FiniteShape2D {
 
 	override val points = arrayOf(p1, p2, p3)
@@ -16,8 +16,8 @@ data class Triangle2D(
 		x2: Float, y2: Float,
 		x3: Float, y3: Float,
 	) : this(
-		vec2(x1, y1),
-		vec2(x2, y2),
-		vec2(x3, y3)
+		vec2f(x1, y1),
+		vec2f(x2, y2),
+		vec2f(x3, y3)
 	)
 }

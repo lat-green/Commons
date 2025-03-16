@@ -3,7 +3,7 @@ package com.greentree.commons.geometry.geom2d.collision.strategy.world;
 import com.greentree.commons.geometry.geom2d.Shape2DUtil;
 import com.greentree.commons.geometry.geom2d.collision.Collidable2D;
 import com.greentree.commons.geometry.geom2d.shape.Rectangle2D;
-import com.greentree.commons.util.cortege.Pair;
+import kotlin.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +17,16 @@ public class SortWorldCollisionStrategy<T extends Collidable2D> extends WorldCol
     private Collidable2D[] world = new Collidable2D[10];//10 : start size
     private int size = 0;
     private boolean reset;
+
+    @Override
+    protected void add0(T shape) {
+        if (shape == null)
+            throw new RuntimeException();
+        if (world.length <= size)
+            world = Arrays.copyOf(world, size * 2);
+        world[size++] = shape;
+        reset = true;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -43,16 +53,6 @@ public class SortWorldCollisionStrategy<T extends Collidable2D> extends WorldCol
             }
         }
         return res;
-    }
-
-    @Override
-    protected void add0(T shape) {
-        if (shape == null)
-            throw new RuntimeException();
-        if (world.length <= size)
-            world = Arrays.copyOf(world, size * 2);
-        world[size++] = shape;
-        reset = true;
     }
 
     @Override

@@ -20,11 +20,19 @@
 
         <dependency>
             <groupId>com.greentree.commons</groupId>
+            <artifactId>context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
+            <artifactId>annotation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
             <artifactId>injector</artifactId>
         </dependency>
         <dependency>
             <groupId>com.greentree.commons</groupId>
-            <artifactId>reflection</artifactId>
+            <artifactId>xml</artifactId>
         </dependency>
     </dependencies>
 

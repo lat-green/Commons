@@ -1,11 +1,16 @@
 open module commons.serialization {
-    requires transitive kotlin.stdlib;
-    requires transitive commons.util;
-    requires transitive commons.reflection;
-    requires transitive kotlin.reflect;
     requires transitive com.fasterxml.jackson.databind;
-    exports com.greentree.commons.serialization.annotation;
-    exports com.greentree.commons.serialization.data;
-    exports com.greentree.commons.serialization.descriptor;
-    exports com.greentree.commons.serialization.serializer;
+    requires transitive commons.xml;
+    requires commons.context;
+    requires commons.annotation;
+    requires commons.util;
+    requires kotlin.reflect;
+    exports com.greentree.commons.serialization.context;
+    exports com.greentree.commons.serialization.format;
+    exports com.greentree.commons.serialization.serializator;
+    exports com.greentree.commons.serialization.serializator.accuracy;
+    exports com.greentree.commons.serialization.serializator.filter;
+    exports com.greentree.commons.serialization.serializator.manager;
+    exports com.greentree.commons.serialization.serializator.provider;
+    exports com.greentree.commons.serialization.serializator.type;
 }
