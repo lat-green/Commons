@@ -1,18 +1,15 @@
 package test.com.greentree.commons.serialization
 
-import com.greentree.commons.context.BeanContext
-import com.greentree.commons.context.layer.registerLayer
-import com.greentree.commons.context.resolveBean
 import com.greentree.commons.serialization.Serialization
 import com.greentree.commons.serialization.serializator.accuracy.FloatAccuracy
 import com.greentree.commons.serialization.serializator.accuracy.IntAccuracy
 import com.greentree.commons.serialization.serializator.manager.SerializatorManager
+import com.greentree.engine.rex.fuse.tests.ContextTest
 
+@ContextTest(Serialization::class)
 abstract class SerializationTest {
 
-	protected val manager: SerializatorManager = BeanContext().apply {
-		registerLayer(Serialization)
-	}.resolveBean()
+	protected lateinit var manager: SerializatorManager
 
 	data class IntBox(
 		@IntAccuracy(-100, 100)

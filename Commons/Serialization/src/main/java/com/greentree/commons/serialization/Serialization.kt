@@ -5,6 +5,8 @@ import com.greentree.commons.context.layer.BeanLayer
 import com.greentree.commons.context.layer.FuseBeanLayer
 import com.greentree.commons.context.registerInstance
 import com.greentree.commons.context.registerSingleton
+import com.greentree.commons.context.resolveBean
+import com.greentree.commons.serialization.context.BeanContextProperty
 import com.greentree.commons.serialization.serializator.BitSetSerializator
 import com.greentree.commons.serialization.serializator.BooleanSerializator
 import com.greentree.commons.serialization.serializator.ByteSerializator
@@ -18,6 +20,7 @@ import com.greentree.commons.serialization.serializator.LongSerializator
 import com.greentree.commons.serialization.serializator.ShortSerializator
 import com.greentree.commons.serialization.serializator.StringSerializator
 import com.greentree.commons.serialization.serializator.accuracy.AccuracySerializatorFilter
+import com.greentree.commons.serialization.serializator.filter.AddSerializationContextSerializatorFilter
 import com.greentree.commons.serialization.serializator.filter.ExceptionSerializatorFilter
 import com.greentree.commons.serialization.serializator.manager.SerializatorManagerImpl
 import com.greentree.commons.serialization.serializator.provider.ArraySerializator
@@ -35,6 +38,9 @@ data object Serialization : BeanLayer {
 		get() = sequenceOf(FuseBeanLayer)
 
 	override fun MutableBeanContext.register() {
+		registerSingleton("beanContextSerializatorFilter") {
+			AddSerializationContextSerializatorFilter(BeanContextProperty(resolveBean()))
+		}
 		/* Serializators */
 		registerInstance(BitSetSerializator)
 		registerInstance(BooleanSerializator)

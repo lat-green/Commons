@@ -6,10 +6,12 @@ import com.greentree.commons.serialization.serializator.deserialize
 import com.greentree.commons.serialization.serializator.manager.SerializatorManager
 import com.greentree.commons.serialization.serializator.manager.serializator
 import com.greentree.commons.serialization.serializator.serialize
+import com.greentree.commons.xml.XMLElement
 import kotlin.reflect.KClass
 
 object XML {
 
+	fun decoder(xml: XMLElement): Decoder = XMLElementDecoder(xml)
 	fun decoder(xml: XmlNode): Decoder = XMLDecoder(xml)
 	fun encoder(onResult: (XmlNode) -> Unit): Encoder = XMLEncoder(onResult)
 
@@ -224,3 +226,45 @@ data class XMLDecoder(private val element: XmlNode) : Decoder {
 	override fun close() {
 	}
 }
+
+data class XMLElementDecoder(
+	val xml: XMLElement,
+) : Decoder, Structure<Decoder> {
+
+	override fun field(index: Int) =
+		XMLElementDecoder(xml.children[index] ?: throw NullPointerException("field index=$index not found in $xml"))
+
+	override fun field(name: String) =
+		XMLElementDecoder(xml.getChild(name) ?: throw NullPointerException("field '$name' not found in $xml"))
+
+	override fun beginCollection() = this
+
+	override fun beginStructure() = this
+
+	override fun decodeBoolean() = xml.content.toBoolean()
+
+	override fun decodeByte() = xml.content.toByte()
+
+	override fun decodeChar() = xml.content.toInt() as Char
+
+	override fun decodeDouble() = xml.content.toDouble()
+
+	override fun decodeFloat() = xml.content.toFloat()
+	override fun decodeInt() = xml.content.toInt()
+
+	override fun decodeLong() = xml.content.toLong()
+
+	override fun decodeShort() = xml.content.toShort()
+
+	override fun decodeString() = xml.content
+}
+
+private operator fun <T> Iterable<T>.get(index: Int): T? {
+	var i = index
+	for(e in this) {
+		if(i-- == 0)
+			return e
+	}
+	return null
+}
+

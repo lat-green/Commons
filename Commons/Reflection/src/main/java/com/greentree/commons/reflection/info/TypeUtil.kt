@@ -42,4 +42,13 @@ object TypeUtil {
 		type: KClass<out S>,
 		superClass: KClass<S>
 	) = getFirstArgument<S, T>(getTypeInfo(type), superClass.java)
+
+	fun <T> getSuperClassAndInterfacesAsClass(cls: Class<T>) = sequence {
+		cls.superclass?.let { superClass ->
+			yield(superClass)
+		}
+		for(i in cls.interfaces) {
+			yield(i)
+		}
+	}
 }

@@ -9,7 +9,16 @@
         <version>0.3.8</version>
     </parent>
 
-    <artifactId>context</artifactId>
+    <artifactId>context-parent</artifactId>
+
+    <packaging>pom</packaging>
+
+    <name>Context Parent</name>
+
+    <modules>
+        <module>Core</module>
+        <module>Tests</module>
+    </modules>
 
     <dependencies>
         <dependency>

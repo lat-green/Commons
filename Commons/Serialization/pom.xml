@@ -24,6 +24,10 @@
         </dependency>
         <dependency>
             <groupId>com.greentree.commons</groupId>
+            <artifactId>context-tests</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
             <artifactId>annotation</artifactId>
         </dependency>
         <dependency>
