@@ -20,6 +20,14 @@
             <artifactId>joml</artifactId>
             <version>${joml.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
+            <artifactId>serialization</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
+            <artifactId>context-tests</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
