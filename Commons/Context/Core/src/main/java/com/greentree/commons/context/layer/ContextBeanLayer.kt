@@ -2,7 +2,7 @@ package com.greentree.commons.context.layer
 
 import com.greentree.commons.context.MutableBeanContext
 import com.greentree.commons.context.argument.BeanDependencyResolver
-import com.greentree.commons.context.argument.EnvironmentArgumentResolver
+import com.greentree.commons.context.argument.EnvironmentDependencyResolver
 import com.greentree.commons.context.argument.SequenceAllBeanDependencyResolver
 import com.greentree.commons.context.environment.EnvironmentImpl
 import com.greentree.commons.context.provider.BeanContextPrototypeBeanProvider
@@ -12,7 +12,7 @@ import com.greentree.commons.context.resolveAllBeans
 import com.greentree.commons.context.resolveBean
 import com.greentree.commons.injector.MethodCallerImpl
 
-object FuseBeanLayer : BeanLayer {
+object ContextBeanLayer : BeanLayer {
 
 	override fun MutableBeanContext.register() {
 		register("beanContext", BeanContextPrototypeBeanProvider)
@@ -26,9 +26,11 @@ object FuseBeanLayer : BeanLayer {
 			SequenceAllBeanDependencyResolver(resolveBean())
 		}
 
-		registerSingleton("environment", EnvironmentImpl::class)
+		registerSingleton("environment") {
+			EnvironmentImpl(resolveAllBeans())
+		}
 		registerSingleton {
-			EnvironmentArgumentResolver(resolveBean())
+			EnvironmentDependencyResolver(resolveBean())
 		}
 	}
 }

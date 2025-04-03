@@ -22,8 +22,11 @@ class SerializatorManagerImpl(
 	override fun <T> serializator(
 		guaranteed: Class<out T>
 	): Serializator<T> =
-		serializatorOrNull(providers + GuaranteedClassSerializator, serializators, guaranteed)
-			?: throw NullPointerException("not found serializator for $guaranteed")
+		serializatorOrNull(
+			providers + GuaranteedClassSerializator,
+			serializators,
+			guaranteed
+		) ?: throw NullPointerException("not found serializator for $guaranteed")
 
 	override fun <T> realSerializator(cls: Class<T>): Serializator<T> =
 		serializatorOrNull(providers, realSerializators, cls)

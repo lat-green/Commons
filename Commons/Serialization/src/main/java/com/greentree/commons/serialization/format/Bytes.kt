@@ -27,8 +27,8 @@ data class ByteDecoder(
 	override fun beginStructure() = this
 	override fun beginCollection() = this
 
-	override fun field(name: String) = this
-	override fun field(index: Int) = this
+	override fun fieldOrNull(name: String) = this
+	override fun fieldOrNull(index: Int) = this
 
 	override fun decodeBoolean(): Boolean = input.readBoolean()
 
@@ -58,8 +58,8 @@ data class ByteEncoder(
 	override fun beginStructure() = this
 	override fun beginCollection() = this
 
-	override fun field(name: String) = this
-	override fun field(index: Int) = this
+	override fun fieldOrNull(name: String) = this
+	override fun fieldOrNull(index: Int) = this
 
 	override fun encodeBoolean(value: Boolean) = output.writeBoolean(value)
 

@@ -6,7 +6,7 @@ import com.greentree.commons.injector.Dependency
 import com.greentree.commons.injector.DependencyResolver
 import com.greentree.commons.reflection.info.TypeInfo
 
-data class EnvironmentArgumentResolver(
+data class EnvironmentDependencyResolver(
 	val environment: Environment,
 ) : DependencyResolver {
 

@@ -34,14 +34,38 @@ object TypeUtil {
 	@JvmStatic
 	fun <S, T> getFirstArgument(
 		type: TypeInfo<out S>,
-		superClass: Class<S>
+		superClass: Class<S>,
 	): Class<out T> = getSuperType(type, superClass).typeArguments[0].toClass() as Class<out T>
 
 	@JvmStatic
 	fun <S : Any, T> getFirstArgument(
+		type: TypeInfo<out S>,
+		superClass: KClass<S>,
+	): Class<out T> = getFirstArgument(type, superClass.java)
+
+	@JvmStatic
+	fun <S : Any, T> getFirstArgument(
 		type: KClass<out S>,
-		superClass: KClass<S>
-	) = getFirstArgument<S, T>(getTypeInfo(type), superClass.java)
+		superClass: Class<S>,
+	): Class<out T> = getFirstArgument(getTypeInfo(type), superClass)
+
+	@JvmStatic
+	fun <S : Any, T> getFirstArgument(
+		type: KClass<out S>,
+		superClass: KClass<S>,
+	): Class<out T> = getFirstArgument(getTypeInfo(type), superClass.java)
+
+	@JvmStatic
+	fun <S : Any, T> getFirstArgument(
+		type: Class<out S>,
+		superClass: Class<S>,
+	): Class<out T> = getFirstArgument(getTypeInfo(type), superClass)
+
+	@JvmStatic
+	fun <S : Any, T> getFirstArgument(
+		type: Class<out S>,
+		superClass: KClass<S>,
+	): Class<out T> = getFirstArgument(getTypeInfo(type), superClass.java)
 
 	fun <T> getSuperClassAndInterfacesAsClass(cls: Class<T>) = sequence {
 		cls.superclass?.let { superClass ->

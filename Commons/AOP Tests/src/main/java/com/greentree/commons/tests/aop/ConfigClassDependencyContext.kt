@@ -1,6 +1,6 @@
 package com.greentree.commons.tests.aop
 
-import com.greentree.commons.reflection.ClassUtil.*
+import com.greentree.commons.reflection.info.TypeUtil.isExtends
 import java.lang.reflect.Method
 
 class ConfigClassDependencyContext(configuration: Class<*>) : DependencyContext {

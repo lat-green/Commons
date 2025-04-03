@@ -7,8 +7,8 @@ import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.context.manager
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
-import com.greentree.commons.util.UnsafeUtil
 import com.greentree.commons.serialization.serializator.Serializator
+import com.greentree.commons.util.UnsafeUtil
 import java.lang.reflect.Modifier
 
 data class UnsafeRealSerializator<T>(
@@ -16,7 +16,7 @@ data class UnsafeRealSerializator<T>(
 ) : Serializator<T> {
 
 	init {
-		require(!(type.isInterface || type.isEnum || type.isArray || type.isAnnotation)) { "$type not supported" }
+		require(!(type.isInterface || type.isEnum || type.isArray || type.isAnnotation || type.isPrimitive)) { "$type not supported" }
 	}
 
 	override fun serialize(context: SerializationContext, encoder: Encoder, value: T) {
@@ -35,7 +35,11 @@ data class UnsafeRealSerializator<T>(
 
 	override fun deserialize(context: SerializationContext, decoder: Decoder): T {
 		val manager = context.manager
-		val result = unsafe.allocateInstance(type) as T
+		val result = try {
+			unsafe.allocateInstance(type)
+		} catch(e: InstantiationException) {
+			throw RuntimeException("$type", e)
+		} as T
 		decoder.beginStructure().use { struct ->
 			for(field in fields(type)) {
 				val offset = unsafe.objectFieldOffset(field)
@@ -62,7 +66,7 @@ data class UnsafeRealSerializator<T>(
 
 		override fun <T : Any> provide(
 			cls: Class<T>
-		) = if(cls.isInterface || cls.isEnum || cls.isArray || cls.isAnnotation)
+		) = if(cls.isInterface || cls.isEnum || cls.isArray || cls.isAnnotation || cls.isPrimitive)
 			null
 		else
 			UnsafeRealSerializator(cls)

@@ -109,7 +109,7 @@ data class JsonEncoder(val onResult: (JsonNode) -> Unit) : Encoder {
 				return res
 			}
 
-			override fun field(index: Int): Encoder = field(index.toString())
+			override fun field(index: Int) = field(index.toString())
 
 			override fun close() {
 				setResult(result)
@@ -168,9 +168,15 @@ data class JsonDecoder(private val element: JsonNode) : Decoder {
 		val element = element
 
 		return object : Structure<Decoder> {
-			override fun field(name: String) = field(name.toInt())
+			override fun fieldOrNull(name: String) = if(element.has(name))
+				JsonDecoder(element.get(name))
+			else
+				null
 
-			override fun field(index: Int) = JsonDecoder(element.get(index))
+			override fun fieldOrNull(index: Int) = if(element.has(index))
+				JsonDecoder(element.get(index))
+			else
+				null
 		}
 	}
 
@@ -181,20 +187,15 @@ data class JsonDecoder(private val element: JsonNode) : Decoder {
 		val element = element
 
 		return object : Structure<Decoder> {
-			override fun field(name: String) = JsonDecoder(
-				if(element.has(name))
-					element.get(name)
-				else
-					nodeFactory.nullNode()
-			)
+			override fun fieldOrNull(name: String) = if(element.has(name))
+				JsonDecoder(element.get(name))
+			else
+				null
 
-			override fun field(index: Int): Decoder = JsonDecoder(
-				if(element.has(index))
-					element.get(index)
-				else
-					nodeFactory.nullNode()
-			)
-//			override fun field(index: Int) = field(descriptor.getElementName(index))
+			override fun fieldOrNull(index: Int) = if(element.has(index))
+				JsonDecoder(element.get(index))
+			else
+				null
 		}
 	}
 }

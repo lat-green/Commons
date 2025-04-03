@@ -1,10 +1,9 @@
-package test.com.greentree.commons.reflection;
+package com.greentree.commons.util.cortege;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.commons.util.cortege.UnOrentetPair;
 /**
  * @author Arseny Latyshev
  *

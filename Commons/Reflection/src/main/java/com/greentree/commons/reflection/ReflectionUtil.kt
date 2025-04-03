@@ -2,10 +2,6 @@ package com.greentree.commons.reflection
 
 import kotlin.reflect.KClass
 
-@Throws(ClassNotFoundException::class)
-fun <T> findClassInAllPackages(baseClass: Class<in T>, className: String): Class<T> =
-	ClassUtil.loadClassInAllPackages(baseClass, className) as Class<T>
-
 fun isExtends(superClass: Class<*>, cls: Class<*>): Boolean {
 	if(superClass == cls)
 		return true

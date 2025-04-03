@@ -17,8 +17,8 @@ annotation class Qualifier(
 )
 
 val KParameter.qualifierOrName: String?
-	get() = Annotations.filter(this).getAnnotation(Qualifier::class.java)?.name
+	get() = Annotations.filter(this).getAnnotation(Qualifier::class.java)?.name ?: name
 val Parameter.qualifierOrName: String?
-	get() = Annotations.filter(this).getAnnotation(Qualifier::class.java)?.name
+	get() = Annotations.filter(this).getAnnotation(Qualifier::class.java)?.name ?: name
 val <T> T.qualifierOrName: String where T : AnnotatedElement, T : Member
 	get() = Annotations.filter(this).getAnnotation(Qualifier::class.java)?.name ?: name

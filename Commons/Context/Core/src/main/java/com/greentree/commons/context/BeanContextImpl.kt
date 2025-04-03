@@ -17,6 +17,6 @@ class BeanContextImpl : MutableBeanContext {
 	override fun <T> resolveProviderOrNull(name: String) = providers[name] as BeanProvider<T>?
 
 	override fun <T> resolveAllProviders(type: Class<T>): Sequence<BeanProvider<T>> {
-		return providers.values.filter { TypeUtil.isExtends(type, it.type) }.asSequence() as Sequence<BeanProvider<T>>
+		return providers.values.asSequence().filter { TypeUtil.isExtends(type, it.type) } as Sequence<BeanProvider<T>>
 	}
 }

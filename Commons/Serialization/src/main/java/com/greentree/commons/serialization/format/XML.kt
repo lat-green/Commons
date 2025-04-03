@@ -99,7 +99,7 @@ data class XMLEncoder(val onResult: (XmlNode) -> Unit) : Encoder {
 		val result = MapTagXmlNode("struct")
 
 		return object : Structure<Encoder> {
-			override fun field(name: String): Encoder {
+			override fun fieldOrNull(name: String): Encoder {
 				val res = XMLEncoder {
 					when(it) {
 						is XmlAttribute -> result.attributes.put(name, it)
@@ -116,9 +116,7 @@ data class XMLEncoder(val onResult: (XmlNode) -> Unit) : Encoder {
 				return res
 			}
 
-			override fun field(index: Int): Encoder {
-				TODO("Not yet implemented")
-			}
+			override fun fieldOrNull(index: Int) = null
 
 			override fun close() {
 //				if(result.children.isEmpty() && result.attributes.size == 1) {
@@ -138,9 +136,9 @@ data class XMLEncoder(val onResult: (XmlNode) -> Unit) : Encoder {
 		val result = MapTagXmlNode("collection")
 
 		return object : Structure<Encoder> {
-			override fun field(name: String) = field(name.toInt())
+			override fun fieldOrNull(name: String) = fieldOrNull(name.toInt())
 
-			override fun field(index: Int): XMLEncoder {
+			override fun fieldOrNull(index: Int): XMLEncoder {
 				val res = XMLEncoder {
 					val element = MapTagXmlNode("element")
 					element.children.add(it)
@@ -194,14 +192,13 @@ data class XMLDecoder(private val element: XmlNode) : Decoder {
 		val element = element as TagXmlNode
 
 		return object : Structure<Decoder> {
-			override fun field(name: String) = XMLDecoder(
-				element.getAttributeOrNull(name) ?: element.getChildOrNull(name)
-				?: throw IllegalArgumentException("not found attribute or child '$name' in ${element.toXmlString()}")
-			)
+			override fun fieldOrNull(name: String) =
+				(element.getAttributeOrNull(name) ?: element.getChildOrNull(name))?.let {
+					XMLDecoder(it)
+				}
 
-			override fun field(index: Int): Decoder {
-				TODO("Not yet implemented")
-			}
+			override fun field(name: String) = fieldOrNull(name)
+				?: throw IllegalArgumentException("not found attribute or child '$name' in ${element.toXmlString()}")
 		}
 	}
 
@@ -231,11 +228,13 @@ data class XMLElementDecoder(
 	val xml: XMLElement,
 ) : Decoder, Structure<Decoder> {
 
-	override fun field(index: Int) =
-		XMLElementDecoder(xml.children[index] ?: throw NullPointerException("field index=$index not found in $xml"))
+	override fun fieldOrNull(index: Int) = xml.children[index]?.let {
+		XMLElementDecoder(it)
+	}
 
-	override fun field(name: String) =
-		XMLElementDecoder(xml.getChild(name) ?: throw NullPointerException("field '$name' not found in $xml"))
+	override fun fieldOrNull(name: String) = xml.getChild(name)?.let {
+		XMLElementDecoder(it)
+	}
 
 	override fun beginCollection() = this
 

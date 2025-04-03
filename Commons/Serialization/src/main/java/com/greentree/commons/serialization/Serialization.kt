@@ -2,7 +2,7 @@ package com.greentree.commons.serialization
 
 import com.greentree.commons.context.MutableBeanContext
 import com.greentree.commons.context.layer.BeanLayer
-import com.greentree.commons.context.layer.FuseBeanLayer
+import com.greentree.commons.context.layer.ContextBeanLayer
 import com.greentree.commons.context.registerInstance
 import com.greentree.commons.context.registerSingleton
 import com.greentree.commons.context.resolveBean
@@ -35,7 +35,7 @@ import com.greentree.engine.rex.serialization.serializator.provider.KotlinObject
 data object Serialization : BeanLayer {
 
 	override val dependencies
-		get() = sequenceOf(FuseBeanLayer)
+		get() = sequenceOf(ContextBeanLayer)
 
 	override fun MutableBeanContext.register() {
 		registerSingleton("beanContextSerializatorFilter") {

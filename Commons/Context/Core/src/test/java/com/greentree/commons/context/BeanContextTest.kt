@@ -1,20 +1,20 @@
 package com.greentree.commons.context
 
-import com.greentree.commons.context.layer.FuseBeanLayer
+import com.greentree.commons.context.layer.ContextBeanLayer
 import com.greentree.commons.context.layer.registerLayer
-import com.greentree.commons.context.mock.HiRepository1
-import com.greentree.commons.context.mock.HiRepository2
-import com.greentree.commons.context.provider.ProxySingletonBeanProvider
-import com.greentree.commons.util.iterator.size
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
 import com.greentree.commons.context.mock.A
 import com.greentree.commons.context.mock.AImpl
 import com.greentree.commons.context.mock.B
 import com.greentree.commons.context.mock.BImpl
 import com.greentree.commons.context.mock.GroupService
+import com.greentree.commons.context.mock.HiRepository1
+import com.greentree.commons.context.mock.HiRepository2
 import com.greentree.commons.context.mock.HiService
 import com.greentree.commons.context.mock.TextRepository
+import com.greentree.commons.context.provider.ProxySingletonBeanProvider
+import com.greentree.commons.util.iterator.size
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class BeanContextTest {
 
@@ -109,7 +109,7 @@ class BeanContextTest {
 	@Test
 	fun registerFuseBeanLayer() {
 		val ctx = BeanContext().apply {
-			registerLayer(FuseBeanLayer)
+			registerLayer(ContextBeanLayer)
 		}
 	}
 

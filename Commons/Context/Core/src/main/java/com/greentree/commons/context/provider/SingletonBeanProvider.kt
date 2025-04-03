@@ -44,8 +44,8 @@ data class SingletonClassBeanProvider<T>(
 			if(value != null)
 				return value
 		}
+		val methodCaller: MethodCaller = context.resolveBean()
 		val value = try {
-			val methodCaller: MethodCaller = context.resolveBean()
 			methodCaller.newInstance(type)
 		} catch(e: Throwable) {
 			throw RuntimeException("exception on register singleton $type", e)
