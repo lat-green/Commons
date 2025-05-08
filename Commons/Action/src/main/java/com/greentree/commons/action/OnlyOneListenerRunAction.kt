@@ -28,4 +28,9 @@ data class OnlyOneListenerRunAction(
 
 	override val listenerCount: Int
 		get() = action.listenerCount
+
+	override fun close() {
+		action.close()
+		origin.close()
+	}
 }

@@ -20,4 +20,8 @@ data class ReactProperty<T : Any>(
 	override fun addListener(listener: Runnable): ListenerCloser {
 		return action.addListener(listener)
 	}
+
+	override fun close() {
+		action.close()
+	}
 }

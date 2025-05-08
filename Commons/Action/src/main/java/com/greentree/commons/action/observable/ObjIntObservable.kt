@@ -30,5 +30,8 @@ interface ObjIntObservable<T> : RunObservable, IntObservable, ObjectObservable<T
 		override fun addListener(listener: ObjIntConsumer<in Any?>): ListenerCloser {
 			return ListenerCloser.Empty
 		}
+
+		override fun close() {
+		}
 	}
 }

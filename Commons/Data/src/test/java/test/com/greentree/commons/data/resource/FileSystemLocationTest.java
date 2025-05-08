@@ -57,7 +57,7 @@ class FileSystemLocationTest {
     @Test
     void zip() throws IOException {
         final var ress = new ClassLoaderResourceLocation(FileSystemLocationTest.class);
-        var zip = ress.getResource("test.zip");
+        var zip = ress.getFileResource("test.zip");
         final var zipLoc = new ZipResourceLocation(zip);
         final var res = zipLoc.getFileResource("1.txt");
         try (final var in = res.open()) {

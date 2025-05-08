@@ -1,5 +1,6 @@
 package com.greentree.commons.action.observer.integer
 
+import com.greentree.commons.action.ListenerCloser
 import com.greentree.commons.action.MultiAction
 import com.greentree.commons.action.observable.IntObservable
 import com.greentree.commons.action.observer.IntObserver

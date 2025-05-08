@@ -3,7 +3,7 @@ package com.greentree.commons.annotation
 import java.lang.reflect.AnnotatedElement
 
 data class AnnotationInheritedElement(
-	private val origin: AnnotatedElement,
+	val origin: AnnotatedElement,
 ) : AnnotatedElement {
 
 	override fun <T : Annotation?> getAnnotation(annotationClass: Class<T>) =

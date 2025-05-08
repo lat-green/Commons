@@ -39,6 +39,11 @@ open class PoolAction<T, A : IObjectAction<T>>(val action: A) : IObjectAction<T>
 		return builder
 	}
 
+	override fun close() {
+		pool.clear()
+		action.close()
+	}
+
 	companion object {
 
 		private const val serialVersionUID = 1L

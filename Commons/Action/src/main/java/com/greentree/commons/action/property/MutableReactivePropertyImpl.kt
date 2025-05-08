@@ -17,5 +17,9 @@ class MutableReactivePropertyImpl<T : Any>(
 	override fun addListener(listener: Runnable): ListenerCloser {
 		return action.addListener(listener)
 	}
+
+	override fun close() {
+		action.close()
+	}
 }
 

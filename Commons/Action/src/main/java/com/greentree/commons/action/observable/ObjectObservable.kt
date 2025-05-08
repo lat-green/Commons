@@ -19,6 +19,9 @@ interface ObjectObservable<T> : RunObservable {
 		override fun addListener(listener: (Any?) -> Unit): ListenerCloser {
 			return ListenerCloser.Empty
 		}
+
+		override fun close() {
+		}
 	}
 }
 

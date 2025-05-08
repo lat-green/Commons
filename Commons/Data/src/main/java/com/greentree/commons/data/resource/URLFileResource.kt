@@ -26,7 +26,7 @@ data class URLFileResource(
 	override val parent: ParentResource
 		get() = TODO("Not yet implemented")
 	override val name: String
-		get() = TODO("Not yet implemented")
+		get() = url.file
 
 	override fun lastModified(): Long {
 		val connection = url.openConnection()

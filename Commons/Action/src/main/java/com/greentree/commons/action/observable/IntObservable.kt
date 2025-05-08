@@ -17,5 +17,8 @@ interface IntObservable : RunObservable {
 		override fun addListener(listener: IntConsumer): ListenerCloser {
 			return ListenerCloser.Empty
 		}
+
+		override fun close() {
+		}
 	}
 }

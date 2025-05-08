@@ -17,5 +17,8 @@ interface FloatObservable : RunObservable {
 		override fun addListener(listener: FloatConsumer): ListenerCloser {
 			return ListenerCloser.Empty
 		}
+
+		override fun close() {
+		}
 	}
 }

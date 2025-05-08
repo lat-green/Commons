@@ -26,5 +26,8 @@ interface PairObservable<T1, T2> : RunObservable, ObjectObservable<Pair<T1, T2>>
 		override fun addListener(listener: (Any?, Any?) -> Unit): ListenerCloser {
 			return ListenerCloser.Empty
 		}
+
+		override fun close() {
+		}
 	}
 }

@@ -25,4 +25,9 @@ data class OnlyOneListenerEventAction<T>(
 			}
 		}
 	}
+
+	override fun close() {
+		action.close()
+		origin.close()
+	}
 }

@@ -9,4 +9,7 @@ data class ConstReactiveProperty<T : Any>(
 	override fun addListener(listener: Runnable): ListenerCloser {
 		return ListenerCloser.Empty
 	}
+
+	override fun close() {
+	}
 }

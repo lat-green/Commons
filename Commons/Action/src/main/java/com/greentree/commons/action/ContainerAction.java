@@ -3,7 +3,7 @@ package com.greentree.commons.action;
 import com.greentree.commons.action.container.ListenerContainer;
 
 /** @author Arseny Latyshev */
-public abstract class ContainerAction<L, LC extends ListenerContainer<L>> {
+public abstract class ContainerAction<L, LC extends ListenerContainer<L>> implements AutoCloseable {
 
     protected final LC listeners;
 
@@ -25,6 +25,11 @@ public abstract class ContainerAction<L, LC extends ListenerContainer<L>> {
 
     public int listenerSize() {
         return listeners.size();
+    }
+
+    @Override
+    public void close() throws Exception {
+        clear();
     }
 
     public void clear() {

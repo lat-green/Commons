@@ -3,7 +3,7 @@ package com.greentree.commons.action.observable
 import com.greentree.commons.action.ListenerCloser
 import java.io.Serializable
 
-interface RunObservable : Serializable {
+interface RunObservable : AutoCloseable, Serializable {
 
 	fun addListener(listener: Runnable): ListenerCloser
 
@@ -20,6 +20,9 @@ interface RunObservable : Serializable {
 
 		override val listenerCount: Int
 			get() = 0
+
+		override fun close() {
+		}
 	}
 
 	companion object {
