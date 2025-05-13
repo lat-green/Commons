@@ -16,3 +16,4 @@ val Vector4fc.w
 
 fun vec4f(xy: Vector2fc, z: Float, w: Float) = Vector4f(xy.x, xy.y, z, w)
 fun vec4f(xyz: Vector3fc, w: Float) = Vector4f(xyz.x, xyz.y, xyz.z, w)
+fun vec4f(x: Float, y: Float, z: Float, w: Float) = Vector4f(x, y, z, w)
