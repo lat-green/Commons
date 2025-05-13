@@ -1,5 +1,7 @@
 package com.greentree.commons.util.react
 
+import java.util.*
+
 interface ChildrenReactContext {
 
 	fun useChild(id: Any): ReactContext
@@ -7,7 +9,7 @@ interface ChildrenReactContext {
 
 fun ReactContext.useChildren(): ChildrenReactContext = useMemoClose(Unit) {
 	val parent = this
-	val children = mutableMapOf<Any, ReactContextProvider>()
+	val children = WeakHashMap<Any, ReactContextProvider>()
 	object : ChildrenReactContext, AutoCloseable {
 		override fun useChild(id: Any): ReactContext {
 			return children.getOrPut(id) {
