@@ -6,7 +6,7 @@ fun interface ReactRunner<R> {
 }
 
 fun <R> ReactContextProvider.runner(block: ReactContext.() -> R): ReactRunner<R> {
-	val result = runReact(block)
+	val result by lazy { runReact(block) }
 	return ReactRunner {
 		runReactIfRequire(block) ?: result
 	}

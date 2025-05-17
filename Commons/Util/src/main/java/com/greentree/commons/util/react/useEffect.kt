@@ -18,8 +18,8 @@ inline fun ReactContext.useEffect(block: () -> Unit) {
 }
 
 inline fun ReactContext.useEffectClose(dependency: Any, block: () -> AutoCloseable) {
-	var closeablePrevious by useRef<AutoCloseable> {
-		it?.close()
+	var closeablePrevious by useRefClose<AutoCloseable> {
+		it.close()
 	}
 	if(useDependency(dependency)) {
 		closeablePrevious = block()
@@ -27,8 +27,8 @@ inline fun ReactContext.useEffectClose(dependency: Any, block: () -> AutoCloseab
 }
 
 inline fun ReactContext.useEffectCloseByHash(dependency: Any, block: () -> AutoCloseable) {
-	var closeablePrevious by useRef<AutoCloseable> {
-		it?.close()
+	var closeablePrevious by useRefClose<AutoCloseable> {
+		it.close()
 	}
 	if(useDependencyByHash(dependency)) {
 		closeablePrevious = block()
@@ -36,8 +36,8 @@ inline fun ReactContext.useEffectCloseByHash(dependency: Any, block: () -> AutoC
 }
 
 inline fun ReactContext.useEffectClose(block: () -> AutoCloseable) {
-	var previousCloseable by useRef<AutoCloseable> {
-		it?.close()
+	var previousCloseable by useRefClose<AutoCloseable> {
+		it.close()
 	}
 	previousCloseable = block()
 }

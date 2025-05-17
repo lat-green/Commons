@@ -6,10 +6,20 @@ typealias Dispatch<Action> = (action: Action) -> Unit
 fun <State, Action> ReactContext.useReducer(
 	initial: State,
 	reducer: Reducer<State, Action>,
-): Dispatch<Action> {
-	var s by useState(initial)
-	return { action ->
-		s = reducer.invoke(s, action)
+): Pair<State, Dispatch<Action>> {
+	var state by useState(initial)
+	return state to { action ->
+		state = reducer(state, action)
+	}
+}
+
+fun <State, Action> ReactContext.useReducer(
+	initial: () -> State,
+	reducer: Reducer<State, Action>,
+): Pair<State, Dispatch<Action>> {
+	var state by useState(initial)
+	return state to { action ->
+		state = reducer(state, action)
 	}
 }
 

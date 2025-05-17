@@ -4,5 +4,9 @@ interface ReactContext {
 
 	fun refresh()
 
-	fun <T> useRef(initialValue: T, onClose: (T) -> Unit): Ref<T>
+	fun useFirst(): Boolean
+
+	fun <T> useRef(initialValue: T, onClose: (T & Any) -> Unit): Ref<T>
+
+	fun <T> useRef(initialValue: T): Ref<T>
 }

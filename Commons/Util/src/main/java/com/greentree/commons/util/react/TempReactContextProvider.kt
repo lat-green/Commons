@@ -2,7 +2,7 @@ package com.greentree.commons.util.react
 
 class TempReactContextProvider : ReactContextProvider {
 
-	private val refs = mutableListOf<DataRef<*>>()
+	private val refs = mutableListOf<Ref<*>>()
 
 	override fun next(): ReactContext = HeadReactContext()
 
@@ -14,7 +14,9 @@ class TempReactContextProvider : ReactContextProvider {
 
 	override fun close() {
 		for(ref in refs) {
-			ref.close()
+			if(ref is AutoCloseable) {
+				ref.close()
+			}
 		}
 	}
 
@@ -23,8 +25,16 @@ class TempReactContextProvider : ReactContextProvider {
 		override fun refresh() {
 		}
 
-		override fun <T> useRef(initialValue: T, onClose: (T) -> Unit): Ref<T> {
-			val ref = DataRef(initialValue, onClose)
+		override fun useFirst(): Boolean = false
+
+		override fun <T> useRef(initialValue: T, onClose: (T & Any) -> Unit): Ref<T> {
+			val ref = CloseableRef(initialValue, onClose)
+			refs.add(ref)
+			return ref
+		}
+
+		override fun <T> useRef(initialValue: T): Ref<T> {
+			val ref = DataRef(initialValue)
 			refs.add(ref)
 			return ref
 		}

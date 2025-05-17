@@ -1,51 +1,63 @@
 package com.greentree.commons.util.react
 
-import java.util.*
+fun interface ChildrenReactContext<K> {
 
-interface ChildrenReactContext {
-
-	fun useChild(id: Any): ReactContext
+	fun useChild(id: K): ReactContext
 }
 
-fun ReactContext.useChildren(): ChildrenReactContext = useMemoClose(Unit) {
+fun <K> ReactContext.useChildren(): ChildrenReactContext<K> = run {
+	var children by useRef(mutableMapOf<K, ReactContextProvider>()) {
+		for(child in it.values) {
+			child.close()
+		}
+		it.clear()
+	}
+	var current by useRef(mutableMapOf<K, ReactContextProvider>()) {
+		for(child in it.values) {
+			child.close()
+		}
+		it.clear()
+	}
+	children.filterNot { (key, value) ->
+		current.containsKey(key)
+	}.forEach { (key, value) ->
+		children.remove(key)
+		value.close()
+	}
+	current.clear()
 	val parent = this
-	val children = WeakHashMap<Any, ReactContextProvider>()
-	object : ChildrenReactContext, AutoCloseable {
-		override fun useChild(id: Any): ReactContext {
-			return children.getOrPut(id) {
-				EventReactContextProvider {
+	return ChildrenReactContext {
+		val child = current.getOrPut(it) {
+			children.getOrPut(it) {
+				FlagReactContextProvider().withRefresh {
 					parent.refresh()
 				}
-			}.next()
-		}
-
-		override fun close() {
-			children.values.forEach {
-				it.close()
 			}
-			children.clear()
 		}
+		child.next()
 	}
 }
 
-inline fun <T : Any> Sequence<T>.forEachReact(context: ReactContext, block: ReactContext.(T) -> Unit) {
-	val children = context.useChildren()
-	for(t in this)
+inline fun <T : Any> ReactContext.useForEach(sequence: Sequence<T>, block: ReactContext.(T) -> Unit) {
+	val children = useChildren<T>()
+	for(t in sequence)
 		children.useChild(t).block(t)
 }
 
-inline fun <T : Any> Iterable<T>.forEachReact(context: ReactContext, block: ReactContext.(T) -> Unit) {
-	val children = context.useChildren()
-	for(t in this)
+inline fun <T : Any> ReactContext.useForEach(iterable: Iterable<T>, block: ReactContext.(T) -> Unit) {
+	val children = useChildren<T>()
+	for(t in iterable)
 		children.useChild(t).block(t)
 }
 
 enum class IfBlock { THEN, ELSE }
 
-inline fun <R> Boolean.ifReact(context: ReactContext, then: ReactContext.() -> R, `else`: ReactContext.() -> R): R {
-	val children = context.useChildren()
-	return if(this)
-		children.useChild(IfBlock.THEN).run(then)
+inline fun <R> ReactContext.useIf(value: Boolean, then: ReactContext.() -> R, `else`: ReactContext.() -> R): R {
+	val children = useChildren<IfBlock>()
+	val thenBlock = children.useChild(IfBlock.THEN)
+	val elseBlock = children.useChild(IfBlock.ELSE)
+	return if(value)
+		thenBlock.run(then)
 	else
-		children.useChild(IfBlock.ELSE).run(`else`)
+		elseBlock.run(`else`)
 }

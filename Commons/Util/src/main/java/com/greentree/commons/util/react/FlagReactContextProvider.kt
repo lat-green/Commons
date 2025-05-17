@@ -2,7 +2,7 @@ package com.greentree.commons.util.react
 
 open class FlagReactContextProvider : ReactContextProvider {
 
-	private val refs = mutableListOf<DataRef<*>>()
+	private val refs = mutableListOf<Ref<*>>()
 	private var next: ReactContext = HeadReactContext()
 	override var requireRefresh: Boolean = true
 		protected set
@@ -20,7 +20,9 @@ open class FlagReactContextProvider : ReactContextProvider {
 
 	override fun close() {
 		for(ref in refs) {
-			ref.close()
+			if(ref is AutoCloseable) {
+				ref.close()
+			}
 		}
 	}
 
@@ -28,8 +30,16 @@ open class FlagReactContextProvider : ReactContextProvider {
 
 		override fun refresh() = this@FlagReactContextProvider.refresh()
 
-		override fun <T> useRef(initialValue: T, onClose: (T) -> Unit): Ref<T> {
-			val ref = DataRef(initialValue, onClose)
+		override fun useFirst(): Boolean = true
+
+		override fun <T> useRef(initialValue: T, onClose: (T & Any) -> Unit): Ref<T> {
+			val ref = CloseableRef(initialValue, onClose)
+			refs.add(ref)
+			return ref
+		}
+
+		override fun <T> useRef(initialValue: T): Ref<T> {
+			val ref = DataRef(initialValue)
 			refs.add(ref)
 			return ref
 		}
@@ -39,9 +49,15 @@ open class FlagReactContextProvider : ReactContextProvider {
 
 		private var refIndex = 0
 
+		override fun useFirst(): Boolean = false
+
 		override fun refresh() = this@FlagReactContextProvider.refresh()
 
-		override fun <T> useRef(initialValue: T, onClose: (T) -> Unit): Ref<T> {
+		override fun <T> useRef(initialValue: T, onClose: (T & Any) -> Unit): Ref<T> {
+			return refs[refIndex++] as Ref<T>
+		}
+
+		override fun <T> useRef(initialValue: T): Ref<T> {
 			return refs[refIndex++] as Ref<T>
 		}
 	}

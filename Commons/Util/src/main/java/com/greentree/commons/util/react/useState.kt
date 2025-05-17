@@ -5,9 +5,8 @@ data class State<T>(
 	val ref: Ref<T>,
 ) : Ref<T> {
 
-	private val refValue = ref.value
 	override var value: T
-		get() = refValue
+		get() = ref.value
 		set(value) {
 			ref.value = value
 			context.refresh()
@@ -17,3 +16,5 @@ data class State<T>(
 fun <T> ReactContext.useState() = useState<T?>(null)
 
 fun <T> ReactContext.useState(initial: T) = State(this, useRef(initial))
+fun <T> ReactContext.useState(initial: () -> T) = State(this, useFirstRef(initial))
+
