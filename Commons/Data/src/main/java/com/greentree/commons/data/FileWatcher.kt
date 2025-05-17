@@ -101,6 +101,10 @@ data object FileWatcher : FileKeyWatcher {
 				watchService.close()
 			}
 		}
+
+		override fun close() {
+			TODO("Not yet implemented")
+		}
 	}
 
 	override fun take() {
