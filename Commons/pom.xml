@@ -22,7 +22,7 @@
         <junit.version>5.10.0</junit.version>
         <jmh.version>1.36</jmh.version>
         <slf4j.version>2.20.0</slf4j.version>
-        <mockito.version>5.3.1</mockito.version>
+        <mockito.version>5.7.0</mockito.version>
 
         <sonar.organization>lat-green</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -133,6 +133,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>23.0.0</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-bom</artifactId>
@@ -416,6 +422,25 @@
             <!--                    </execution>-->
             <!--                </executions>-->
             <!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.3.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <configuration>
+                            <rules>
+                                <BanDuplicatePomDependencyVersions/>
+                                <DependencyConvergence/>
+                            </rules>
+                        </configuration>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
