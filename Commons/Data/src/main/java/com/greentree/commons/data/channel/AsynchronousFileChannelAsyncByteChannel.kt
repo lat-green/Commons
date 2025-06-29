@@ -4,10 +4,9 @@ import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousChannel
 import java.nio.channels.AsynchronousFileChannel
 import java.nio.channels.CompletionHandler
-import java.util.concurrent.Future
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 data class AsynchronousFileChannelAsyncByteChannel(
 	val origin: AsynchronousFileChannel,
@@ -16,16 +15,17 @@ data class AsynchronousFileChannelAsyncByteChannel(
 	override val size: Long
 		get() = origin.size()
 
-	override fun read(dst: ByteBuffer, position: Long): Future<Int> = origin.read(dst, position)
+	override suspend fun read(dst: ByteBuffer, position: Long): Int {
+		return suspendCoroutine { continuation ->
+			origin.read(dst, position, null, object : CompletionHandler<Int, Nothing?> {
+				override fun completed(result: Int, attachment: Nothing?) {
+					continuation.resume(result)
+				}
 
-	override fun read(dst: ByteBuffer, position: Long, continuation: Continuation<Int>) =
-		origin.read(dst, position, null, object : CompletionHandler<Int, Nothing?> {
-			override fun completed(result: Int, attachment: Nothing?) {
-				continuation.resume(result)
-			}
-
-			override fun failed(exc: Throwable, attachment: Nothing?) {
-				continuation.resumeWithException(exc)
-			}
-		})
+				override fun failed(exc: Throwable, attachment: Nothing?) {
+					continuation.resumeWithException(exc)
+				}
+			})
+		}
+	}
 }

@@ -1,6 +1,7 @@
 package com.greentree.commons.serialization.serializator.provider
 
 import com.greentree.commons.annotation.Annotations
+import com.greentree.commons.reflection.info.TypeUtil
 import com.greentree.commons.serialization.context.AnnotatedElementProperty
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.format.Decoder
@@ -63,6 +64,8 @@ data class DataClassSerializator<T : Any>(
 		override fun <T : Any> provide(cls: Class<T>): Serializator<T>? {
 			val guaranteed = cls.kotlin
 			if(!guaranteed.isData || guaranteed.objectInstance != null)
+				return null
+			if(TypeUtil.isExtends(AutoCloseable::class, cls))
 				return null
 			return DataClassSerializator(guaranteed)
 		}

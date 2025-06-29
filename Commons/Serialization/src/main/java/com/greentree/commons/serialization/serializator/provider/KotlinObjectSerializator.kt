@@ -3,8 +3,8 @@ package com.greentree.engine.rex.serialization.serializator.provider
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
-import com.greentree.commons.serialization.serializator.provider.SerializatorProvider
 import com.greentree.commons.serialization.serializator.Serializator
+import com.greentree.commons.serialization.serializator.provider.SerializatorProvider
 import kotlin.reflect.KClass
 
 data class KotlinObjectSerializator<T : Any>(

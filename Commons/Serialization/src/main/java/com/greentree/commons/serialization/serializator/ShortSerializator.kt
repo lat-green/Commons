@@ -4,7 +4,6 @@ import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.context.getPropertyOrNull
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
-import com.greentree.commons.serialization.serializator.Serializator
 import com.greentree.commons.serialization.serializator.accuracy.ShortAccuracy
 import com.greentree.commons.serialization.serializator.accuracy.calculator
 import com.greentree.commons.serialization.serializator.accuracy.decode

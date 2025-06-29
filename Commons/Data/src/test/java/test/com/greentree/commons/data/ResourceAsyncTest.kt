@@ -1,6 +1,7 @@
 package test.com.greentree.commons.data
 
 import com.greentree.commons.data.resource.Resources
+import com.greentree.commons.data.resource.readBytesAsync
 import com.greentree.commons.data.resource.readTextAsync
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
@@ -10,16 +11,31 @@ import java.nio.file.Files
 class ResourceAsyncTest {
 
 	@Test
-	fun test1() {
-		val file = Files.createTempFile("test1", ".txt").toFile()
-		val text = "Hello"
+	fun readTextAsync() {
+		val file = Files.createTempFile("readTextAsync", ".txt").toFile()
+		file.deleteOnExit()
+		val actualText = "Hello"
 		file.writer().use {
-			it.write(text)
+			it.write(actualText)
 		}
-		val t1 = runBlocking {
+		val expectedText = runBlocking {
 			Resources.of(file).readTextAsync()
 		}
-		assertEquals(t1, text)
-		file.delete()
+		assertEquals(expectedText, actualText)
+	}
+
+	@Test
+	fun readBytesAsync() {
+		val file = Files.createTempFile("readBytesAsync", ".txt").toFile()
+		file.deleteOnExit()
+		val actualBytes = "Hello".toByteArray()
+		file.outputStream().use {
+			it.write(actualBytes)
+		}
+		val expectedBytes = runBlocking {
+			Resources.of(file).readBytesAsync()
+		}
+
+		assertArrayEquals(expectedBytes, actualBytes)
 	}
 }

@@ -4,14 +4,14 @@ import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.context.manager
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
+import com.greentree.commons.serialization.serializator.Serializator
 import com.greentree.commons.serialization.serializator.manager.serializator
 import com.greentree.commons.serialization.serializator.provider.SerializatorProvider
-import com.greentree.commons.serialization.serializator.Serializator
 import com.greentree.commons.serialization.serializator.type.GuaranteedType
 import java.lang.reflect.Modifier
 
 data class GuaranteedClassSerializator<T>(
-	val guaranteed: Class<out T>,
+	val guaranteed: Class<T>,
 ) : Serializator<T> {
 
 	init {
@@ -20,15 +20,28 @@ data class GuaranteedClassSerializator<T>(
 
 	override fun serialize(context: SerializationContext, encoder: Encoder, value: T) {
 		val manager = context.manager
-		val cls = value!!::class.java as Class<T>
-		encoder.beginStructure().use { struct ->
-			struct.field("type").use { clsEncoder ->
-				manager.serializator<Class<*>>()
-					.serialize(context + GuaranteedType(guaranteed), clsEncoder, cls)
+		if(value == null) {
+			encoder.beginStructure().use { struct ->
+				struct.field("type").use { clsEncoder ->
+					manager.serializator<Class<*>>()
+						.serialize(context + GuaranteedType(guaranteed), clsEncoder, guaranteed)
+				}
+				struct.field("value").use { dataEncoder ->
+					manager.realSerializator(guaranteed as Class<T?>)
+						.serialize(context, dataEncoder, null)
+				}
 			}
-			struct.field("value").use { dataEncoder ->
-				manager.realSerializator(cls)
-					.serialize(context, dataEncoder, value)
+		} else {
+			val cls = value!!::class.java as Class<T>
+			encoder.beginStructure().use { struct ->
+				struct.field("type").use { clsEncoder ->
+					manager.serializator<Class<*>>()
+						.serialize(context + GuaranteedType(guaranteed), clsEncoder, cls)
+				}
+				struct.field("value").use { dataEncoder ->
+					manager.realSerializator(cls)
+						.serialize(context, dataEncoder, value)
+				}
 			}
 		}
 	}

@@ -6,15 +6,33 @@ import kotlin.reflect.KClass
 object TypeUtil {
 
 	@JvmStatic
+	fun isExtends(superType: Class<*>, type: Class<*>): Boolean {
+		return isExtends(getTypeInfo(superType), getTypeInfo(type))
+	}
+
+	@JvmStatic
+	fun isExtends(superType: Class<*>, type: KClass<*>): Boolean {
+		return isExtends(getTypeInfo(superType), getTypeInfo(type))
+	}
+
+	@JvmStatic
 	fun isExtends(superType: Class<*>, type: TypeInfo<*>): Boolean {
 		return isExtends(getTypeInfo(superType), type)
 	}
 
 	@JvmStatic
-	fun isExtends(superType: TypeInfo<*>, type: TypeInfo<*>): Boolean {
-		if(superType == type)
-			return true
-		return superType.isParentFor(type)
+	fun isExtends(superType: KClass<*>, type: Class<*>): Boolean {
+		return isExtends(getTypeInfo(superType), getTypeInfo(type))
+	}
+
+	@JvmStatic
+	fun isExtends(superType: KClass<*>, type: KClass<*>): Boolean {
+		return isExtends(getTypeInfo(superType), getTypeInfo(type))
+	}
+
+	@JvmStatic
+	fun isExtends(superType: KClass<*>, type: TypeInfo<*>): Boolean {
+		return isExtends(getTypeInfo(superType), type)
 	}
 
 	@JvmStatic
@@ -23,8 +41,15 @@ object TypeUtil {
 	}
 
 	@JvmStatic
-	fun isExtends(superType: Class<*>, type: Class<*>): Boolean {
-		return isExtends(getTypeInfo(superType), getTypeInfo(type))
+	fun isExtends(superType: TypeInfo<*>, type: KClass<*>): Boolean {
+		return isExtends(superType, getTypeInfo(type))
+	}
+
+	@JvmStatic
+	fun isExtends(superType: TypeInfo<*>, type: TypeInfo<*>): Boolean {
+		if(superType == type)
+			return true
+		return superType.isParentFor(type)
 	}
 
 	@JvmStatic

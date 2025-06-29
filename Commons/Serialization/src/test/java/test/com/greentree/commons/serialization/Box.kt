@@ -1,6 +1,6 @@
 package test.com.greentree.commons.serialization
 
-open class TextBox(val text: String) {
+open class TextBox(val text: String?) {
 
 	override fun equals(other: Any?): Boolean {
 		if(this === other) return true
