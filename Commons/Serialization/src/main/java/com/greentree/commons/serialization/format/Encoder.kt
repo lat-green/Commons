@@ -52,7 +52,7 @@ interface Encoder : AutoCloseable {
 		}
 	}
 
-	fun <T> encodeArray(serializator: SerializationStrategy<T>, value: Array<T>) {
+	fun <T : Any> encodeArray(serializator: SerializationStrategy<T>, value: Array<T>) {
 		beginStructure().use { s ->
 			s.field("size").use { f ->
 				f.encodeInt(value.size)

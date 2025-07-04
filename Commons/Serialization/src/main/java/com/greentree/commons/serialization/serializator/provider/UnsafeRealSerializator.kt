@@ -11,7 +11,7 @@ import com.greentree.commons.serialization.serializator.Serializator
 import com.greentree.commons.util.UnsafeUtil
 import java.lang.reflect.Modifier
 
-data class UnsafeRealSerializator<T>(
+data class UnsafeRealSerializator<T : Any>(
 	override val type: Class<T>,
 ) : Serializator<T> {
 

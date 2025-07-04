@@ -52,7 +52,7 @@ interface Decoder : AutoCloseable {
 		}
 	}
 
-	fun <T> decodeArray(serializator: DeserializationStrategy<T>): Array<T> {
+	fun <T : Any> decodeArray(serializator: DeserializationStrategy<T>): Array<T> {
 		val componentType = serializator.type
 		beginStructure().use { s ->
 			val size = s.field("size").use { f ->

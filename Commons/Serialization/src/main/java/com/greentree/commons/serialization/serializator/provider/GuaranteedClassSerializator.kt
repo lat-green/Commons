@@ -10,7 +10,7 @@ import com.greentree.commons.serialization.serializator.provider.SerializatorPro
 import com.greentree.commons.serialization.serializator.type.GuaranteedType
 import java.lang.reflect.Modifier
 
-data class GuaranteedClassSerializator<T>(
+data class GuaranteedClassSerializator<T : Any>(
 	val guaranteed: Class<T>,
 ) : Serializator<T> {
 
@@ -20,28 +20,15 @@ data class GuaranteedClassSerializator<T>(
 
 	override fun serialize(context: SerializationContext, encoder: Encoder, value: T) {
 		val manager = context.manager
-		if(value == null) {
-			encoder.beginStructure().use { struct ->
-				struct.field("type").use { clsEncoder ->
-					manager.serializator<Class<*>>()
-						.serialize(context + GuaranteedType(guaranteed), clsEncoder, guaranteed)
-				}
-				struct.field("value").use { dataEncoder ->
-					manager.realSerializator(guaranteed as Class<T?>)
-						.serialize(context, dataEncoder, null)
-				}
+		val cls = value!!::class.java as Class<T>
+		encoder.beginStructure().use { struct ->
+			struct.field("type").use { clsEncoder ->
+				manager.serializator<Class<*>>()
+					.serialize(context + GuaranteedType(guaranteed), clsEncoder, cls)
 			}
-		} else {
-			val cls = value!!::class.java as Class<T>
-			encoder.beginStructure().use { struct ->
-				struct.field("type").use { clsEncoder ->
-					manager.serializator<Class<*>>()
-						.serialize(context + GuaranteedType(guaranteed), clsEncoder, cls)
-				}
-				struct.field("value").use { dataEncoder ->
-					manager.realSerializator(cls)
-						.serialize(context, dataEncoder, value)
-				}
+			struct.field("value").use { dataEncoder ->
+				manager.realSerializator(cls)
+					.serialize(context, dataEncoder, value)
 			}
 		}
 	}

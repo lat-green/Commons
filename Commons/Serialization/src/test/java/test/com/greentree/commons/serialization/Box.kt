@@ -1,20 +1,6 @@
 package test.com.greentree.commons.serialization
 
-open class TextBox(val text: String?) {
-
-	override fun equals(other: Any?): Boolean {
-		if(this === other) return true
-		if(javaClass != other?.javaClass) return false
-
-		other as TextBox
-
-		return text == other.text
-	}
-
-	override fun hashCode(): Int {
-		return text.hashCode()
-	}
-}
+data class TextBox(val text: String)
 
 fun Box(value: IntArray) = IntArrayBox(value)
 

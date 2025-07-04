@@ -5,7 +5,7 @@ import com.greentree.commons.serialization.context.EmptySerializationContext
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.format.Decoder
 
-interface DeserializationStrategy<out T> {
+interface DeserializationStrategy<out T : Any> {
 
 	val type: Class<out T>
 		get() = TypeUtil.getFirstArgument(
@@ -16,5 +16,6 @@ interface DeserializationStrategy<out T> {
 	fun deserialize(context: SerializationContext, decoder: Decoder): T
 }
 
-fun <T> DeserializationStrategy<T>.deserialize(decoder: Decoder): T = deserialize(EmptySerializationContext, decoder)
+fun <T : Any> DeserializationStrategy<T>.deserialize(decoder: Decoder): T =
+	deserialize(EmptySerializationContext, decoder)
 

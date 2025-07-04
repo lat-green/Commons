@@ -26,7 +26,6 @@ data object BaseArgumentsProvider : ArgumentsProvider {
 				Arguments.of(55, 4),
 				Arguments.of(Unit, 0),
 //				Arguments.of(Box(Object()), 0), as Class<T?>
-				Arguments.of(TextBox(null)),
 				Arguments.of(TextBox("Hi")),
 				Arguments.of(BitSet().apply {
 					repeat(5) {

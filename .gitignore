@@ -1,6 +1,6 @@
-**/target/*/
-**/target/*.jar
-**/target/*.exec
+**/target/
+!**/src/**/target/
+
 **/.settings/
 **/.idea/
 **/.project

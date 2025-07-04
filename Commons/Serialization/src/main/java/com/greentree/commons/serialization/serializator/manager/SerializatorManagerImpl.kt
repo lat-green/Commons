@@ -19,7 +19,7 @@ class SerializatorManagerImpl(
 	private val realSerializators: MutableMap<Class<*>, Serializator<*>> =
 		serializators.map { wrap(it) }.associateBy { it.type }.toMutableMap()
 
-	override fun <T> serializator(
+	override fun <T : Any> serializator(
 		guaranteed: Class<out T>
 	): Serializator<T> =
 		serializatorOrNull(
@@ -28,11 +28,11 @@ class SerializatorManagerImpl(
 			guaranteed
 		) ?: throw NullPointerException("not found serializator for $guaranteed")
 
-	override fun <T> realSerializator(cls: Class<T>): Serializator<T> =
+	override fun <T : Any> realSerializator(cls: Class<T>): Serializator<T> =
 		serializatorOrNull(providers, realSerializators, cls)
 			?: throw NullPointerException("not found serializator for $cls")
 
-	private fun <T> serializatorOrNull(
+	private fun <T : Any> serializatorOrNull(
 		providers: Sequence<SerializatorProvider>,
 		serializators: MutableMap<Class<*>, Serializator<*>>,
 		guaranteed: Class<out T>
@@ -48,7 +48,7 @@ class SerializatorManagerImpl(
 		} as Serializator<T>?
 	}
 
-	private fun <T> wrap(
+	private fun <T : Any> wrap(
 		serializator: Serializator<T>,
 	): Serializator<T> {
 		var result = filters.fold(serializator) { acc, serializatorFilter ->

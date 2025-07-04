@@ -14,21 +14,21 @@ interface SerializatorManager : SerializationContext.Element {
 
 	companion object Key : SerializationContext.Key<SerializatorManager>
 
-	fun <T> serializator(guaranteed: Class<out T>): Serializator<T>
-	fun <T> realSerializator(cls: Class<T>): Serializator<T>
+	fun <T : Any> serializator(guaranteed: Class<out T>): Serializator<T>
+	fun <T : Any> realSerializator(cls: Class<T>): Serializator<T>
 }
 
 fun <T : Any> SerializatorManager.serializator(guaranteed: KClass<out T>) = serializator(guaranteed.java)
-inline fun <reified T> SerializatorManager.serializator() = serializator(T::class.java)
+inline fun <reified T : Any> SerializatorManager.serializator() = serializator(T::class.java)
 
-inline fun <reified T> SerializatorManager.deserialize(context: SerializationContext, decoder: Decoder): T =
+inline fun <reified T : Any> SerializatorManager.deserialize(context: SerializationContext, decoder: Decoder): T =
 	serializator<T>().deserialize(context, decoder)
 
-inline fun <reified T> SerializatorManager.serialize(context: SerializationContext, encoder: Encoder, value: T) =
+inline fun <reified T : Any> SerializatorManager.serialize(context: SerializationContext, encoder: Encoder, value: T) =
 	serializator<T>().serialize(context, encoder, value)
 
-inline fun <reified T> SerializatorManager.deserialize(decoder: Decoder): T =
+inline fun <reified T : Any> SerializatorManager.deserialize(decoder: Decoder): T =
 	deserialize(EmptySerializationContext, decoder)
 
-inline fun <reified T> SerializatorManager.serialize(encoder: Encoder, value: T) =
+inline fun <reified T : Any> SerializatorManager.serialize(encoder: Encoder, value: T) =
 	serialize(EmptySerializationContext, encoder, value)

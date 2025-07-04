@@ -5,7 +5,7 @@ import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
 import com.greentree.commons.serialization.serializator.Serializator
 
-data class SerializatorFilterWrap<T>(
+data class SerializatorFilterWrap<T : Any>(
 	val filter: SerializatorFilter,
 	val origin: Serializator<T>,
 ) : Serializator<T> {
