@@ -1,4 +1,4 @@
-package com.greentree.commons.util.react
+package com.greentree.commons.react
 
 fun <T> ReactContext.usePreviousNotEquals(value: T): T? {
 	var currentRef by useRef(value)

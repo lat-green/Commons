@@ -1,4 +1,4 @@
-package com.greentree.commons.util.react
+package com.greentree.commons.react
 
 fun ReactContext.useDependency(dependency: Any): Boolean {
 	var previous by useRef<Any>()

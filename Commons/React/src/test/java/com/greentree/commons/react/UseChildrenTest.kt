@@ -1,4 +1,4 @@
-package com.greentree.commons.util.react
+package com.greentree.commons.react
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

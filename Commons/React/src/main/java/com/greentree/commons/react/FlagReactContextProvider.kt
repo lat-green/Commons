@@ -1,4 +1,4 @@
-package com.greentree.commons.util.react
+package com.greentree.commons.react
 
 open class FlagReactContextProvider : ReactContextProvider {
 

@@ -1,4 +1,4 @@
-package com.greentree.commons.util.react
+package com.greentree.commons.react
 
 @Deprecated("", ReplaceWith("FlagReactContextProvider().withRefresh(onRefresh)", "com.greentree.commons.util.react.*"))
 data class EventReactContextProvider(

@@ -1,4 +1,4 @@
-package com.greentree.commons.util.react
+package com.greentree.commons.react
 
 typealias Reducer<State, Action> = (state: State, action: Action) -> State
 typealias Dispatch<Action> = (action: Action) -> Unit

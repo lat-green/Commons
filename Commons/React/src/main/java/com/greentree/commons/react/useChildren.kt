@@ -1,4 +1,8 @@
-package com.greentree.commons.util.react
+package com.greentree.commons.react
+
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 fun interface ChildrenReactContext<K> {
 
@@ -52,7 +56,12 @@ inline fun <T : Any> ReactContext.useForEach(iterable: Iterable<T>, block: React
 
 enum class IfBlock { THEN, ELSE }
 
+@OptIn(ExperimentalContracts::class)
 inline fun <R> ReactContext.useIf(value: Boolean, then: ReactContext.() -> R, `else`: ReactContext.() -> R): R {
+	contract {
+		callsInPlace(then, InvocationKind.AT_MOST_ONCE)
+		callsInPlace(`else`, InvocationKind.AT_MOST_ONCE)
+	}
 	val children = useChildren<IfBlock>()
 	val thenBlock = children.useChild(IfBlock.THEN)
 	val elseBlock = children.useChild(IfBlock.ELSE)

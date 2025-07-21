@@ -20,6 +20,11 @@
         </dependency>
         <dependency>
             <groupId>com.greentree.commons</groupId>
+            <artifactId>react</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
             <artifactId>tests</artifactId>
         </dependency>
     </dependencies>

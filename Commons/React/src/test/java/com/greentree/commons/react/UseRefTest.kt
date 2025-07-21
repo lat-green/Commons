@@ -1,4 +1,4 @@
-package com.greentree.commons.util.react
+package com.greentree.commons.react
 
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

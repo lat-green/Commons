@@ -48,6 +48,7 @@
         <module>Serialization</module>
         <module>Reflection</module>
         <module>Math</module>
+        <module>React</module>
         <module>Injector</module>
         <module>Graph</module>
         <module>Geometry</module>
@@ -210,6 +211,11 @@
             <dependency>
                 <groupId>com.greentree.commons</groupId>
                 <artifactId>math</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.greentree.commons</groupId>
+                <artifactId>react</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
