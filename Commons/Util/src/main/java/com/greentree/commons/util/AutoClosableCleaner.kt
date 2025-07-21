@@ -2,12 +2,21 @@ package com.greentree.commons.util
 
 import java.lang.ref.Cleaner
 
-object AutoClosableCleaner {
+data object AutoClosableCleaner {
 
 	private val cleaner = Cleaner.create()
 
-	fun register(thisRef: Any, closeable: AutoCloseable) {
+	fun register(thisRef: Any?, closeable: AutoCloseable) {
 		cleaner.register(thisRef, CloseRunnable(closeable))
+	}
+}
+
+data class CloseRunnable(
+	val autoCloseable: AutoCloseable,
+) : Runnable {
+
+	override fun run() {
+		autoCloseable.close()
 	}
 }
 

@@ -13,6 +13,10 @@ class MethodCallerImpl(
 		dependency: Dependency,
 	) = resolver.resolveDependency(dependency)
 
+	override fun resolveAll(
+		dependency: Dependency,
+	) = resolver.resolveAllDependencies(dependency)
+
 	override fun isSupports(dependency: Dependency) = resolver.supportsDependency(dependency)
 
 	override fun builder() = Builder(resolver)

@@ -10,14 +10,14 @@ data class EnvironmentDependencyResolver(
 	val environment: Environment,
 ) : DependencyResolver {
 
-	override fun resolveDependency(dependency: Dependency): Any {
+	override fun resolveAllDependencies(dependency: Dependency): Sequence<Any> {
 		val value = dependency.getAnnotation(Value::class.java)!!
 		val result = environment[value.name] ?: if(value.default == Value.Companion.DEFAULT_DEFAULT)
 			throw RuntimeException("environment property ${value.name} not found")
 		else
 			value.default
 		try {
-			return stringToAny(dependency.type, result)
+			return sequenceOf(stringToAny(dependency.type, result))
 		} catch(e: NumberFormatException) {
 			throw RuntimeException("on resolve $dependency", e)
 		}

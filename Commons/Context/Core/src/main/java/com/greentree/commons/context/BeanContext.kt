@@ -2,13 +2,14 @@ package com.greentree.commons.context
 
 import com.greentree.commons.context.provider.BeanProvider
 import com.greentree.commons.reflection.info.TypeUtil
+import com.greentree.commons.util.iterator.isNotEmpty
 import kotlin.reflect.KClass
 
 interface BeanContext {
 
 	fun containsBean(name: String): Boolean = resolveProviderOrNull<Any>(name) != null
 	fun containsBean(name: String, type: Class<*>): Boolean = resolveProviderOrNull(name, type) != null
-	fun containsBean(type: Class<*>): Boolean = resolveProviderOrNull(type) != null
+	fun containsBean(type: Class<*>): Boolean = resolveAllProviders(type).isNotEmpty()
 
 	fun <T> resolveProviderOrNull(name: String): BeanProvider<T>?
 

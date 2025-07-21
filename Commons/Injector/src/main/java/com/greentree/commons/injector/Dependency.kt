@@ -16,7 +16,7 @@ sealed interface Dependency : AnnotatedElement {
 	fun isSupportedType(type: TypeInfo<*>): Boolean = isExtends(this.type, type)
 
 	val name: String?
-	val type: TypeInfo<*>
+	val type: TypeInfo<out Any>
 	val isMarkedNullable: Boolean
 		get() = false
 	val isOptional: Boolean
@@ -29,7 +29,7 @@ sealed interface Dependency : AnnotatedElement {
 		fun of(parameter: KParameter) = KParameterDependency(parameter)
 		fun of(cls: Class<*>, name: String? = null) = SimpleDependency(cls, name)
 		fun of(cls: KClass<*>, name: String? = null) = SimpleDependency(cls, name)
-		fun of(type: TypeInfo<*>, name: String? = null) = SimpleDependency(type, name)
+		fun of(type: TypeInfo<out Any>, name: String? = null) = SimpleDependency(type, name)
 	}
 }
 
@@ -39,7 +39,7 @@ data class FieldDependency(val field: Field) : Dependency, AnnotatedElement by A
 
 	override val name: String
 		get() = this.field.qualifierOrName
-	override val type: TypeInfo<*>
+	override val type: TypeInfo<out Any>
 		get() = getTypeInfo<Any>(this.field.genericType)
 }
 
@@ -48,7 +48,7 @@ data class KParameterDependency(val parameter: KParameter) : Dependency,
 
 	override val name: String?
 		get() = parameter.qualifierOrName
-	override val type: TypeInfo<*>
+	override val type: TypeInfo<out Any>
 		get() = getTypeInfo<Any>(parameter.type)
 	override val isOptional: Boolean
 		get() = parameter.isOptional
@@ -61,12 +61,12 @@ data class ParameterDependency(val parameter: Parameter) : Dependency,
 
 	override val name: String?
 		get() = this.parameter.qualifierOrName
-	override val type: TypeInfo<*>
+	override val type: TypeInfo<out Any>
 		get() = getTypeInfo<Any>(this.parameter.parameterizedType)
 }
 
 data class SimpleDependency(
-	override val type: TypeInfo<*>,
+	override val type: TypeInfo<out Any>,
 	override val name: String? = null
 ) : Dependency {
 

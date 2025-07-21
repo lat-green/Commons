@@ -28,4 +28,13 @@ class BeanDependencyResolver(
 			return beanContext.resolveBean(qualifier.name, argument.type.toClass())!!
 		return beanContext.resolveBean(argument.type.toClass())!!
 	}
+
+	override fun resolveAllDependencies(argument: Dependency): Sequence<Any> {
+		if(Sequence::class.java == argument.type.toClass())
+			TODO("Sequence not supported $argument")
+		val qualifier = Annotations.filter(argument).getAnnotation(Qualifier::class.java)
+		if(qualifier != null)
+			return sequenceOf(beanContext.resolveBean(qualifier.name, argument.type.toClass())!!)
+		return beanContext.resolveAllBeans(argument.type.toClass())
+	}
 }

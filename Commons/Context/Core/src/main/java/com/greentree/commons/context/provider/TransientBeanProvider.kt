@@ -15,7 +15,7 @@ data class TransientBeanProvider<T>(
 		try {
 			registration(context)
 		} catch(e: Throwable) {
-			throw RuntimeException("exception on register singleton $type", e)
+			throw RuntimeException("exception on register transient $type", e)
 		}
 	}
 }

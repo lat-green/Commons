@@ -15,4 +15,6 @@ class SequenceAllBeanDependencyResolver(
 		val t = type.typeArguments[0]
 		return beanContext.resolveAllBeans(t.toClass())
 	}
+
+	override fun resolveAllDependencies(dependency: Dependency) = sequenceOf(resolveDependency(dependency))
 }

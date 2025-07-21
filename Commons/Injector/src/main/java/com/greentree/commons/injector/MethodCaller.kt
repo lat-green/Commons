@@ -99,6 +99,7 @@ interface MethodCaller {
 	fun isSupports(dependency: Dependency): Boolean
 
 	fun resolve(dependency: Dependency): Any?
+	fun resolveAll(dependency: Dependency): Sequence<Any>
 
 	fun builder(): Builder
 
@@ -122,3 +123,7 @@ fun MethodCaller.isSupports(parameter: Parameter) = isSupports(Dependency.of(par
 fun <T> MethodCaller.resolve(cls: Class<T>): T = resolve(Dependency.of(cls)) as T
 fun MethodCaller.resolve(field: Field): Any? = resolve(Dependency.of(field))
 fun MethodCaller.resolve(parameter: Parameter): Any? = resolve(Dependency.of(parameter))
+
+fun <T> MethodCaller.resolveAll(cls: Class<T>) = resolveAll(Dependency.of(cls)) as Sequence<T>
+fun MethodCaller.resolveAll(parameter: Field) = resolveAll(Dependency.of(parameter))
+fun MethodCaller.resolveAll(parameter: Parameter) = resolveAll(Dependency.of(parameter))

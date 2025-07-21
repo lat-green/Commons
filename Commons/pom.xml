@@ -55,6 +55,7 @@
         <module>AOP Tests</module>
         <module>Annotations</module>
         <module>Action</module>
+        <module>Context/Annotations</module>
     </modules>
 
     <distributionManagement>

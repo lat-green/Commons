@@ -26,7 +26,7 @@ object ContextBeanLayer : BeanLayer {
 			SequenceAllBeanDependencyResolver(resolveBean())
 		}
 
-		registerSingleton("environment") {
+		registerTransient("environment") {
 			EnvironmentImpl(resolveAllBeans())
 		}
 		registerSingleton {
