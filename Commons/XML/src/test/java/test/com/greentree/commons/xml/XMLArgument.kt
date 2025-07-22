@@ -10,7 +10,7 @@ data object XMLArgument : ArgumentsProvider {
 
 	override fun provideArguments(context: ExtensionContext): Stream<out Arguments> {
 		val streams: MutableCollection<InputStream> = ArrayList()
-		val cl = LXMLParserTest::class.java.classLoader
+		val cl = XMLParserTest::class.java.classLoader
 		var i = 0
 		while(true) {
 			val s = cl.getResourceAsStream("XMLs/$i.xml") ?: break

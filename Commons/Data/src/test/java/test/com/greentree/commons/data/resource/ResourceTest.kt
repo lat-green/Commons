@@ -8,8 +8,6 @@ import com.greentree.commons.tests.aop.AutowiredArgument
 import com.greentree.commons.tests.aop.AutowiredConfig
 import com.greentree.commons.tests.aop.AutowiredTest
 import org.junit.jupiter.api.Assertions.*
-import java.nio.ByteBuffer
-import java.nio.channels.ReadableByteChannel
 import java.util.*
 
 @AutowiredConfig(ResourceTestConfig::class)

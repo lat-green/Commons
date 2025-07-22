@@ -16,7 +16,6 @@
     <name>Context Parent</name>
 
     <modules>
-        <module>Annotations</module>
         <module>Compile</module>
         <module>Core</module>
         <module>Tests</module>

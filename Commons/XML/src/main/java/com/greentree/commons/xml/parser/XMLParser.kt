@@ -14,4 +14,3 @@ fun interface XMLParser {
 
 fun XMLParser.parse(file: File): XMLElement = file.inputStream().use { parse(it) }
 fun XMLParser.parse(path: Path): XMLElement = path.inputStream().use { parse(it) }
-

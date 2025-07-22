@@ -5,10 +5,23 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.greentree.commons</groupId>
-        <artifactId>context-parent</artifactId>
+        <artifactId>commons</artifactId>
         <version>0.3.9</version>
     </parent>
 
-    <artifactId>context-annotations</artifactId>
+    <artifactId>event</artifactId>
+
+    <name>Event</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
+            <artifactId>util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
+            <artifactId>react</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

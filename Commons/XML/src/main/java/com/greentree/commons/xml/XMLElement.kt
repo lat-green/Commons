@@ -5,7 +5,7 @@ import java.util.*
 import java.util.stream.Collectors
 
 data class XMLElement(
-	val children: Collection<XMLElement>,
+	val children: List<XMLElement>,
 	val attributes: Map<String, String>,
 	val name: String,
 	val content: String,

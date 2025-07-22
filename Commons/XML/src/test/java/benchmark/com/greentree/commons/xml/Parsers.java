@@ -1,6 +1,6 @@
 package benchmark.com.greentree.commons.xml;
 
-import com.greentree.commons.xml.parser.LXMLParser;
+import com.greentree.commons.xml.parser.ANTLR4XMLParser;
 import com.greentree.commons.xml.parser.MyXMLParser;
 import com.greentree.commons.xml.parser.SAXXMLParser;
 import org.openjdk.jmh.annotations.*;
@@ -31,8 +31,8 @@ public class Parsers {
     }
 
     @Benchmark
-    public void benchmarkLXMLParser(Blackhole blackhole) throws Throwable {
-        var xml = LXMLParser.INSTANCE.parse(text);
+    public void benchmarkANTLR4XMLParser(Blackhole blackhole) throws Throwable {
+        var xml = ANTLR4XMLParser.INSTANCE.parse(text);
         blackhole.consume(xml);
     }
 
@@ -45,7 +45,7 @@ public class Parsers {
     @Benchmark
     public void benchmarkSAXXMLParser(Blackhole blackhole) throws Throwable {
         try (var stream = new ByteArrayInputStream(text.getBytes())) {
-            var xml = SAXXMLParser.parse(stream);
+            var xml = SAXXMLParser.INSTANCE.parse(stream);
             blackhole.consume(xml);
         }
     }
