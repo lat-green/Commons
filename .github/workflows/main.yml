@@ -62,7 +62,7 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Run JMH benchmarks
-      run: mvn -B jmh:benchmark -f Commons -Pjmh -Djmh.rf=json -Djmh.rff=target/benchmark-result.json
+      run: sh -c 'mvn -B jmh:benchmark -f Commons -Pjmh -Djmh.rf=json -Djmh.rff=target/benchmark-result.json'
 
     - name: JMH Benchmark Action
       uses: kitlangton/jmh-benchmark-action@main
