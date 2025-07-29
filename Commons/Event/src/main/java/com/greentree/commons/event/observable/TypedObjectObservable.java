@@ -1,6 +1,6 @@
 package com.greentree.commons.event.observable;
 
-import com.greentree.commons.action.ListenerCloser;
+import com.greentree.commons.event.ListenerCloser;
 
 import java.io.Serializable;
 import java.util.function.Consumer;

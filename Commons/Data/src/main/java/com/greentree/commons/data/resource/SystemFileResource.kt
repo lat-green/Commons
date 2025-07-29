@@ -8,8 +8,10 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.channels.AsynchronousFileChannel
 import java.nio.channels.FileChannel
+import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
+import java.nio.file.attribute.FileAttribute
 
 data class SystemFileResource(
 	val file: File,
@@ -35,14 +37,14 @@ data class SystemFileResource(
 
 	override fun openAsyncChannel() =
 		AsynchronousFileChannelAsyncByteChannel(
-			AsynchronousFileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.CREATE)
+			AsynchronousFileChannel.open(path, StandardOpenOption.READ)
 		)
 
 	override fun openWriteChannel(): FileChannel =
 		FileChannel.open(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE)
 
 	override fun openChannel(): FileChannel =
-		FileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.CREATE)
+		FileChannel.open(path, StandardOpenOption.READ)
 
 	override fun exists() = file.exists()
 
@@ -68,4 +70,13 @@ data class SystemFileResource(
 		get() = FileWatcher.onFileModify(file)
 	override val onDelete: RunObservable
 		get() = FileWatcher.onFileDelete(file)
+
+	companion object {
+
+		fun crateTempResource(prefix: String, suffix: String, vararg attrs: FileAttribute<*>): SystemFileResource {
+			val file = Files.createTempFile(prefix, suffix).toFile()
+			file.deleteOnExit()
+			return SystemFileResource(file)
+		}
+	}
 }

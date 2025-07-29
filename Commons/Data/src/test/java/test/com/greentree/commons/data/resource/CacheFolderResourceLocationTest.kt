@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
-import java.net.URL
 import java.nio.file.Files
 import java.time.Duration
 
@@ -37,7 +36,7 @@ internal class CacheFolderResourceLocationTest {
 		val out_dir = Files.createTempDirectory("out").toFile()
 		out_dir.deleteOnExit()
 		val `in` = RootUrlResourceLocation(
-			URL("https://avatars.githubusercontent.com/u/")
+			"https://avatars.githubusercontent.com/u/"
 		)
 		val out = RootFileResourceLocation(out_dir)
 		val cache = CacheResourceLocation(`in`, out)

@@ -6,7 +6,7 @@ import java.lang.reflect.Method
 class ConfigClassDependencyContext(configuration: Class<*>) : DependencyContext {
 
 	private val contexts = mutableListOf<DependencyContext>()
-	private val configurationInstance = configuration.getConstructor().newInstance()
+	private val configurationInstance = InstanceManager.newInstance(configuration)
 
 	init {
 		for(method in configuration.declaredMethods) {

@@ -1,5 +1,6 @@
 package com.greentree.commons.tests.aop
 
+import com.greentree.commons.util.iterator.size
 import org.junit.jupiter.params.provider.Arguments
 import java.lang.reflect.Method
 import java.util.stream.Stream
@@ -9,10 +10,14 @@ interface DependencyContext {
 	operator fun <T> get(type: Class<T>, tags: Collection<String>): Iterable<T>
 }
 
-fun DependencyContext.arguments(method: Method) = run {
-	val a = method.parameters.map {
-		it.type!! to (it.getAnnotation(AutowiredArgument::class.java)?.tags?.toList() ?: listOf())
+fun DependencyContext.arguments(method: Method, baseArgumentCount: Int? = null) = run {
+	var parameters = method.parameters.asSequence()
+	if(baseArgumentCount != null) {
+		parameters = parameters.take(parameters.size - baseArgumentCount)
 	}
+	val a = parameters.map {
+		it.type!! to (it.getAnnotation(AutowiredArgument::class.java)?.tags?.toList() ?: listOf())
+	}.toList()
 	arguments(a)
 }
 
@@ -32,7 +37,7 @@ fun DependencyContext.solve(
 				it + e
 			}
 		}
-	
+
 	return result.map {
 		Arguments.of(*it.toTypedArray())
 	}

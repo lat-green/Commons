@@ -11,115 +11,105 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Measurement(iterations = 2, time = 2)
-@Warmup(iterations = 2, time = 2)
-@Fork(2)
+@Measurement(iterations = 2, time = 1)
+@Warmup(iterations = 1, time = 1)
+@Fork(1)
 public class TwoFile_readAllBytes {
 
     private static final int SIZE_KB = 1024;
     private static final int SIZE_MB = SIZE_KB * SIZE_KB;
-    @Param({"" + SIZE_MB, "" + 20 * SIZE_MB, "" + 100 * SIZE_MB, "" + 500 * SIZE_MB})
+    private final List<Path> files = new ArrayList<>();
+    @Param({"" + SIZE_KB, "" + 20 * SIZE_MB, "" + 100 * SIZE_MB, "" + 500 * SIZE_MB})
     private int size;
-
-    private Path file1;
-    private Path file2;
 
     @Setup
     public void init() throws Exception {
-        file1 = Files.createTempFile("testFileRead1", ".txt");
-        file2 = Files.createTempFile("testFileRead2", ".txt");
         byte[] bytes = new byte[size];
         ThreadLocalRandom.current().nextBytes(bytes);
-        Files.write(file1, bytes);
-        ThreadLocalRandom.current().nextBytes(bytes);
-        Files.write(file2, bytes);
+        for (int i = 0; i < 10; i++) {
+            var file = Files.createTempFile("testFileRead1", ".txt");
+            files.add(file);
+            Files.write(file, bytes);
+        }
     }
 
     @TearDown
     public void clear() throws Exception {
-        Files.delete(file1);
-        Files.delete(file2);
+        for (var file : files) {
+            Files.delete(file);
+        }
+        files.clear();
     }
 
     @Benchmark
     public void FileResource_readTextAsync(Blackhole blackhole) throws IOException {
-        KotlinBenchmarkKt.FileResource_readTextAsync(file1, file2, blackhole);
+        KotlinBenchmarkKt.FileResource_readBytesAsync(files, blackhole);
     }
 
     @Benchmark
     public void FileChannel_readAllBytes(Blackhole blackhole) throws IOException {
-        try (var in = Channels.newInputStream(FileChannel.open(file1))) {
-            var bytes = in.readAllBytes();
-            blackhole.consume(bytes);
-        }
-        try (var in = Channels.newInputStream(FileChannel.open(file2))) {
-            var bytes = in.readAllBytes();
-            blackhole.consume(bytes);
+        for (var file : files) {
+            try (var in = Channels.newInputStream(FileChannel.open(file))) {
+                var bytes = in.readAllBytes();
+                blackhole.consume(bytes);
+            }
         }
     }
 
-    @Benchmark
+    //    @Benchmark
     public void BufferedInputStream_FileChannel_readAllBytes(Blackhole blackhole) throws IOException {
-        try (var in = new BufferedInputStream(Channels.newInputStream(FileChannel.open(file1)))) {
-            var bytes = in.readAllBytes();
-            blackhole.consume(bytes);
-        }
-        try (var in = new BufferedInputStream(Channels.newInputStream(FileChannel.open(file2)))) {
-            var bytes = in.readAllBytes();
-            blackhole.consume(bytes);
+        for (var file : files) {
+            try (var in = new BufferedInputStream(Channels.newInputStream(FileChannel.open(file)))) {
+                var bytes = in.readAllBytes();
+                blackhole.consume(bytes);
+            }
         }
     }
 
     @Benchmark
     public void FileInputStream_readAllBytes(Blackhole blackhole) throws IOException {
-        try (var in = new FileInputStream(file1.toFile())) {
-            var bytes = in.readAllBytes();
-            blackhole.consume(bytes);
-        }
-        try (var in = new FileInputStream(file2.toFile())) {
-            var bytes = in.readAllBytes();
-            blackhole.consume(bytes);
+        for (var file : files) {
+            try (var in = new FileInputStream(file.toFile())) {
+                var bytes = in.readAllBytes();
+                blackhole.consume(bytes);
+            }
         }
     }
 
     @Benchmark
     public void BufferedInputStream_FileInputStream_readAllBytes(Blackhole blackhole) throws IOException {
-        try (var in = new BufferedInputStream(new FileInputStream(file1.toFile()))) {
-            var bytes = in.readAllBytes();
-            blackhole.consume(bytes);
-        }
-        try (var in = new BufferedInputStream(new FileInputStream(file2.toFile()))) {
-            var bytes = in.readAllBytes();
-            blackhole.consume(bytes);
+        for (var file : files) {
+            try (var in = new BufferedInputStream(new FileInputStream(file.toFile()))) {
+                var bytes = in.readAllBytes();
+                blackhole.consume(bytes);
+            }
         }
     }
 
     @Benchmark
     public void Files_readAllBytes(Blackhole blackhole) throws Exception {
-        byte[] bytes1 = Files.readAllBytes(file1);
-        blackhole.consume(bytes1);
-        byte[] bytes2 = Files.readAllBytes(file2);
-        blackhole.consume(bytes2);
+        for (var file : files) {
+            byte[] bytes1 = Files.readAllBytes(file);
+            blackhole.consume(bytes1);
+        }
     }
 
     @Benchmark
     public void AsynchronousFileInputStream_readAllBytes(Blackhole blackhole) throws Exception {
-        try (var in = new AsynchronousFileInputStream(file1)) {
-            byte[] bytes = in.readAllBytes();
-            blackhole.consume(bytes);
-        }
-        try (var in = new AsynchronousFileInputStream(file2)) {
-            byte[] bytes = in.readAllBytes();
-            blackhole.consume(bytes);
+        for (var file : files) {
+            try (var in = new AsynchronousFileInputStream(file)) {
+                byte[] bytes = in.readAllBytes();
+                blackhole.consume(bytes);
+            }
         }
     }
 
 }
-
-

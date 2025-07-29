@@ -2,13 +2,21 @@ package test.com.greentree.commons.data.resource
 
 import com.greentree.commons.data.resource.FileResource
 import com.greentree.commons.data.resource.MutableFileResource
+import com.greentree.commons.data.resource.SystemFileResource
 import com.greentree.commons.data.resource.readText
+import com.greentree.commons.data.resource.readTextAsync
+import com.greentree.commons.data.resource.writeBytes
 import com.greentree.commons.data.resource.writeText
 import com.greentree.commons.tests.aop.AutowiredArgument
 import com.greentree.commons.tests.aop.AutowiredConfig
 import com.greentree.commons.tests.aop.AutowiredTest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.RepeatedTest
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
+import kotlin.test.Test
 
 @AutowiredConfig(ResourceTestConfig::class)
 class ResourceTest {
@@ -23,6 +31,20 @@ class ResourceTest {
 		resource.open().use {
 			assertNotNull(it)
 		}
+	}
+
+	@Test
+	fun readFileAsync() {
+		val file = SystemFileResource.crateTempResource("junit", ".txt")
+		val size = (DEFAULT_BUFFER_SIZE * 5 + 2 * DEFAULT_BUFFER_SIZE * Math.random()).toInt()
+		val bytes = ByteArray(size)
+		ThreadLocalRandom.current().nextBytes(bytes)
+		file.writeBytes(bytes)
+		val data1 = file.readText()
+		val data2 = runBlocking {
+			file.readTextAsync()
+		}
+		assertEquals(data1, data2)
 	}
 
 	@AutowiredTest()

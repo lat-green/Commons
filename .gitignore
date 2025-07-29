@@ -2,7 +2,8 @@
 !**/src/**/target/
 
 **/.settings/
-**/.idea/
 **/.project
 **/.classpath
+
+**/.idea/
 **/*.iml

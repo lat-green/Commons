@@ -1,6 +1,7 @@
 package com.greentree.commons.data.resource
 
 import com.greentree.commons.data.asGathering
+import com.greentree.commons.util.iterator.IteratorUtil.array
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.channels.Channels
@@ -28,6 +29,7 @@ fun MutableFileResource.writeText(text: String, charset: Charset = Charsets.UTF_
 	writeBytes(text.toByteArray(charset))
 
 fun MutableFileResource.writeBytes(array: ByteArray) = openWrite().use { it.write(array) }
+fun MutableFileResource.writeBytes(array: ByteArray, off: Int, len: Int) = openWrite().use { it.write(array, off, len) }
 
 fun FileResource.writeTo(result: MutableFileResource, lastRead: Long) {
 	val m = lastModified()

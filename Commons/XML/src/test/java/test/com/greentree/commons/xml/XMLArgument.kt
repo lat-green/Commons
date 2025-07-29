@@ -3,20 +3,26 @@ package test.com.greentree.commons.xml
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
-import java.io.InputStream
 import java.util.stream.Stream
 
 data object XMLArgument : ArgumentsProvider {
 
+	private val classLoader
+		get() = XMLParserTest::class.java.classLoader
+
 	override fun provideArguments(context: ExtensionContext): Stream<out Arguments> {
-		val streams: MutableCollection<InputStream> = ArrayList()
-		val cl = XMLParserTest::class.java.classLoader
-		var i = 0
-		while(true) {
-			val s = cl.getResourceAsStream("XMLs/$i.xml") ?: break
-			streams.add(s)
-			i++
+		return classLoader.getResourceAsStream("XMLs").use {
+			String(it.readAllBytes())
 		}
-		return streams.stream().map { Arguments.of(it) }
+			.split('\n')
+			.stream()
+			.filter { it.isNotBlank() }
+			.map { "XMLs/$it" }
+			.map { ClassPathArguments(it) }
+	}
+
+	data class ClassPathArguments(val path: String) : Arguments {
+
+		override fun get() = arrayOf(classLoader.getResourceAsStream(path))
 	}
 }

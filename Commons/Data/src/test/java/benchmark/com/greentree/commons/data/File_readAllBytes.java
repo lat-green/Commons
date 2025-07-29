@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Measurement(iterations = 2, time = 2)
-@Warmup(iterations = 2, time = 2)
-@Fork(2)
+@Measurement(iterations = 2, time = 1)
+@Warmup(iterations = 1, time = 1)
+@Fork(1)
 public class File_readAllBytes {
 
     private static final int SIZE_KB = 1024;

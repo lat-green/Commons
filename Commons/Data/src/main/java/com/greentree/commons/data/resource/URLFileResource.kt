@@ -1,12 +1,18 @@
 package com.greentree.commons.data.resource
 
+import com.greentree.commons.data.resource.location.RootUrlResourceLocation
 import java.io.InputStream
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
 
 data class URLFileResource(
 	val url: URL,
 ) : FileResource {
+
+	constructor(uri: URI) : this(uri.toURL())
+
+	constructor(uri: String) : this(URI(uri))
 
 	override val length: Long
 		get() {
