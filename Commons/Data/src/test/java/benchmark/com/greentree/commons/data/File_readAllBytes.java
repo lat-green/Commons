@@ -36,6 +36,11 @@ public class File_readAllBytes {
         Files.write(file, bytes);
     }
 
+    @TearDown
+    public void clear() throws Exception {
+        Files.delete(file);
+    }
+
     @Benchmark
     public void FileChannel_readAllBytes(Blackhole blackhole) throws IOException {
         try (var in = Channels.newInputStream(FileChannel.open(file))) {
@@ -66,11 +71,6 @@ public class File_readAllBytes {
             var bytes = in.readAllBytes();
             blackhole.consume(bytes);
         }
-    }
-
-    @TearDown
-    public void clear() throws Exception {
-        Files.delete(file);
     }
 
     @Benchmark
