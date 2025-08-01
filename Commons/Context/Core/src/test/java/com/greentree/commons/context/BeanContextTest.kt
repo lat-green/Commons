@@ -62,6 +62,7 @@ class BeanContextTest {
 		}
 		val a: HiService = ctx.resolveBean()
 		val b: HiService = ctx.resolveBean()
+		assertNotSame(a, b)
 		assertSame(a.repository, b.repository)
 	}
 
@@ -77,6 +78,7 @@ class BeanContextTest {
 		}
 		val a: HiService = ctx.resolveBean()
 		val b: HiService = ctx.resolveBean()
+		assertSame(a, b)
 		assertSame(a.repository, b.repository)
 	}
 
@@ -200,6 +202,6 @@ class BeanContextTest {
 		}
 		val parentRepository: TextRepository = parent.resolveBean()
 		val childRepository: TextRepository = child.resolveBean()
-		assertEquals(parentRepository, childRepository)
+		assertSame(parentRepository, childRepository)
 	}
 }
