@@ -5,7 +5,7 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 @OptIn(ExperimentalContracts::class)
-inline fun <R> ReactContext.useMemo(dependency: Any, block: () -> R): R {
+inline fun <R> ReactContext.useMemo(dependency: Any?, block: () -> R): R {
 	contract {
 		callsInPlace(block, InvocationKind.AT_MOST_ONCE)
 	}
@@ -47,7 +47,7 @@ inline fun <R> ReactContext.useMemoByHash(dependency: Any, block: () -> R): R {
 inline fun <R> ReactContext.useMemoByHash(dependency: Unit, block: () -> R) = useMemo(block)
 
 @OptIn(ExperimentalContracts::class)
-inline fun <R : AutoCloseable> ReactContext.useMemoClose(dependency: Any, block: () -> R): R {
+inline fun <R : AutoCloseable?> ReactContext.useMemoClose(dependency: Any, block: () -> R): R {
 	contract {
 		callsInPlace(block, InvocationKind.AT_MOST_ONCE)
 	}
@@ -61,7 +61,7 @@ inline fun <R : AutoCloseable> ReactContext.useMemoClose(dependency: Any, block:
 }
 
 @OptIn(ExperimentalContracts::class)
-inline fun <R : AutoCloseable> ReactContext.useMemoClose(block: () -> R): R {
+inline fun <R : AutoCloseable?> ReactContext.useMemoClose(block: () -> R): R {
 	contract {
 		callsInPlace(block, InvocationKind.AT_MOST_ONCE)
 	}
@@ -75,10 +75,10 @@ inline fun <R : AutoCloseable> ReactContext.useMemoClose(block: () -> R): R {
 }
 
 @Deprecated("not use Unit as dependency", ReplaceWith("useMemoClose(block)"))
-inline fun <R : AutoCloseable> ReactContext.useMemoClose(dependency: Unit, block: () -> R) = useMemoClose(block)
+inline fun <R : AutoCloseable?> ReactContext.useMemoClose(dependency: Unit, block: () -> R) = useMemoClose(block)
 
 @OptIn(ExperimentalContracts::class)
-inline fun <R : AutoCloseable> ReactContext.useMemoCloseByHash(dependency: Any, block: () -> R): R {
+inline fun <R : AutoCloseable?> ReactContext.useMemoCloseByHash(dependency: Any?, block: () -> R): R {
 	contract {
 		callsInPlace(block, InvocationKind.AT_MOST_ONCE)
 	}
@@ -92,4 +92,4 @@ inline fun <R : AutoCloseable> ReactContext.useMemoCloseByHash(dependency: Any, 
 }
 
 @Deprecated("not use Unit as dependency", ReplaceWith("useMemoClose(block)"))
-inline fun <R : AutoCloseable> ReactContext.useMemoCloseByHash(dependency: Unit, block: () -> R) = useMemoClose(block)
+inline fun <R : AutoCloseable?> ReactContext.useMemoCloseByHash(dependency: Unit, block: () -> R) = useMemoClose(block)
