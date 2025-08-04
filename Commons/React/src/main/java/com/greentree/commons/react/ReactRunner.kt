@@ -1,13 +1,10 @@
 package com.greentree.commons.react
 
-fun interface ReactRunner<R> {
+interface ReactRunner<R> {
+
+	fun refresh()
 
 	fun runReact(): R
 }
 
-fun <R> ReactContextProvider.runner(block: ReactContext.() -> R): ReactRunner<R> {
-	val result by lazy { runReact(block) }
-	return ReactRunner {
-		runReactIfRequire(block) ?: result
-	}
-}
+fun <R> ReactContextProvider.runner(block: ReactContext.() -> R) = RequireReactRunner(this, block)

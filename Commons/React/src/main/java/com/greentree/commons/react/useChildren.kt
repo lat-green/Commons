@@ -42,13 +42,13 @@ fun <K> ReactContext.useChildren(): ChildrenReactContext<K> = run {
 	}
 }
 
-inline fun <T : Any> ReactContext.useForEach(sequence: Sequence<T>, block: ReactContext.(T) -> Unit) {
+inline fun <T> ReactContext.useForEach(sequence: Sequence<T>, block: ReactContext.(T) -> Unit) {
 	val children = useChildren<T>()
 	for(t in sequence)
 		children.useChild(t).block(t)
 }
 
-inline fun <T : Any> ReactContext.useForEach(iterable: Iterable<T>, block: ReactContext.(T) -> Unit) {
+inline fun <T> ReactContext.useForEach(iterable: Iterable<T>, block: ReactContext.(T) -> Unit) {
 	val children = useChildren<T>()
 	for(t in iterable)
 		children.useChild(t).block(t)

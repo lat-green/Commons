@@ -1,5 +1,9 @@
 package com.greentree.commons.react
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
+
 interface ReactContextProvider : AutoCloseable {
 
 	val requireRefresh: Boolean
@@ -9,7 +13,11 @@ interface ReactContextProvider : AutoCloseable {
 	fun next(): ReactContext
 }
 
+@OptIn(ExperimentalContracts::class)
 inline fun <R> ReactContextProvider.runReact(block: ReactContext.() -> R): R {
+	contract {
+		callsInPlace(block, InvocationKind.AT_LEAST_ONCE)
+	}
 	var result: R
 	do {
 		result = next().run(block)
