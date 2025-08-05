@@ -9,6 +9,15 @@ fun ReactContext.useDependency(dependency: Any?): Boolean {
 	return false
 }
 
+fun ReactContext.useDependencyBySame(dependency: Any?): Boolean {
+	var previous by useRef<Any>()
+	if(previous !== dependency) {
+		previous = dependency
+		return true
+	}
+	return false
+}
+
 fun ReactContext.useDependencyByHash(dependency: Any?): Boolean {
 	var previous by useRef<Any>()
 	val hash = dependency.hashCode()

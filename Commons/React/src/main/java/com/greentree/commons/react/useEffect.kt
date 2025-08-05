@@ -25,6 +25,16 @@ inline fun ReactContext.useEffectByHash(dependency: Any, block: () -> Unit) {
 }
 
 @OptIn(ExperimentalContracts::class)
+inline fun ReactContext.useEffectBySame(dependency: Any, block: () -> Unit) {
+	contract {
+		callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+	}
+	if(useDependencyByHash(dependency)) {
+		block()
+	}
+}
+
+@OptIn(ExperimentalContracts::class)
 @Deprecated("", ReplaceWith("block()"))
 inline fun ReactContext.useEffect(block: () -> Unit) {
 	contract {
@@ -55,6 +65,19 @@ inline fun ReactContext.useEffectCloseByHash(dependency: Any, block: () -> AutoC
 		it.close()
 	}
 	if(useDependencyByHash(dependency)) {
+		closeablePrevious = block()
+	}
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun ReactContext.useEffectCloseBySame(dependency: Any, block: () -> AutoCloseable) {
+	contract {
+		callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+	}
+	var closeablePrevious by useRefClose<AutoCloseable> {
+		it.close()
+	}
+	if(useDependencyBySame(dependency)) {
 		closeablePrevious = block()
 	}
 }
