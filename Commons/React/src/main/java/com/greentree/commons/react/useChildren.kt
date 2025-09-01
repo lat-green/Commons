@@ -54,6 +54,20 @@ inline fun <T> ReactContext.useForEach(iterable: Iterable<T>, block: ReactContex
 		children.useChild(t).block(t)
 }
 
+inline fun <T, R> ReactContext.useMap(iterable: Iterable<T>, block: ReactContext.(T) -> R): List<R> {
+	val children = useChildren<T>()
+	return iterable.map {
+		children.useChild(it).block(it)
+	}
+}
+
+fun <T, R> ReactContext.useMap(iterable: Sequence<T>, block: ReactContext.(T) -> R): Sequence<R> {
+	val children = useChildren<T>()
+	return iterable.map {
+		children.useChild(it).block(it)
+	}
+}
+
 enum class IfBlock { THEN, ELSE }
 
 @OptIn(ExperimentalContracts::class)
