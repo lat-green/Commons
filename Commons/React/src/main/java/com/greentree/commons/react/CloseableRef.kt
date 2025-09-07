@@ -7,11 +7,17 @@ class CloseableRef<T>(
 
 	override var value: T = value
 		set(value) {
-			field?.let {
-				onClose(it)
+			if(field != value) {
+				field?.let {
+					onClose(it)
+				}
+				field = value
 			}
-			field = value
 		}
+
+	override fun toString(): String {
+		return "CloseableRef($value)"
+	}
 
 	override fun close() {
 		value?.let {

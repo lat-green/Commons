@@ -10,17 +10,20 @@ fun interface ChildrenReactContext<K> {
 }
 
 fun <K> ReactContext.useChildren(): ChildrenReactContext<K> = run {
-	var children by useRef(mutableMapOf<K, ReactContextProvider>()) {
-		for(child in it.values) {
-			child.close()
-		}
-		it.clear()
-	}
 	var current by useRef(mutableMapOf<K, ReactContextProvider>()) {
 		for(child in it.values) {
 			child.close()
 		}
+	}
+	var children by useRef(mutableMapOf<K, ReactContextProvider>()) {
+		it.filterNot { (key, value) ->
+			current.containsKey(key)
+		}.forEach { (key, value) ->
+			it.remove(key)
+			value.close()
+		}
 		it.clear()
+		current.clear()
 	}
 	children.filterNot { (key, value) ->
 		current.containsKey(key)

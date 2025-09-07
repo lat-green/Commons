@@ -13,4 +13,11 @@
 
     <name>React</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.greentree.commons</groupId>
+            <artifactId>tests</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
