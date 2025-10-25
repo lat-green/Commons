@@ -57,6 +57,7 @@
         <module>Annotations</module>
         <module>Action</module>
         <module>Event</module>
+        <module>Signals</module>
     </modules>
 
     <distributionManagement>
@@ -189,6 +190,11 @@
             </dependency>
             <dependency>
                 <groupId>com.greentree.commons</groupId>
+                <artifactId>event</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.greentree.commons</groupId>
                 <artifactId>geometry</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -220,6 +226,11 @@
             <dependency>
                 <groupId>com.greentree.commons</groupId>
                 <artifactId>serialization</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.greentree.commons</groupId>
+                <artifactId>signals</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
