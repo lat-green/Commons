@@ -55,7 +55,10 @@ object ClassUtil {
 		return type.isPrimitive || type == Int::class.java || type == Short::class.java || type == Boolean::class.java || type == Double::class.java || type == Float::class.java || type == Char::class.java || type == Byte::class.java
 	}
 
-	@Deprecated("use TypeUtil", ReplaceWith("TypeUtil.isExtends(superClass, cls)"))
+	@Deprecated(
+		"use TypeUtil",
+		ReplaceWith("TypeUtil.isExtends(superClass, cls)", { "com.greentree.commons.reflection.info.TypeUtil" })
+	)
 	@JvmStatic
 	fun isExtends(superClass: Class<*>, cls: Class<*>): Boolean {
 		if(superClass == cls) return true
