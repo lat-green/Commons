@@ -14,8 +14,9 @@ object MyXMLParser : XMLParser {
 		var s = text.indexOf('<')
 		while(s != -1) {
 			val e: Int
-			if(text[s + 1] == '!') e = text.indexOf("-->", s) + 2
-			else {
+			if(text[s + 1] == '!') {
+				e = text.indexOf("-->", s) + 2
+			} else {
 				e = text.indexOf('>', s)
 				if(text[s + 1] != '?' || text[e - 1] != '?') if(text[e - 1] == '/') {
 					require(text[s + 1] != '/') { text.substring(s + 1, e) }

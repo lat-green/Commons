@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<material>
+    <shaders>
+        <vertex>shaders/17_shader_vertexbuffer.vert</vertex>
+        <fragment>shaders/17_shader_vertexbuffer.frag</fragment>
+    </shaders>
+    <properties>
+        <property name="tex" type="texture">texture/box.jpg</property>
+    </properties>
+</material>

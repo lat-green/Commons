@@ -57,7 +57,7 @@ object ClassUtil {
 
 	@Deprecated(
 		"use TypeUtil",
-		ReplaceWith("TypeUtil.isExtends(superClass, cls)", { "com.greentree.commons.reflection.info.TypeUtil" })
+		ReplaceWith("TypeUtil.isExtends(superClass, cls)", imports = ["com.greentree.commons.reflection.info.TypeUtil"])
 	)
 	@JvmStatic
 	fun isExtends(superClass: Class<*>, cls: Class<*>): Boolean {
