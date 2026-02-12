@@ -2,6 +2,8 @@ package com.greentree.commons.serialization.serializator.provider
 
 import com.greentree.commons.annotation.Annotations
 import com.greentree.commons.reflection.ClassUtil
+import com.greentree.commons.reflection.info.TypeInfo
+import com.greentree.commons.reflection.info.TypeInfoBuilder.getTypeInfo
 import com.greentree.commons.serialization.context.AnnotatedElementProperty
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.context.manager
@@ -12,10 +14,11 @@ import com.greentree.commons.util.UnsafeUtil
 import java.lang.reflect.Modifier
 
 data class UnsafeRealSerializator<T : Any>(
-	override val type: Class<T>,
+	override val type: TypeInfo<T>,
 ) : Serializator<T> {
 
 	init {
+		val type = type.toClass()
 		require(!(type.isInterface || type.isEnum || type.isArray || type.isAnnotation || type.isPrimitive)) { "$type not supported" }
 	}
 
@@ -23,11 +26,12 @@ data class UnsafeRealSerializator<T : Any>(
 		val manager = context.manager
 		encoder.beginStructure().use { struct ->
 			for(field in fields(type)) {
+				val type = getTypeInfo<Any>(field)
 				val offset = unsafe.objectFieldOffset(field)
-				val value = unsafe.getObject(value, offset)
+				val fieldValue = unsafe.getObject(value, offset)
 				struct.field(field.name).use {
-					manager.serializator(field.type)
-						.serialize(context + AnnotatedElementProperty(Annotations.filter(field)), it, value)
+					manager.serializator(type)
+						.serialize(context + AnnotatedElementProperty(Annotations.filter(field)), it, fieldValue)
 				}
 			}
 		}
@@ -36,15 +40,16 @@ data class UnsafeRealSerializator<T : Any>(
 	override fun deserialize(context: SerializationContext, decoder: Decoder): T {
 		val manager = context.manager
 		val result = try {
-			unsafe.allocateInstance(type)
+			unsafe.allocateInstance(type.toClass())
 		} catch(e: InstantiationException) {
 			throw RuntimeException("$type", e)
 		} as T
 		decoder.beginStructure().use { struct ->
 			for(field in fields(type)) {
+				val type = getTypeInfo<Any>(field)
 				val offset = unsafe.objectFieldOffset(field)
 				val value = struct.field(field.name).use {
-					manager.serializator(field.type)
+					manager.serializator(type)
 						.deserialize(context + AnnotatedElementProperty(Annotations.filter(field)), it)
 				}
 				unsafe.getAndSetObject(result, offset, value)
@@ -57,7 +62,7 @@ data class UnsafeRealSerializator<T : Any>(
 
 		private val unsafe = UnsafeUtil.getUnsafeInstance()
 
-		private fun fields(cls: Class<*>) = ClassUtil.getAllFields(cls)
+		private fun fields(cls: TypeInfo<*>) = ClassUtil.getAllFields(cls.toClass())
 			.asSequence()
 			.filter { !Modifier.isStatic(it.modifiers) }
 
@@ -65,10 +70,13 @@ data class UnsafeRealSerializator<T : Any>(
 			get() = 0
 
 		override fun <T : Any> provide(
-			cls: Class<T>
-		) = if(cls.isInterface || cls.isEnum || cls.isArray || cls.isAnnotation || cls.isPrimitive)
-			null
-		else
-			UnsafeRealSerializator(cls)
+			type: TypeInfo<T>,
+		) = run {
+			val cls = type.toClass()
+			if(cls.isInterface || cls.isEnum || cls.isArray || cls.isAnnotation || cls.isPrimitive)
+				null
+			else
+				UnsafeRealSerializator(type)
+		}
 	}
 }

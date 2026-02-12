@@ -17,6 +17,7 @@ import com.greentree.commons.serialization.serializator.FloatSerializator
 import com.greentree.commons.serialization.serializator.IntArraySerializator
 import com.greentree.commons.serialization.serializator.IntSerializator
 import com.greentree.commons.serialization.serializator.LongSerializator
+import com.greentree.commons.serialization.serializator.MapSerializator
 import com.greentree.commons.serialization.serializator.ShortSerializator
 import com.greentree.commons.serialization.serializator.StringSerializator
 import com.greentree.commons.serialization.serializator.accuracy.AccuracySerializatorFilter
@@ -26,7 +27,6 @@ import com.greentree.commons.serialization.serializator.manager.SerializatorMana
 import com.greentree.commons.serialization.serializator.provider.ArraySerializator
 import com.greentree.commons.serialization.serializator.provider.DataClassSerializator
 import com.greentree.commons.serialization.serializator.provider.ObjectSerializatorProvider
-import com.greentree.commons.serialization.serializator.provider.UnsafeRealSerializator
 import com.greentree.commons.serialization.serializator.type.ClassAsNameSerializator
 import com.greentree.commons.serialization.serializator.type.KotlinObjectTypeSerializator
 import com.greentree.commons.serialization.serializator.type.KotlinSealedTypeSerializator
@@ -59,7 +59,8 @@ data object Serialization : BeanLayer {
 		registerInstance(KotlinObjectSerializator)
 		registerInstance(ObjectSerializatorProvider)
 		registerInstance(EnumAsByteSerializator)
-		registerInstance(UnsafeRealSerializator)
+//		registerInstance(UnsafeRealSerializator)
+		registerInstance(MapSerializator)
 		/* Filter */
 		registerInstance(ExceptionSerializatorFilter)
 		registerInstance(AccuracySerializatorFilter)

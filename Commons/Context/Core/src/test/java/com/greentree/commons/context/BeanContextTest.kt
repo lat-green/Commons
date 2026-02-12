@@ -7,6 +7,7 @@ import com.greentree.commons.context.mock.AImpl
 import com.greentree.commons.context.mock.B
 import com.greentree.commons.context.mock.BImpl
 import com.greentree.commons.context.mock.GroupService
+import com.greentree.commons.context.mock.HiRepository
 import com.greentree.commons.context.mock.HiRepository1
 import com.greentree.commons.context.mock.HiRepository2
 import com.greentree.commons.context.mock.HiService
@@ -203,5 +204,17 @@ class BeanContextTest {
 		val parentRepository: TextRepository = parent.resolveBean()
 		val childRepository: TextRepository = child.resolveBean()
 		assertSame(parentRepository, childRepository)
+	}
+
+	@Test
+	fun resolveAllBeans() {
+		val r1 = HiRepository1()
+		val r2 = HiRepository2()
+		val ctx = BeanContext().apply {
+			registerInstance(r1)
+			registerInstance(r2)
+		}
+		val all = ctx.resolveAllBeans<HiRepository>()
+		assertEquals(listOf(r1, r2), all.toList())
 	}
 }

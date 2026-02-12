@@ -1,6 +1,6 @@
 package com.greentree.commons.serialization.serializator.manager
 
-import com.greentree.commons.reflection.ClassUtil
+import com.greentree.commons.reflection.info.TypeInfo
 import com.greentree.commons.serialization.serializator.Serializator
 import com.greentree.commons.serialization.serializator.filter.AddSerializationContextSerializatorFilter
 import com.greentree.commons.serialization.serializator.filter.SerializatorFilter
@@ -14,13 +14,18 @@ class SerializatorManagerImpl(
 	val filters: Sequence<SerializatorFilter>,
 ) : SerializatorManager {
 
-	private val serializators: MutableMap<Class<*>, Serializator<*>> =
+	private val serializators: MutableMap<TypeInfo<*>, Serializator<*>> =
 		serializators.map { wrap(it) }.associateBy { it.type }.toMutableMap()
-	private val realSerializators: MutableMap<Class<*>, Serializator<*>> =
+	private val realSerializators: MutableMap<TypeInfo<*>, Serializator<*>> =
 		serializators.map { wrap(it) }.associateBy { it.type }.toMutableMap()
 
+	init {
+		require(this.serializators.isNotEmpty())
+		require(realSerializators.isNotEmpty())
+	}
+
 	override fun <T : Any> serializator(
-		guaranteed: Class<out T>
+		guaranteed: TypeInfo<out T>,
 	): Serializator<T> =
 		serializatorOrNull(
 			providers + GuaranteedClassSerializator,
@@ -28,16 +33,16 @@ class SerializatorManagerImpl(
 			guaranteed
 		) ?: throw NullPointerException("not found serializator for $guaranteed")
 
-	override fun <T : Any> realSerializator(cls: Class<T>): Serializator<T> =
+	override fun <T : Any> realSerializator(cls: TypeInfo<T>): Serializator<T> =
 		serializatorOrNull(providers, realSerializators, cls)
 			?: throw NullPointerException("not found serializator for $cls")
 
 	private fun <T : Any> serializatorOrNull(
 		providers: Sequence<SerializatorProvider>,
-		serializators: MutableMap<Class<*>, Serializator<*>>,
-		guaranteed: Class<out T>
+		serializators: MutableMap<TypeInfo<*>, Serializator<*>>,
+		guaranteed: TypeInfo<out T>,
 	): Serializator<T>? {
-		val guaranteed = ClassUtil.getNotPrimitive(guaranteed)
+		val guaranteed = guaranteed.boxing
 		@Suppress("UNCHECKED_CAST")
 		return serializators.getOrPutNotNull(guaranteed) {
 			val origin = provide(providers, guaranteed)
@@ -65,10 +70,10 @@ class SerializatorManagerImpl(
 
 		private fun <T : Any> provide(
 			providers: Sequence<SerializatorProvider>,
-			cls: Class<T>,
+			type: TypeInfo<T>,
 		): Serializator<T>? {
 			return providers
-				.map { it to it.provide(cls) }
+				.map { it to it.provide(type) }
 				.filter { it.second != null }
 				.sortedBy { -it.first.priority }
 				.map { it.second }

@@ -3,6 +3,7 @@ package test.com.greentree.commons.serialization
 import com.greentree.commons.serialization.format.Bytes
 import com.greentree.commons.serialization.serializator.deserialize
 import com.greentree.commons.serialization.serializator.serialize
+import com.greentree.commons.serialization.serializator.manager.serializator
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource

@@ -1,5 +1,6 @@
 package com.greentree.commons.serialization.serializator
 
+import com.greentree.commons.reflection.info.TypeInfo
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.context.getPropertyOrNull
 import com.greentree.commons.serialization.format.Decoder
@@ -19,14 +20,16 @@ data class ClassSerializator(
 	}
 
 	override fun serialize(context: SerializationContext, encoder: Encoder, value: Class<*>) {
-		val guaranteedType = context.getPropertyOrNull(GuaranteedType) ?: Any::class.java
-		val serializator = serializator(guaranteedType)
-		serializator.serialize(context, encoder, guaranteedType, value)
+		val guaranteedType = context.getPropertyOrNull(GuaranteedType) ?: TypeInfo(Any::class)
+		val guaranteedClass = guaranteedType.toClass()
+		val serializator = serializator(guaranteedClass)
+		serializator.serialize(context, encoder, guaranteedClass, value)
 	}
 
 	override fun deserialize(context: SerializationContext, decoder: Decoder): Class<*> {
-		val guaranteedType = context.getPropertyOrNull(GuaranteedType) ?: Any::class.java
-		val serializator = serializator(guaranteedType)
-		return serializator.deserialize(context, decoder, guaranteedType)
+		val guaranteedType = context.getPropertyOrNull(GuaranteedType) ?: TypeInfo(Any::class)
+		val guaranteedClass = guaranteedType.toClass()
+		val serializator = serializator(guaranteedClass)
+		return serializator.deserialize(context, decoder, guaranteedClass)
 	}
 }

@@ -53,7 +53,7 @@ interface Decoder : AutoCloseable {
 	}
 
 	fun <T : Any> decodeArray(serializator: DeserializationStrategy<T>): Array<T> {
-		val componentType = serializator.type
+		val componentType = serializator.type.toClass()
 		beginStructure().use { s ->
 			val size = s.field("size").use { f ->
 				f.decodeInt()

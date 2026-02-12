@@ -12,7 +12,7 @@ object TypeUtil {
 
 	@JvmStatic
 	fun isExtends(superType: Class<*>, type: KClass<*>): Boolean {
-		return isExtends(getTypeInfo(superType), getTypeInfo(type))
+		return isExtends(TypeInfo(superType), getTypeInfo(type))
 	}
 
 	@JvmStatic
@@ -53,7 +53,7 @@ object TypeUtil {
 	}
 
 	@JvmStatic
-	fun <S> getSuperType(type: TypeInfo<out S>, superClass: Class<S>): TypeInfo<S> =
+	fun <S> getSuperType(type: TypeInfo<out S>, superClass: Class<S>) =
 		type.getSuperType(superClass) as TypeInfo<S>
 
 	@JvmStatic

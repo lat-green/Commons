@@ -42,3 +42,11 @@ inline fun <T, R> Iterable<T>.mapOption(block: (T) -> Result<R>): Result<List<R>
 	}
 	return Result.success(result)
 }
+
+inline fun <T, reified R> Array<T>.mapToArray(block: (T) -> R): Array<R> {
+	return Array<R>(size) {
+		block(get(it))
+	}
+}
+
+inline fun <reified T> Sequence<T>.toTypedArray() = toList().toTypedArray()

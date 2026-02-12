@@ -1,17 +1,19 @@
 package com.greentree.engine.rex.serialization.serializator.provider
 
+import com.greentree.commons.reflection.info.TypeInfo
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.context.manager
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
 import com.greentree.commons.serialization.serializator.Serializator
+import com.greentree.commons.serialization.serializator.manager.realSerializator
 import com.greentree.commons.serialization.serializator.manager.serializator
 import com.greentree.commons.serialization.serializator.provider.SerializatorProvider
 import com.greentree.commons.serialization.serializator.type.GuaranteedType
 import java.lang.reflect.Modifier
 
 data class GuaranteedClassSerializator<T : Any>(
-	val guaranteed: Class<T>,
+	val guaranteed: TypeInfo<T>,
 ) : Serializator<T> {
 
 	init {
@@ -48,14 +50,14 @@ data class GuaranteedClassSerializator<T : Any>(
 	}
 
 	override val type
-		get() = guaranteed as Class<T>
+		get() = guaranteed
 
 	companion object : SerializatorProvider {
 
-		override fun <T : Any> provide(cls: Class<T>): Serializator<T>? {
-			if(Modifier.isFinal(cls.modifiers))
+		override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+			if(Modifier.isFinal(type.modifiers))
 				return null
-			return GuaranteedClassSerializator(cls)
+			return GuaranteedClassSerializator(type)
 		}
 	}
 }

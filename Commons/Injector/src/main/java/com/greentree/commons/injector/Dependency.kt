@@ -67,7 +67,7 @@ data class ParameterDependency(val parameter: Parameter) : Dependency,
 
 data class SimpleDependency(
 	override val type: TypeInfo<out Any>,
-	override val name: String? = null
+	override val name: String? = null,
 ) : Dependency {
 
 	constructor(cls: Class<*>, name: String? = null) : this(getTypeInfo(cls), name)

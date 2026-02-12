@@ -1,5 +1,7 @@
 package com.greentree.commons.serialization.serializator.manager
 
+import com.greentree.commons.reflection.info.TypeInfo
+import com.greentree.commons.reflection.info.TypeInfoBuilder.getTypeInfo
 import com.greentree.commons.serialization.context.EmptySerializationContext
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.format.Decoder
@@ -14,9 +16,15 @@ interface SerializatorManager : SerializationContext.Element {
 
 	companion object Key : SerializationContext.Key<SerializatorManager>
 
-	fun <T : Any> serializator(guaranteed: Class<out T>): Serializator<T>
-	fun <T : Any> realSerializator(cls: Class<T>): Serializator<T>
+	fun <T : Any> serializator(guaranteed: TypeInfo<out T>): Serializator<T>
+	fun <T : Any> realSerializator(cls: TypeInfo<T>): Serializator<T>
 }
+
+fun <T : Any> SerializatorManager.serializator(guaranteed: Class<out T>): Serializator<T> =
+	serializator(getTypeInfo(guaranteed))
+
+fun <T : Any> SerializatorManager.realSerializator(cls: Class<T>): Serializator<T> =
+	realSerializator(getTypeInfo(cls))
 
 fun <T : Any> SerializatorManager.serializator(guaranteed: KClass<out T>) = serializator(guaranteed.java)
 inline fun <reified T : Any> SerializatorManager.serializator() = serializator(T::class.java)

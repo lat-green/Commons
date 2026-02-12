@@ -1,5 +1,6 @@
 package com.greentree.commons.serialization.serializator.provider
 
+import com.greentree.commons.reflection.info.TypeInfo
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
@@ -23,7 +24,8 @@ data object ObjectSerializatorProvider : SerializatorProvider {
 	override val priority: Int
 		get() = 1
 
-	override fun <T : Any> provide(cls: Class<T>): Serializator<T>? {
+	override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+		val cls = type.toClass()
 		return if(cls == Any::class.java)
 			ObjectSerializator as Serializator<T>
 		else

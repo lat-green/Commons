@@ -1,6 +1,8 @@
 package com.greentree.commons.serialization.serializator.provider
 
 import com.greentree.commons.annotation.Annotations
+import com.greentree.commons.reflection.info.TypeInfo
+import com.greentree.commons.reflection.info.TypeInfoBuilder.getTypeInfo
 import com.greentree.commons.reflection.info.TypeUtil
 import com.greentree.commons.serialization.context.AnnotatedElementProperty
 import com.greentree.commons.serialization.context.SerializationContext
@@ -22,7 +24,7 @@ data class DataClassSerializator<T : Any>(
 		encoder.beginStructure().use { struct ->
 			for(parameter in primaryConstructor.parameters) {
 				val field = cls.java.getDeclaredField(parameter.name)
-				val type = field.type as Class<Any>
+				val type = getTypeInfo<Any>(field)
 				require(field.trySetAccessible()) { "$field not accessible" }
 				val fieldValue = field.get(value)
 				struct.field(field.name).use { fieldEncoder ->
@@ -43,7 +45,7 @@ data class DataClassSerializator<T : Any>(
 		val args = decoder.beginStructure().use { struct ->
 			primaryConstructor.parameters.map { parameter ->
 				val field = cls.java.getDeclaredField(parameter.name)
-				val type = field.type as Class<Any>
+				val type = getTypeInfo<Any>(field)
 				struct.field(field.name).use { fieldDecoder ->
 					manager.serializator(type)
 						.deserialize(
@@ -56,12 +58,13 @@ data class DataClassSerializator<T : Any>(
 		return constructor.call(*args)
 	}
 
-	override val type: Class<T>
-		get() = cls.java
+	override val type: TypeInfo<T>
+		get() = getTypeInfo(cls)
 
 	companion object : SerializatorProvider {
 
-		override fun <T : Any> provide(cls: Class<T>): Serializator<T>? {
+		override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+			val cls = type.toClass()
 			val guaranteed = cls.kotlin
 			if(!guaranteed.isData || guaranteed.objectInstance != null)
 				return null

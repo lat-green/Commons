@@ -22,7 +22,6 @@ public class TypeInfoTest {
         final var a = TypeInfoBuilder.getTypeInfo(Integer.class);
         final var b = TypeInfoBuilder.getTypeInfo(Integer.class);
         assertEquals(a, b);
-
     }
 
     @Test
