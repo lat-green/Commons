@@ -1,5 +1,6 @@
 package com.greentree.commons.reflection
 
+import com.greentree.commons.reflection.info.TypeInfo
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -23,6 +24,10 @@ data class ParameterizedTypeImpl(
 			}
 			require(rawType.typeParameters.size == actualTypeArguments.size) {
 				"$rawType has ${rawType.typeParameters.size} typeParameters, but actualTypeArguments size is ${actualTypeArguments.size}"
+			}
+			val primitiveActualTypeArguments = actualTypeArguments.filter { TypeInfo<Any>(it).isPrimitive }
+			require(primitiveActualTypeArguments.isEmpty()) {
+				"actualTypeArguments has primitive ${primitiveActualTypeArguments}"
 			}
 		}
 	}

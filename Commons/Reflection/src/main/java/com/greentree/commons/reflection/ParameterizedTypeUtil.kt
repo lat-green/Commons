@@ -4,6 +4,7 @@ import com.greentree.commons.util.mapToArray
 import java.lang.reflect.GenericArrayType
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.lang.reflect.TypeVariable
 import java.lang.reflect.WildcardType
 import kotlin.reflect.KClass
 
@@ -105,6 +106,12 @@ object ParameterizedTypeUtil {
 					}.firstOrNull()
 				}
 
+				is TypeVariable<*> -> {
+					return type.bounds.mapNotNull {
+						getBaseOrNull(it, superType)
+					}.firstOrNull()
+				}
+
 				is GenericArrayType -> {
 					if(superType.isArray)
 						TODO("getBaseOrNull(${type::class}, ${superType::class})")
@@ -175,7 +182,7 @@ object ParameterizedTypeUtil {
 		getActualTypeArguments(getBaseOrNull(type, superType)!!).map { getRawType(it) }.toTypedArray()
 }
 
-private fun Type.inject(map: Map<String, Type>): Type = when(this) {
+fun Type.inject(map: Map<String, Type>): Type = when(this) {
 	is java.lang.reflect.TypeVariable<*> -> {
 		map[this.name] ?: this
 	}

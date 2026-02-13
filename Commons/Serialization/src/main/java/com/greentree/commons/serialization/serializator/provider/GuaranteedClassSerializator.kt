@@ -22,14 +22,15 @@ data class GuaranteedClassSerializator<T : Any>(
 
 	override fun serialize(context: SerializationContext, encoder: Encoder, value: T) {
 		val manager = context.manager
-		val cls = value!!::class.java as Class<T>
+		val cls = value::class.java as Class<T>
+		val type = guaranteed.complementChild(cls)
 		encoder.beginStructure().use { struct ->
 			struct.field("type").use { clsEncoder ->
 				manager.serializator<Class<*>>()
 					.serialize(context + GuaranteedType(guaranteed), clsEncoder, cls)
 			}
 			struct.field("value").use { dataEncoder ->
-				manager.realSerializator(cls)
+				manager.realSerializator(type)
 					.serialize(context, dataEncoder, value)
 			}
 		}

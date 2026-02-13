@@ -15,6 +15,10 @@ data class ArrayTypeInfo<T>(
 		get() = arrayOf()
 	override val boxing
 		get() = this
+
+	override fun <S> complementChildOrNull(child: Class<S>): TypeInfo<S>? {
+		TODO("Not yet implemented")
+	}
 }
 
 fun <T> ArrayTypeInfo(type: GenericArrayType) = ArrayTypeInfo<T>(TypeInfo(type.genericComponentType))

@@ -57,6 +57,10 @@ sealed interface TypeInfo<T> : Type {
 	}
 
 	fun getSuperClassAndInterfacesAsClass(): Iterable<Class<in T>> = getSuperClassAndInterfaces().map { it.toClass() }
+
+	fun <S> complementChildOrNull(child: Class<S>): TypeInfo<S>?
+	fun <S> complementChild(child: Class<S>): TypeInfo<S> =
+		complementChildOrNull(child) ?: TypeInfo(child)
 }
 
 fun <T> TypeInfo(field: Field) = TypeInfo<T>(field.genericType)
@@ -73,10 +77,11 @@ else
 	)
 
 fun <T> TypeInfo(type: WildcardType): TypeInfo<T> {
-	if(type.lowerBounds.isEmpty() && type.upperBounds.size == 1)
-		return TypeInfo(type.upperBounds[0])
-	if(type.lowerBounds.isEmpty() && type.upperBounds.isEmpty())
+	val upperBounds = type.upperBounds.toList() - Any::class.java
+	if(upperBounds.isEmpty())
 		return TypeInfo<T>(Any::class.java)
+	if(type.lowerBounds.isEmpty() && upperBounds.size == 1)
+		return TypeInfo(upperBounds[0])
 	throw UnsupportedOperationException("$type " + type.lowerBounds.contentToString() + " " + type.upperBounds.contentToString())
 }
 

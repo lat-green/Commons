@@ -64,4 +64,13 @@ object ClassUtil {
 		if(superClass == cls) return true
 		return superClass.isAssignableFrom(cls)
 	}
+
+	@JvmStatic
+	fun <T> getSuperClassAndInterfaces(cls: Class<T>) = sequence {
+		cls.superclass?.let {
+			yield(it)
+		}
+		for(i in cls.interfaces)
+			yield(i)
+	} as Sequence<Class<in T>>
 }

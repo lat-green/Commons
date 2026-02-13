@@ -27,19 +27,14 @@ class SerializationJsonTest : SerializationTest() {
 		val serializator = manager.serializator(
 			ParameterizedTypeInfo.fromClass<Map<String, Int>>(
 				String::class,
-				Int::class
-			)
-		)
-		println(
-			ParameterizedTypeInfo.fromClass<Map<String, Int>>(
-				String::class,
-				Int::class
+				Integer::class
 			)
 		)
 		val json = Json.encodeToString(serializator, expected)
-		println(json.toPrettyString())
+		val text = json.toPrettyString()
 		val decoder = Json.decoder(json)
 		val actual = serializator.deserialize(decoder)
 		assertEquals(expected, actual) { "$expected $json" }
+		assertTrue(text.length < 70) { "length: ${text.length}\n$text" }
 	}
 }

@@ -2,6 +2,7 @@ package test.com.greentree.commons.reflection
 
 import com.greentree.commons.reflection.ParameterizedTypeImpl
 import com.greentree.commons.reflection.ParameterizedTypeUtil
+import com.greentree.commons.reflection.info.ParameterizedTypeInfo
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.jvm.javaType
@@ -24,7 +25,7 @@ class ParameterizedTypeUtilTest {
 			ParameterizedTypeImpl(Collection::class.java, String::class.java),
 		)
 		assertIsExtendsFalse(
-			ParameterizedTypeImpl(Iterable::class.java, Int::class.java),
+			ParameterizedTypeImpl(Iterable::class.java, Integer::class.java),
 			ParameterizedTypeImpl(Collection::class.java, String::class.java),
 		)
 		assertIsExtendsFalse(
@@ -34,6 +35,13 @@ class ParameterizedTypeUtilTest {
 		assertIsExtendsTrue(
 			ParameterizedTypeImpl(MutableCollection::class.java, String::class.java),
 			ParameterizedTypeUtilTest::a.returnType.javaType,
+		)
+		assertIsExtendsTrue(
+			Map::class.java,
+			ParameterizedTypeInfo.fromClass<LinkedHashMap<String, Int>>(
+				String::class,
+				Integer::class,
+			),
 		)
 	}
 
