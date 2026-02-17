@@ -10,6 +10,8 @@
 
     <artifactId>math</artifactId>
 
+    <name>Math</name>
+
     <properties>
         <joml.version>1.10.8</joml.version>
     </properties>
