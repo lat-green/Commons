@@ -53,7 +53,7 @@ object Json {
 private val objectMapper = ObjectMapper()
 private val nodeFactory = objectMapper.nodeFactory
 
-data class JsonEncoder(val onResult: (JsonNode) -> Unit) : Encoder {
+data class JsonEncoder(val onResult: (JsonNode) -> Unit) : NamedEncoder {
 
 	private lateinit var result: JsonNode
 
@@ -98,11 +98,11 @@ data class JsonEncoder(val onResult: (JsonNode) -> Unit) : Encoder {
 		setResult(nodeFactory.textNode(value))
 	}
 
-	override fun beginStructure(): StructureFieldGroup<Encoder> {
+	override fun beginStructure(): StructureFieldGroup<NamedEncoder> {
 		val result = nodeFactory.objectNode()
 
-		return object : StructureFieldGroup<Encoder> {
-			override fun fieldOrNull(name: String): Encoder {
+		return object : StructureFieldGroup<NamedEncoder> {
+			override fun fieldOrNull(name: String): NamedEncoder {
 				val res = JsonEncoder {
 					result.put(name, it)
 				}
@@ -115,10 +115,10 @@ data class JsonEncoder(val onResult: (JsonNode) -> Unit) : Encoder {
 		}
 	}
 
-	override fun beginCollection(): CollectionFieldGroup<Encoder> {
+	override fun beginCollection(): CollectionFieldGroup<NamedEncoder> {
 		val result = nodeFactory.arrayNode()
 
-		return object : CollectionFieldGroup<Encoder> {
+		return object : CollectionFieldGroup<NamedEncoder> {
 			override fun fieldOrNull(index: Int): JsonEncoder {
 				val res = JsonEncoder {
 					result.insert(index, it)
@@ -140,7 +140,7 @@ data class JsonEncoder(val onResult: (JsonNode) -> Unit) : Encoder {
 	}
 }
 
-data class JsonDecoder(private val element: JsonNode) : Decoder {
+data class JsonDecoder(private val element: JsonNode) : NamedDecoder {
 
 	override fun decodeBoolean(): Boolean = element.booleanValue()
 
@@ -160,28 +160,38 @@ data class JsonDecoder(private val element: JsonNode) : Decoder {
 
 	override fun decodeString(): String = element.textValue()
 
-	override fun beginCollection(): CollectionFieldGroup<Decoder> {
+	override fun beginCollection(): NamedCollectionFieldGroup<NamedDecoder> {
 		val element = element
 
-		return object : CollectionFieldGroup<Decoder> {
+		return object : NamedCollectionFieldGroup<NamedDecoder> {
 			override fun fieldOrNull(index: Int) = if(element.has(index))
 				JsonDecoder(element.get(index))
 			else
 				null
+
+			override val size: Int
+				get() = element.size()
 		}
 	}
 
 	override fun close() {
 	}
 
-	override fun beginStructure(): StructureFieldGroup<Decoder> {
+	override fun beginStructure(): NamedStructureFieldGroup<NamedDecoder> {
 		val element = element
 
-		return object : StructureFieldGroup<Decoder> {
+		return object : NamedStructureFieldGroup<NamedDecoder> {
 			override fun fieldOrNull(name: String) = if(element.has(name))
 				JsonDecoder(element.get(name))
 			else
 				null
+
+			override val keys: Set<String>
+				get() = buildSet {
+					element.fieldNames().forEach {
+						add(it)
+					}
+				}
 		}
 	}
 }

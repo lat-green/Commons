@@ -7,8 +7,7 @@ import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.context.manager
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
-import com.greentree.commons.serialization.serializator.manager.deserialize
-import com.greentree.commons.serialization.serializator.manager.serialize
+import com.greentree.commons.serialization.format.beginSizedCollection
 import com.greentree.commons.serialization.serializator.provider.SerializatorProvider
 import java.util.*
 
@@ -27,18 +26,11 @@ interface AbstractCollectionSerializator<E : Any, C : MutableCollection<E>> : Se
 	) {
 		val manager = context.manager
 		val elementSerializator = manager.serializator(elementType)
-		encoder.beginStructure().use { struct ->
-			struct.field("size").use { f ->
-				manager.serialize(context, f, value.size)
-			}
-			struct.field("elements").use { entriesField ->
-				entriesField.beginCollection().use { struct ->
-					var index = 0
-					for(element in value) {
-						struct.field(index++).use { f ->
-							elementSerializator.serialize(context, f, element)
-						}
-					}
+		encoder.beginSizedCollection(value.size) { c ->
+			var index = 0
+			for(element in value) {
+				c.field(index++).use { f ->
+					elementSerializator.serialize(context, f, element)
 				}
 			}
 		}
@@ -52,18 +44,11 @@ interface AbstractCollectionSerializator<E : Any, C : MutableCollection<E>> : Se
 		val elementSerializator = manager.serializator(elementType)
 		val collection = newCollection()
 		collection.run {
-			decoder.beginStructure().use { struct ->
-				val size = struct.field("size").use { f ->
-					manager.deserialize<Int>(context, f)
-				}
-				struct.field("elements").use { entriesField ->
-					entriesField.beginCollection().use { struct ->
-						repeat(size) { index ->
-							struct.field(index).use { f ->
-								val e = elementSerializator.deserialize(context, f)
-								add(e)
-							}
-						}
+			decoder.beginSizedCollection { size, c ->
+				repeat(size) { index ->
+					c.field(index).use { f ->
+						val e = elementSerializator.deserialize(context, f)
+						add(e)
 					}
 				}
 			}

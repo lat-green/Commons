@@ -3,6 +3,9 @@ package com.greentree.commons.serialization.format
 import com.greentree.commons.serialization.serializator.SerializationStrategy
 import com.greentree.commons.serialization.serializator.serialize
 import java.util.*
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 interface Encoder : AutoCloseable {
 
@@ -36,39 +39,44 @@ interface Encoder : AutoCloseable {
 	fun beginCollection(): CollectionFieldGroup<Encoder>
 
 	fun encodeIntArray(value: IntArray) {
-		beginStructure().use { s ->
-			s.field("size").use { f ->
-				f.encodeInt(value.size)
-			}
-			s.field("value").use { f ->
-				f.beginCollection().use { c ->
-					for((index, element) in value.withIndex()) {
-						c.field(index).use { f ->
-							f.encodeInt(value[index])
-						}
-					}
+		beginSizedCollection(value.size) { c ->
+			for((index, element) in value.withIndex()) {
+				c.field(index).use { f ->
+					f.encodeInt(value[index])
 				}
 			}
 		}
 	}
 
 	fun <T : Any> encodeArray(serializator: SerializationStrategy<T>, value: Array<T>) {
-		beginStructure().use { s ->
-			s.field("size").use { f ->
-				f.encodeInt(value.size)
-			}
-			s.field("value").use { f ->
-				f.beginCollection().use { c ->
-					for((index, element) in value.withIndex()) {
-						c.field(index).use { f ->
-							serializator.serialize(f, element)
-						}
-					}
+		beginSizedCollection(value.size) { c ->
+			for((index, element) in value.withIndex()) {
+				c.field(index).use { f ->
+					serializator.serialize(f, element)
 				}
 			}
 		}
 	}
 
 	override fun close() {
+	}
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun <R> Encoder.beginSizedCollection(size: Int, block: (CollectionFieldGroup<Encoder>) -> R): R {
+	contract {
+		callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+	}
+	if(this is NamedEncoder)
+		return beginSizedCollection(block)
+	beginStructure().use { s ->
+		s.field("size").use { f ->
+			f.encodeInt(size)
+		}
+		s.field("value").use { f ->
+			f.beginCollection().use { c ->
+				return block(c)
+			}
+		}
 	}
 }

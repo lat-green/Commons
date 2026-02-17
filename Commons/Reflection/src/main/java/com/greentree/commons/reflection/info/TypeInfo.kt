@@ -61,6 +61,11 @@ sealed interface TypeInfo<T> : Type {
 	fun <S> complementChildOrNull(child: Class<S>): TypeInfo<S>?
 	fun <S> complementChild(child: Class<S>): TypeInfo<S> =
 		complementChildOrNull(child) ?: TypeInfo(child)
+
+	companion object {
+
+		val STRING = TypeInfo(String::class.java)
+	}
 }
 
 fun <T> TypeInfo(field: Field) = TypeInfo<T>(field.genericType)

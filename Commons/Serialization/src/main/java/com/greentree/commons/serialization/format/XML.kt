@@ -50,7 +50,7 @@ object XML {
 		decodeFromString(serializator(cls), value)
 }
 
-data class XMLEncoder(val onResult: (XmlNode) -> Unit) : Encoder {
+data class XMLEncoder(val onResult: (XmlNode) -> Unit) : NamedEncoder {
 
 	private lateinit var result: XmlNode
 
@@ -95,11 +95,11 @@ data class XMLEncoder(val onResult: (XmlNode) -> Unit) : Encoder {
 		setResult(StringXmlNode(value))
 	}
 
-	override fun beginStructure(): StructureFieldGroup<Encoder> {
+	override fun beginStructure(): StructureFieldGroup<NamedEncoder> {
 		val result = MapTagXmlNode("struct")
 
-		return object : StructureFieldGroup<Encoder> {
-			override fun fieldOrNull(name: String): Encoder {
+		return object : StructureFieldGroup<NamedEncoder> {
+			override fun fieldOrNull(name: String): NamedEncoder {
 				val res = XMLEncoder {
 					when(it) {
 						is XmlAttribute -> result.attributes.put(name, it)
@@ -130,10 +130,10 @@ data class XMLEncoder(val onResult: (XmlNode) -> Unit) : Encoder {
 		}
 	}
 
-	override fun beginCollection(): CollectionFieldGroup<Encoder> {
+	override fun beginCollection(): CollectionFieldGroup<NamedEncoder> {
 		val result = MapTagXmlNode("collection")
 
-		return object : CollectionFieldGroup<Encoder> {
+		return object : CollectionFieldGroup<NamedEncoder> {
 			override fun fieldOrNull(index: Int): XMLEncoder {
 				val res = XMLEncoder {
 					val element = MapTagXmlNode("element")
@@ -164,7 +164,7 @@ data class XMLEncoder(val onResult: (XmlNode) -> Unit) : Encoder {
 	}
 }
 
-data class XMLDecoder(private val element: XmlNode) : Decoder {
+data class XMLDecoder(private val element: XmlNode) : NamedDecoder {
 
 	override fun decodeBoolean() = (element as BooleanXmlNode).value
 
@@ -184,10 +184,10 @@ data class XMLDecoder(private val element: XmlNode) : Decoder {
 
 	override fun decodeString() = (element as StringXmlNode).value
 
-	override fun beginStructure(): StructureFieldGroup<Decoder> {
+	override fun beginStructure(): NamedStructureFieldGroup<NamedDecoder> {
 		val element = element as TagXmlNode
 
-		return object : StructureFieldGroup<Decoder> {
+		return object : NamedStructureFieldGroup<NamedDecoder> {
 			override fun fieldOrNull(name: String) =
 				(element.getAttributeOrNull(name) ?: element.getChildOrNull(name))?.let {
 					XMLDecoder(it)
@@ -195,15 +195,21 @@ data class XMLDecoder(private val element: XmlNode) : Decoder {
 
 			override fun field(name: String) = fieldOrNull(name)
 				?: throw IllegalArgumentException("not found attribute or child '$name' in ${element.toXmlString()}")
+
+			override val keys: Set<String>
+				get() = element.attributes.keys + element.children.filterIsInstance<TagXmlNode>().map { it.name }
 		}
 	}
 
-	override fun beginCollection(): CollectionFieldGroup<Decoder> {
+	override fun beginCollection(): NamedCollectionFieldGroup<NamedDecoder> {
 		val element = element as TagXmlNode
 
-		return object : CollectionFieldGroup<Decoder> {
+		return object : NamedCollectionFieldGroup<NamedDecoder> {
 			override fun fieldOrNull(index: Int) =
 				XMLDecoder((element.children.get(index) as TagXmlNode).children.single())
+
+			override val size: Int
+				get() = element.children.size
 		}
 	}
 

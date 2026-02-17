@@ -23,6 +23,7 @@ import com.greentree.commons.serialization.serializator.LinkedHashMapSerializato
 import com.greentree.commons.serialization.serializator.LinkedListSerializator
 import com.greentree.commons.serialization.serializator.ListSerializator
 import com.greentree.commons.serialization.serializator.LongSerializator
+import com.greentree.commons.serialization.serializator.MapSerializator
 import com.greentree.commons.serialization.serializator.SetSerializator
 import com.greentree.commons.serialization.serializator.ShortSerializator
 import com.greentree.commons.serialization.serializator.StringSerializator
@@ -62,6 +63,7 @@ data object Serialization : BeanLayer {
 		registerInstance(LongSerializator)
 		registerInstance(ShortSerializator)
 		registerInstance(StringSerializator)
+		registerInstance(MapSerializator)
 		registerInstance(HashMapSerializator)
 		registerInstance(LinkedHashMapSerializator)
 		registerInstance(TreeMapSerializator)

@@ -1,6 +1,7 @@
 package com.greentree.commons.reflection.info
 
 import com.greentree.commons.reflection.ClassUtil
+import com.greentree.commons.reflection.inject
 import com.greentree.commons.util.mapToArray
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type

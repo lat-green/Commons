@@ -6,7 +6,6 @@ import com.greentree.commons.serialization.context.manager
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
 import com.greentree.commons.serialization.serializator.Serializator
-import com.greentree.commons.serialization.serializator.manager.realSerializator
 import com.greentree.commons.serialization.serializator.manager.serializator
 import com.greentree.commons.serialization.serializator.provider.SerializatorProvider
 import com.greentree.commons.serialization.serializator.type.GuaranteedType
@@ -52,6 +51,9 @@ data class GuaranteedClassSerializator<T : Any>(
 	}
 
 	companion object : SerializatorProvider {
+
+		override val priority: Int
+			get() = 2
 
 		override fun <T : Any> provide(type: TypeInfo<out T>): Serializator<T>? {
 			if(Modifier.isFinal(type.modifiers))

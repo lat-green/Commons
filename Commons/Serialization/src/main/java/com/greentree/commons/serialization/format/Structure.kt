@@ -18,14 +18,17 @@ interface CollectionFieldGroup<out T : Any> : FieldGroup<Int, T> {
 	override fun fieldOrNull(index: Int): T?
 }
 
-interface NamedStructure<K, out T : Any> : FieldGroup<K, T> {
+interface NamedStructure<K, out T : Any> : FieldGroup<K, T>
 
-	val keys: Set<K>
+interface NamedStructureFieldGroup<out T : Any> : NamedStructure<String, T>, StructureFieldGroup<T> {
+
+	val keys: Set<String>
 }
 
-interface NamedStructureFieldGroup<out T : Any> : NamedStructure<String, T>, StructureFieldGroup<T>
+interface NamedCollectionFieldGroup<out T : Any> : NamedStructure<Int, T>, CollectionFieldGroup<T> {
 
-interface NamedCollectionFieldGroup<out T : Any> : NamedStructure<Int, T>, CollectionFieldGroup<T>
+	val size: Int
+}
 
 data class StructureFieldGroupImpl<out T : Any>(val original: T) : StructureFieldGroup<T> {
 
