@@ -23,7 +23,7 @@ interface SerializationContext {
 				}
 			}
 
-	interface Key<E : Element>
+	interface Key<out E : Element>
 
 	interface Element : SerializationContext {
 
@@ -40,12 +40,12 @@ interface SerializationContext {
 			if(this.key == key) EmptySerializationContext else this
 	}
 
-	interface Property<T> : Element {
+	interface Property<out T> : Element {
 
 		val value: T
 	}
 
-	interface Marker<T : Marker<T>> : Element, Key<T> {
+	interface Marker<out T : Marker<T>> : Element, Key<T> {
 
 		override val key
 			get() = this
@@ -55,10 +55,10 @@ interface SerializationContext {
 val SerializationContext.manager
 	get() = get(SerializatorManager)
 
-fun <T> SerializationContext.getProperty(key: Key<out Property<T>>) =
+fun <T> SerializationContext.getProperty(key: Key<Property<T>>) =
 	get(key).value
 
-fun <T> SerializationContext.getPropertyOrNull(key: Key<out Property<T>>) =
+fun <T> SerializationContext.getPropertyOrNull(key: Key<Property<T>>) =
 	getOrNull(key)?.value
 
 operator fun SerializationContext.contains(key: Key<*>) = getOrNull(key) != null

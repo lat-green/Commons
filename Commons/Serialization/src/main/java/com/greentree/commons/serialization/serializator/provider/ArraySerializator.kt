@@ -28,7 +28,7 @@ data class ArraySerializator<T : Any>(
 
 	companion object : SerializatorProvider {
 
-		override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+		override fun <T : Any> provide(type: TypeInfo<out T>): Serializator<T>? {
 			val cls = type.toClass()
 			val guaranteed = cls.kotlin.java
 			if(!guaranteed.isArray)

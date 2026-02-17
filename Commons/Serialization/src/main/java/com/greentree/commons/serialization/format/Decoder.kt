@@ -32,8 +32,8 @@ interface Decoder : AutoCloseable {
 
 	fun decodeClass(): Class<*> = Class.forName(decodeString())
 
-	fun beginStructure(): Structure<Decoder>
-	fun beginCollection(): Structure<Decoder>
+	fun beginStructure(): StructureFieldGroup<Decoder>
+	fun beginCollection(): CollectionFieldGroup<Decoder>
 
 	fun decodeIntArray(): IntArray {
 		beginStructure().use { s ->
@@ -71,5 +71,8 @@ interface Decoder : AutoCloseable {
 				}
 			}
 		}
+	}
+
+	override fun close() {
 	}
 }

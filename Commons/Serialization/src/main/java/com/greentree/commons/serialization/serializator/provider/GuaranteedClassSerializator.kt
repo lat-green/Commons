@@ -13,24 +13,24 @@ import com.greentree.commons.serialization.serializator.type.GuaranteedType
 import java.lang.reflect.Modifier
 
 data class GuaranteedClassSerializator<T : Any>(
-	val guaranteed: TypeInfo<T>,
+	override val type: TypeInfo<out T>,
 ) : Serializator<T> {
 
 	init {
-		require(!Modifier.isFinal(guaranteed.modifiers)) { "$guaranteed is final" }
+		require(!Modifier.isFinal(type.modifiers)) { "$type is final" }
 	}
 
 	override fun serialize(context: SerializationContext, encoder: Encoder, value: T) {
 		val manager = context.manager
 		val cls = value::class.java as Class<T>
-		val type = guaranteed.complementChild(cls)
+		val genericClass = type.complementChild(cls)
 		encoder.beginStructure().use { struct ->
 			struct.field("type").use { clsEncoder ->
 				manager.serializator<Class<*>>()
-					.serialize(context + GuaranteedType(guaranteed), clsEncoder, cls)
+					.serialize(context + GuaranteedType(type), clsEncoder, cls)
 			}
 			struct.field("value").use { dataEncoder ->
-				manager.realSerializator(type)
+				manager.realSerializator(genericClass)
 					.serialize(context, dataEncoder, value)
 			}
 		}
@@ -41,21 +41,19 @@ data class GuaranteedClassSerializator<T : Any>(
 		decoder.beginStructure().use { struct ->
 			val cls = struct.field("type").use { clsEncoder ->
 				manager.serializator<Class<T>>()
-					.deserialize(context + GuaranteedType(guaranteed), clsEncoder)
+					.deserialize(context + GuaranteedType(type), clsEncoder)
 			}
+			val genericClass = type.complementChild(cls)
 			struct.field("value").use { dataEncoder ->
-				return manager.realSerializator(cls)
+				return manager.realSerializator(genericClass)
 					.deserialize(context, dataEncoder)
 			}
 		}
 	}
 
-	override val type
-		get() = guaranteed
-
 	companion object : SerializatorProvider {
 
-		override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+		override fun <T : Any> provide(type: TypeInfo<out T>): Serializator<T>? {
 			if(Modifier.isFinal(type.modifiers))
 				return null
 			return GuaranteedClassSerializator(type)

@@ -3,10 +3,10 @@ package com.greentree.commons.serialization.format
 import java.util.*
 
 data class BitsPackDecoder(
-	val origin: Decoder
+	val origin: Decoder,
 ) : Decoder {
 
-	private var collection: Structure<Decoder>? = null
+	private var collection: CollectionFieldGroup<Decoder>? = null
 	private var collectionIndex = 0
 	private val bits = BitSet()
 	private var index = 8
@@ -99,5 +99,5 @@ data class BitsPackDecoder(
 
 	override fun beginStructure() = BitsPackDecoderStructure(origin.beginStructure())
 
-	override fun beginCollection() = BitsPackDecoderStructure(origin.beginCollection())
+	override fun beginCollection() = BitsPackDecoderCollection(origin.beginCollection())
 }

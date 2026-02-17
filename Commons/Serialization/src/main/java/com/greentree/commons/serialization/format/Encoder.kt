@@ -32,8 +32,8 @@ interface Encoder : AutoCloseable {
 
 	fun encodeClass(cls: Class<*>) = encodeString(cls.name)
 
-	fun beginStructure(): Structure<Encoder>
-	fun beginCollection(): Structure<Encoder>
+	fun beginStructure(): StructureFieldGroup<Encoder>
+	fun beginCollection(): CollectionFieldGroup<Encoder>
 
 	fun encodeIntArray(value: IntArray) {
 		beginStructure().use { s ->
@@ -67,5 +67,8 @@ interface Encoder : AutoCloseable {
 				}
 			}
 		}
+	}
+
+	override fun close() {
 	}
 }

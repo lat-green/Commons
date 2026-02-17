@@ -15,7 +15,7 @@ class SerializationBytesTest : SerializationTest() {
 	@ArgumentsSource(BaseArgumentsProvider::class)
 	@ParameterizedTest
 	fun <T : Any> serialize(expected: T, maxSize: Int) {
-		val serializator = manager.serializator(expected::class.java)
+		val serializator = manager.serializator(expected::class)
 		val array = ByteArrayOutputStream().use {
 			Bytes.encoder(it).use { encoder ->
 				serializator.serialize(encoder, expected)

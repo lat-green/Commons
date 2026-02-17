@@ -14,7 +14,7 @@ import com.greentree.commons.util.UnsafeUtil
 import java.lang.reflect.Modifier
 
 data class UnsafeRealSerializator<T : Any>(
-	override val type: TypeInfo<T>,
+	override val type: TypeInfo<out T>,
 ) : Serializator<T> {
 
 	init {
@@ -70,7 +70,7 @@ data class UnsafeRealSerializator<T : Any>(
 			get() = 0
 
 		override fun <T : Any> provide(
-			type: TypeInfo<T>,
+			type: TypeInfo<out T>,
 		) = run {
 			val cls = type.toClass()
 			if(cls.isInterface || cls.isEnum || cls.isArray || cls.isAnnotation || cls.isPrimitive)

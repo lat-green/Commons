@@ -6,8 +6,6 @@ import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
 import com.greentree.commons.serialization.serializator.Serializator
-import kotlin.Deprecated
-import kotlin.ReplaceWith
 import kotlin.reflect.KClass
 
 interface SerializatorManager : SerializationContext.Element {
@@ -21,11 +19,9 @@ interface SerializatorManager : SerializationContext.Element {
 	fun <T : Any> realSerializator(cls: TypeInfo<T>): Serializator<T>
 }
 
-@Deprecated("", ReplaceWith("serializator(TypeInfo(guaranteed))"))
 fun <T : Any> SerializatorManager.serializator(guaranteed: Class<out T>): Serializator<T> =
 	serializator(TypeInfo(guaranteed))
 
-@Deprecated("", ReplaceWith("realSerializator(TypeInfo(cls))"))
 fun <T : Any> SerializatorManager.realSerializator(cls: Class<T>): Serializator<T> =
 	realSerializator(TypeInfo(cls))
 

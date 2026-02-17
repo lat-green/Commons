@@ -2,29 +2,26 @@ package com.greentree.commons.serialization.serializator
 
 import com.greentree.commons.reflection.info.TypeInfo
 import com.greentree.commons.reflection.info.TypeUtil
-import com.greentree.commons.reflection.info.TypeUtil.getSuperType
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.context.manager
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
 import com.greentree.commons.serialization.serializator.manager.deserialize
 import com.greentree.commons.serialization.serializator.manager.serialize
-import com.greentree.commons.serialization.serializator.provider.SerializatorProvider
+import java.util.*
 
-data class MapSerializator<K : Any, V : Any>(
-	override val type: TypeInfo<out Map<K, V>>,
-	val keyClass: TypeInfo<out K> = type.getKeyType(),
-	val valueClass: TypeInfo<out V> = type.getValueType(),
-) : Serializator<Map<K, V>> {
+interface AbstractMapSerializator<K : Any, V : Any, M : MutableMap<K, V>> : Serializator<M> {
+
+	fun newMap(): M
 
 	override fun serialize(
 		context: SerializationContext,
 		encoder: Encoder,
-		value: Map<K, V>,
+		value: M,
 	) {
 		val manager = context.manager
-		val keySerializator = manager.serializator(keyClass)
-		val valueSerializator = manager.serializator(valueClass)
+		val keySerializator = manager.serializator(type.getKeyType())
+		val valueSerializator = manager.serializator(type.getValueType())
 		encoder.beginStructure().use { struct ->
 			struct.field("size").use { f ->
 				manager.serialize(context, f, value.size)
@@ -52,11 +49,12 @@ data class MapSerializator<K : Any, V : Any>(
 	override fun deserialize(
 		context: SerializationContext,
 		decoder: Decoder,
-	): Map<K, V> {
+	): M {
 		val manager = context.manager
-		val keySerializator = manager.serializator(keyClass)
-		val valueSerializator = manager.serializator(valueClass)
-		return buildMap {
+		val keySerializator = manager.serializator(type.getKeyType())
+		val valueSerializator = manager.serializator(type.getValueType())
+		val map = newMap()
+		map.run {
 			decoder.beginStructure().use { struct ->
 				val size = struct.field("size").use { f ->
 					manager.deserialize<Int>(context, f)
@@ -80,21 +78,27 @@ data class MapSerializator<K : Any, V : Any>(
 				}
 			}
 		}
-	}
-
-	companion object : SerializatorProvider {
-
-		override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
-			if(TypeUtil.isExtends(Map::class.java, type)) {
-				return MapSerializator<Any, Any>(type as TypeInfo<out Map<Any, Any>>) as Serializator<T>
-			}
-			return null
-		}
+		return map
 	}
 }
 
-private fun <K> TypeInfo<out Map<K, *>>.getKeyType() = getSuperType(this, Map::class.java)
+fun <K> TypeInfo<out Map<K, *>>.getKeyType() = TypeUtil.getSuperType(this, Map::class.java)
 	.typeArguments[0] as TypeInfo<K>
 
-private fun <V> TypeInfo<out Map<*, V>>.getValueType() = getSuperType(this, Map::class.java)
+fun <V> TypeInfo<out Map<*, V>>.getValueType() = TypeUtil.getSuperType(this, Map::class.java)
 	.typeArguments[1] as TypeInfo<V>
+
+data object TreeMapSerializator : AbstractMapSerializator<Any, Any, TreeMap<Any, Any>> {
+
+	override fun newMap() = TreeMap<Any, Any>()
+}
+
+data object HashMapSerializator : AbstractMapSerializator<Any, Any, HashMap<Any, Any>> {
+
+	override fun newMap() = HashMap<Any, Any>()
+}
+
+data object LinkedHashMapSerializator : AbstractMapSerializator<Any, Any, LinkedHashMap<Any, Any>> {
+
+	override fun newMap() = LinkedHashMap<Any, Any>()
+}

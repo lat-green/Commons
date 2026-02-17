@@ -39,7 +39,10 @@ data object BaseArgumentsProvider : ArgumentsProvider {
 				Arguments.of(Box(arrayOf<Int>(1, 2, 3)), 16),
 				Arguments.of(Box(arrayOf("aaa", 2, Unit)), 22),
 				Arguments.of(Box(arrayOf<String>("A", "B", "C")), 13),
-				Arguments.of(mapOf("a" to 1, "b" to 2)),
+				Arguments.of(mutableMapOf("a" to 1, "b" to 2)),
+				Arguments.of(mutableListOf("a" to 1, "b" to 2)),
+				Arguments.of(mutableSetOf("a" to 1, "b" to 2)),
+				Arguments.of(mutableListOf("a", "b")),
 			),
 			(0 .. ((intAccuracy.max - intAccuracy.min + intAccuracy.accuracy / 2) / intAccuracy.accuracy).toInt())
 				.map { Arguments.of(IntBox(it * intAccuracy.accuracy + intAccuracy.min), 1) }

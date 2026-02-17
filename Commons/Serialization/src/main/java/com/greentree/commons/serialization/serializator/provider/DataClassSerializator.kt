@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 
 data class DataClassSerializator<T : Any>(
-	val cls: KClass<T>,
+	val cls: KClass<out T>,
 ) : Serializator<T> {
 
 	private val primaryConstructor = cls.primaryConstructor ?: throw IllegalArgumentException("$cls is not data class")
@@ -58,12 +58,12 @@ data class DataClassSerializator<T : Any>(
 		return constructor.call(*args)
 	}
 
-	override val type: TypeInfo<T>
-		get() = getTypeInfo(cls)
+	override val type
+		get() = TypeInfo(cls)
 
 	companion object : SerializatorProvider {
 
-		override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+		override fun <T : Any> provide(type: TypeInfo<out T>): Serializator<T>? {
 			val cls = type.toClass()
 			val guaranteed = cls.kotlin
 			if(!guaranteed.isData || guaranteed.objectInstance != null)

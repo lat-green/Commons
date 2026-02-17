@@ -3,7 +3,7 @@ package com.greentree.commons.serialization.format
 import java.util.*
 
 data class BitsPackEncoder(
-	val origin: Encoder
+	val origin: Encoder,
 ) : Encoder {
 
 	private val bits = BitSet()
@@ -93,5 +93,5 @@ data class BitsPackEncoder(
 
 	override fun beginStructure() = BitsPackEncoderStructure(origin.beginStructure())
 
-	override fun beginCollection() = BitsPackEncoderStructure(origin.beginCollection())
+	override fun beginCollection() = BitsPackEncoderCollection(origin.beginCollection())
 }

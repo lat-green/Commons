@@ -18,7 +18,7 @@ data class EnumAsByteSerializator<E : Enum<E>>(
 
 	companion object : SerializatorProvider {
 
-		override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+		override fun <T : Any> provide(type: TypeInfo<out T>): Serializator<T>? {
 			val cls = type.toClass()
 			if(!cls.isEnum)
 				return null

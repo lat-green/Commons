@@ -8,6 +8,9 @@ import com.greentree.commons.serialization.serializator.Serializator
 
 private data object ObjectSerializator : Serializator<Any> {
 
+	override val type
+		get() = TypeInfo(Any::class)
+
 	override fun serialize(context: SerializationContext, encoder: Encoder, value: Any) {
 		encoder.beginStructure().use {
 		}
@@ -24,7 +27,7 @@ data object ObjectSerializatorProvider : SerializatorProvider {
 	override val priority: Int
 		get() = 1
 
-	override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+	override fun <T : Any> provide(type: TypeInfo<out T>): Serializator<T>? {
 		val cls = type.toClass()
 		return if(cls == Any::class.java)
 			ObjectSerializator as Serializator<T>

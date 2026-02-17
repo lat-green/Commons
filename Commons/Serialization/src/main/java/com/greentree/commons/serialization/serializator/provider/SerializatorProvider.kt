@@ -8,5 +8,5 @@ interface SerializatorProvider {
 	val priority: Int
 		get() = 10
 
-	fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>?
+	fun <T : Any> provide(type: TypeInfo<out T>): Serializator<T>?
 }

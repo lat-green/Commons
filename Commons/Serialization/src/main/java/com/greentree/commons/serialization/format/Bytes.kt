@@ -22,13 +22,13 @@ object Bytes {
 
 data class ByteDecoder(
 	val input: DataInput,
-) : Decoder, Structure<Decoder> {
+) : Decoder {
 
-	override fun beginStructure() = this
-	override fun beginCollection() = this
+	private val structure = StructureFieldGroupImpl(this)
+	private val collection = CollectionFieldGroupImpl(this)
 
-	override fun fieldOrNull(name: String) = this
-	override fun fieldOrNull(index: Int) = this
+	override fun beginStructure() = structure
+	override fun beginCollection() = collection
 
 	override fun decodeBoolean(): Boolean = input.readBoolean()
 
@@ -53,13 +53,13 @@ data class ByteDecoder(
 
 data class ByteEncoder(
 	val output: DataOutput,
-) : Encoder, Structure<Encoder> {
+) : Encoder {
 
-	override fun beginStructure() = this
-	override fun beginCollection() = this
+	private val structure = StructureFieldGroupImpl(this)
+	private val collection = CollectionFieldGroupImpl(this)
 
-	override fun fieldOrNull(name: String) = this
-	override fun fieldOrNull(index: Int) = this
+	override fun beginStructure() = structure
+	override fun beginCollection() = collection
 
 	override fun encodeBoolean(value: Boolean) = output.writeBoolean(value)
 

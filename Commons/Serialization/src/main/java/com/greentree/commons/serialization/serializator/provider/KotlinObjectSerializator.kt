@@ -1,7 +1,6 @@
 package com.greentree.engine.rex.serialization.serializator.provider
 
 import com.greentree.commons.reflection.info.TypeInfo
-import com.greentree.commons.reflection.info.TypeInfoBuilder.getTypeInfo
 import com.greentree.commons.serialization.context.SerializationContext
 import com.greentree.commons.serialization.format.Decoder
 import com.greentree.commons.serialization.format.Encoder
@@ -10,7 +9,7 @@ import com.greentree.commons.serialization.serializator.provider.SerializatorPro
 import kotlin.reflect.KClass
 
 data class KotlinObjectSerializator<T : Any>(
-	val cls: KClass<T>,
+	val cls: KClass<out T>,
 ) : Serializator<T> {
 
 	private val objectInstance = run {
@@ -34,7 +33,7 @@ data class KotlinObjectSerializator<T : Any>(
 		override val priority: Int
 			get() = 1
 
-		override fun <T : Any> provide(type: TypeInfo<T>): Serializator<T>? {
+		override fun <T : Any> provide(type: TypeInfo<out T>): Serializator<T>? {
 			val cls = type.toClass()
 			val kClass = cls.kotlin
 			return if(kClass.objectInstance != null)
@@ -45,5 +44,5 @@ data class KotlinObjectSerializator<T : Any>(
 	}
 
 	override val type
-		get() = getTypeInfo(cls)
+		get() = TypeInfo(cls)
 }

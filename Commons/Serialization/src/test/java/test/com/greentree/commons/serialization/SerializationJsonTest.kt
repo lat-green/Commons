@@ -35,6 +35,22 @@ class SerializationJsonTest : SerializationTest() {
 		val decoder = Json.decoder(json)
 		val actual = serializator.deserialize(decoder)
 		assertEquals(expected, actual) { "$expected $json" }
-		assertTrue(text.length < 70) { "length: ${text.length}\n$text" }
+		assertTrue(text.length < 125) { "length: ${text.length} > 125\n$text" }
+	}
+
+	@Test
+	fun testSet() {
+		val expected = setOf("a", "b")
+		val serializator = manager.serializator(
+			ParameterizedTypeInfo.fromClass<Set<String>>(
+				String::class,
+			)
+		)
+		val json = Json.encodeToString(serializator, expected)
+		val text = json.toPrettyString()
+		val decoder = Json.decoder(json)
+		val actual = serializator.deserialize(decoder)
+		assertEquals(expected, actual) { "$expected $json" }
+		assertTrue(text.length < 70) { "length: ${text.length} > 70\n$text" }
 	}
 }

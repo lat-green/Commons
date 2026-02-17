@@ -26,12 +26,11 @@ class SerializatorManagerImpl(
 
 	override fun <T : Any> serializator(
 		guaranteed: TypeInfo<out T>,
-	): Serializator<T> =
-		serializatorOrNull(
-			providers + GuaranteedClassSerializator,
-			serializators,
-			guaranteed
-		) ?: throw NullPointerException("not found serializator for $guaranteed")
+	): Serializator<T> = serializatorOrNull(
+		providers + GuaranteedClassSerializator,
+		serializators,
+		guaranteed
+	) ?: throw NullPointerException("not found serializator for $guaranteed")
 
 	override fun <T : Any> realSerializator(cls: TypeInfo<T>): Serializator<T> =
 		serializatorOrNull(providers, realSerializators, cls)
@@ -45,11 +44,11 @@ class SerializatorManagerImpl(
 		val guaranteed = guaranteed.boxing
 		@Suppress("UNCHECKED_CAST")
 		return serializators.getOrPutNotNull(guaranteed) {
-			val origin = provide(providers, guaranteed)
-			if(origin == null)
+			val original = provide(providers, guaranteed)
+			if(original == null)
 				null
 			else
-				wrap(origin)
+				wrap(original)
 		} as Serializator<T>?
 	}
 
@@ -70,7 +69,7 @@ class SerializatorManagerImpl(
 
 		private fun <T : Any> provide(
 			providers: Sequence<SerializatorProvider>,
-			type: TypeInfo<T>,
+			type: TypeInfo<out T>,
 		): Serializator<T>? {
 			return providers
 				.map { it to it.provide(type) }

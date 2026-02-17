@@ -7,25 +7,34 @@ import com.greentree.commons.context.registerInstance
 import com.greentree.commons.context.registerSingleton
 import com.greentree.commons.context.resolveBean
 import com.greentree.commons.serialization.context.BeanContextProperty
+import com.greentree.commons.serialization.serializator.ArrayListSerializator
 import com.greentree.commons.serialization.serializator.BitSetSerializator
 import com.greentree.commons.serialization.serializator.BooleanSerializator
 import com.greentree.commons.serialization.serializator.ByteSerializator
 import com.greentree.commons.serialization.serializator.ClassSerializator
+import com.greentree.commons.serialization.serializator.CollectionSerializator
 import com.greentree.commons.serialization.serializator.DoubleSerializator
 import com.greentree.commons.serialization.serializator.EnumAsByteSerializator
 import com.greentree.commons.serialization.serializator.FloatSerializator
+import com.greentree.commons.serialization.serializator.HashMapSerializator
 import com.greentree.commons.serialization.serializator.IntArraySerializator
 import com.greentree.commons.serialization.serializator.IntSerializator
+import com.greentree.commons.serialization.serializator.LinkedHashMapSerializator
+import com.greentree.commons.serialization.serializator.LinkedListSerializator
+import com.greentree.commons.serialization.serializator.ListSerializator
 import com.greentree.commons.serialization.serializator.LongSerializator
-import com.greentree.commons.serialization.serializator.MapSerializator
+import com.greentree.commons.serialization.serializator.SetSerializator
 import com.greentree.commons.serialization.serializator.ShortSerializator
 import com.greentree.commons.serialization.serializator.StringSerializator
+import com.greentree.commons.serialization.serializator.TreeMapSerializator
 import com.greentree.commons.serialization.serializator.accuracy.AccuracySerializatorFilter
 import com.greentree.commons.serialization.serializator.filter.AddSerializationContextSerializatorFilter
 import com.greentree.commons.serialization.serializator.filter.ExceptionSerializatorFilter
 import com.greentree.commons.serialization.serializator.manager.SerializatorManagerImpl
 import com.greentree.commons.serialization.serializator.provider.ArraySerializator
 import com.greentree.commons.serialization.serializator.provider.DataClassSerializator
+import com.greentree.commons.serialization.serializator.provider.GenericCollectionSerializator
+import com.greentree.commons.serialization.serializator.provider.GenericMapSerializator
 import com.greentree.commons.serialization.serializator.provider.ObjectSerializatorProvider
 import com.greentree.commons.serialization.serializator.type.ClassAsNameSerializator
 import com.greentree.commons.serialization.serializator.type.KotlinObjectTypeSerializator
@@ -53,6 +62,11 @@ data object Serialization : BeanLayer {
 		registerInstance(LongSerializator)
 		registerInstance(ShortSerializator)
 		registerInstance(StringSerializator)
+		registerInstance(HashMapSerializator)
+		registerInstance(LinkedHashMapSerializator)
+		registerInstance(TreeMapSerializator)
+		registerInstance(ArrayListSerializator)
+		registerInstance(LinkedListSerializator)
 		/* SerializatorProviders */
 		registerInstance(ArraySerializator)
 		registerInstance(DataClassSerializator)
@@ -60,7 +74,11 @@ data object Serialization : BeanLayer {
 		registerInstance(ObjectSerializatorProvider)
 		registerInstance(EnumAsByteSerializator)
 //		registerInstance(UnsafeRealSerializator)
-		registerInstance(MapSerializator)
+		registerInstance(GenericMapSerializator)
+		registerInstance(GenericCollectionSerializator)
+		registerInstance(ListSerializator)
+		registerInstance(SetSerializator)
+		registerInstance(CollectionSerializator)
 		/* Filter */
 		registerInstance(ExceptionSerializatorFilter)
 		registerInstance(AccuracySerializatorFilter)
