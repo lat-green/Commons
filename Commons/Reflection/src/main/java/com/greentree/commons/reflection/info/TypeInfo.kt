@@ -12,7 +12,7 @@ import java.lang.reflect.TypeVariable
 import java.lang.reflect.WildcardType
 import kotlin.reflect.KClass
 
-sealed interface TypeInfo<T> : Type {
+sealed interface TypeInfo<T : Any> : Type {
 
 	fun toClass(): Class<T>
 	val isPrimitive
@@ -47,7 +47,8 @@ sealed interface TypeInfo<T> : Type {
 	fun isChildFor(parent: Class<*>): Boolean = isChildFor(TypeInfo(parent))
 	fun isParentFor(child: Class<*>): Boolean = isParentFor(TypeInfo(child))
 
-	fun <S> getSuperType(base: Class<S>) = ParameterizedTypeUtil.getBaseOrNull(this, base)?.let { TypeInfo<S>(it) }
+	fun <S : Any> getSuperType(base: Class<S>) =
+		ParameterizedTypeUtil.getBaseOrNull(this, base)?.let { TypeInfo<S>(it) }
 
 	fun getSuperClassAndInterfaces(): Iterable<ParameterizedTypeInfo<in T>> = buildList {
 		superType?.let {
@@ -58,8 +59,8 @@ sealed interface TypeInfo<T> : Type {
 
 	fun getSuperClassAndInterfacesAsClass(): Iterable<Class<in T>> = getSuperClassAndInterfaces().map { it.toClass() }
 
-	fun <S> complementChildOrNull(child: Class<S>): TypeInfo<S>?
-	fun <S> complementChild(child: Class<S>): TypeInfo<S> =
+	fun <S : Any> complementChildOrNull(child: Class<S>): TypeInfo<S>?
+	fun <S : Any> complementChild(child: Class<S>): TypeInfo<S> =
 		complementChildOrNull(child) ?: TypeInfo(child)
 
 	companion object {
@@ -68,10 +69,10 @@ sealed interface TypeInfo<T> : Type {
 	}
 }
 
-fun <T> TypeInfo(field: Field) = TypeInfo<T>(field.genericType)
-fun <T> TypeInfo(parameter: Parameter) = TypeInfo<T>(parameter.parameterizedType)
+fun <T : Any> TypeInfo(field: Field) = TypeInfo<T>(field.genericType)
+fun <T : Any> TypeInfo(parameter: Parameter) = TypeInfo<T>(parameter.parameterizedType)
 
-fun <T> TypeInfo(
+fun <T : Any> TypeInfo(
 	rawType: Class<T>,
 ): TypeInfo<T> = if(rawType.isArray)
 	ArrayTypeInfo(TypeInfo<Any>(rawType.componentType)) as TypeInfo<T>
@@ -81,7 +82,7 @@ else
 		rawType.typeParameters.mapToArray { TypeInfo<Any>(it) }
 	)
 
-fun <T> TypeInfo(type: WildcardType): TypeInfo<T> {
+fun <T : Any> TypeInfo(type: WildcardType): TypeInfo<T> {
 	val upperBounds = type.upperBounds.toList() - Any::class.java
 	if(upperBounds.isEmpty())
 		return TypeInfo<T>(Any::class.java)
@@ -90,7 +91,7 @@ fun <T> TypeInfo(type: WildcardType): TypeInfo<T> {
 	throw UnsupportedOperationException("$type " + type.lowerBounds.contentToString() + " " + type.upperBounds.contentToString())
 }
 
-fun <T> TypeInfo(type: Type): TypeInfo<T> = when(type) {
+fun <T : Any> TypeInfo(type: Type): TypeInfo<T> = when(type) {
 	is TypeInfo<*> -> type
 	is Class<*> -> TypeInfo(type as Class<T>)
 	is ParameterizedType -> ParameterizedTypeInfo(type)
@@ -104,12 +105,14 @@ fun <T : Any> TypeInfo(
 	rawType: KClass<T>,
 ) = TypeInfo(rawType.java)
 
+inline fun <reified T : Any> TypeInfo() = TypeInfo(T::class.java)
+
 @Deprecated("", ReplaceWith("TypeInfo(this)"))
-val <T> Class<T>.type
+val <T : Any> Class<T>.type
 	get() = TypeInfo(this)
 
 @Deprecated("", ReplaceWith("type"))
-val <T> Class<T>.parameterizedType
+val <T : Any> Class<T>.parameterizedType
 	get() = type
 
 @Deprecated("", ReplaceWith("TypeInfo(this)"))
