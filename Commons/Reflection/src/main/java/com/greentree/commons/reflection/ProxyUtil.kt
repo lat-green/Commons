@@ -1,6 +1,6 @@
 package com.greentree.commons.reflection
 
-import com.greentree.commons.reflection.info.TypeInfoBuilder.getTypeInfo
+import com.greentree.commons.reflection.info.TypeInfo
 import com.greentree.commons.reflection.info.TypeUtil
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
@@ -8,7 +8,12 @@ import java.lang.reflect.Proxy
 
 object ProxyUtil {
 
-	fun <T> newLazyInstance(initializer: () -> T) = newLazyInstance(returnType(initializer), initializer)
+	fun <T : Any> newLazyInstance(initializer: () -> T) =
+		newLazyInstance(returnType(initializer), initializer)
+
+	fun <T : Any> newLazyInstance(type: TypeInfo<out T>, initializer: () -> T): T {
+		return newLazyInstance(type.toClass(), initializer)
+	}
 
 	fun <T> newLazyInstance(cls: Class<out T>, initializer: () -> T): T {
 		return Proxy.newProxyInstance(
@@ -54,7 +59,8 @@ object ProxyUtil {
 		}
 	}
 
-	fun <T> newStreamingInstance(initializer: () -> T) = newStreamingInstance(returnType(initializer), initializer)
+	fun <T : Any> newStreamingInstance(initializer: () -> T) =
+		newStreamingInstance(returnType(initializer).toClass(), initializer)
 
 	fun <T> newStreamingInstance(cls: Class<out T>, initializer: () -> T): T {
 		return Proxy.newProxyInstance(
@@ -85,26 +91,26 @@ object ProxyUtil {
 	}
 }
 
-fun <R> returnType(factory: Function0<R>): Class<out R> =
+fun <R : Any> returnType(factory: Function0<R>): TypeInfo<out R> =
 	TypeUtil.getSuperType(
-		getTypeInfo(factory::class.java),
+		TypeInfo(factory::class.java),
 		Function0::class.java
-	).typeArguments[0].toClass() as Class<out R>
+	).typeArguments[0] as TypeInfo<out R>
 
-fun <R> returnType(factory: Function1<*, R>): Class<out R> =
+fun <R : Any> returnType(factory: Function1<*, R>): TypeInfo<out R> =
 	TypeUtil.getSuperType(
-		getTypeInfo(factory::class.java),
+		TypeInfo(factory::class.java),
 		Function1::class.java
-	).typeArguments[1].toClass() as Class<out R>
+	).typeArguments[1] as TypeInfo<out R>
 
-fun <R> returnType(factory: Function2<*, *, R>): Class<out R> =
+fun <R : Any> returnType(factory: Function2<*, *, R>): TypeInfo<out R> =
 	TypeUtil.getSuperType(
-		getTypeInfo(factory::class.java),
+		TypeInfo(factory::class.java),
 		Function2::class.java
-	).typeArguments[2].toClass() as Class<out R>
+	).typeArguments[2] as TypeInfo<out R>
 
-fun <R> returnType(factory: Function3<*, *, *, R>): Class<out R> =
+fun <R : Any> returnType(factory: Function3<*, *, *, R>): TypeInfo<out R> =
 	TypeUtil.getSuperType(
-		getTypeInfo(factory::class.java),
+		TypeInfo(factory::class.java),
 		Function3::class.java
-	).typeArguments[3].toClass() as Class<out R>
+	).typeArguments[3] as TypeInfo<out R>

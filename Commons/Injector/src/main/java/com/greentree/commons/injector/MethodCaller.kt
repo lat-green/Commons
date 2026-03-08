@@ -2,6 +2,7 @@
 
 package com.greentree.commons.injector
 
+import com.greentree.commons.reflection.info.TypeInfo
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -112,6 +113,7 @@ interface MethodCaller {
 }
 
 fun <T : Any> MethodCaller.newInstance(type: KClass<out T>): T = newInstance(type.java)
+fun <T : Any> MethodCaller.newInstance(type: TypeInfo<out T>): T = newInstance(type.toClass())
 
 fun MethodCaller.isSupports(method: Method) = method.parameters.all { isSupports(it) }
 fun MethodCaller.isSupports(constructor: Constructor<*>) = constructor.parameters.all { isSupports(it) }

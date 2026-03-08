@@ -7,13 +7,13 @@ data class ParentBeanContext(
 	val child: MutableBeanContext = BeanContext(),
 ) : MutableBeanContext {
 
-	override fun <T> resolveProviderOrNull(type: Class<T>): BeanProvider<T>? =
+	override fun <T : Any> resolveProviderOrNull(type: Class<T>): BeanProvider<T>? =
 		child.resolveProviderOrNull(type) ?: parent.resolveProviderOrNull(type)
 
-	override fun <T> resolveAllProviders(type: Class<T>): Sequence<BeanProvider<T>> =
+	override fun <T : Any> resolveAllProviders(type: Class<T>): Sequence<BeanProvider<T>> =
 		child.resolveAllProviders(type) + parent.resolveAllProviders(type)
 
-	override fun <T> resolveProviderOrNull(name: String): BeanProvider<T>? =
+	override fun <T : Any> resolveProviderOrNull(name: String): BeanProvider<T>? =
 		child.resolveProviderOrNull(name) ?: parent.resolveProviderOrNull(name)
 
 	override fun register(name: String, provider: BeanProvider<*>): MutableBeanContext {

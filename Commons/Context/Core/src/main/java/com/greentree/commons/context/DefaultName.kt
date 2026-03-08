@@ -1,5 +1,6 @@
 package com.greentree.commons.context
 
+import com.greentree.commons.reflection.info.TypeInfo
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -7,13 +8,16 @@ fun defaultName(className: String): String {
 	return firstToLowerCase(className.substringAfterLast('.'))
 }
 
+fun defaultName(cls: TypeInfo<*>) = defaultName(cls.toClass())
+
 fun defaultName(cls: KClass<*>) = defaultName(cls.java)
 
 fun defaultName(cls: Class<*>): String = defaultName(cls.name)
 
+@Deprecated("", ReplaceWith("defaultName(obj.javaClass)"))
 fun defaultName(obj: Any) = defaultName(obj.javaClass)
 
-fun defaultName(factory: BeanRegistration<*>) = defaultName(factory.type)
+fun <T : Any> defaultName(factory: BeanRegistration<T>) = defaultName(factory.type)
 
 private fun firstToLowerCase(str: String): String {
 	if(str.isBlank())

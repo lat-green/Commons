@@ -2,7 +2,7 @@ package com.greentree.commons.reflection.info
 
 import java.lang.reflect.GenericArrayType
 
-data class ArrayTypeInfo<T>(
+data class ArrayTypeInfo<T : Any>(
 	val componentType: TypeInfo<T>,
 ) : GenericArrayType, TypeInfo<Array<T>> {
 
@@ -16,9 +16,9 @@ data class ArrayTypeInfo<T>(
 	override val boxing
 		get() = this
 
-	override fun <S> complementChildOrNull(child: Class<S>): TypeInfo<S>? {
+	override fun <S : Any> complementChildOrNull(child: Class<S>): TypeInfo<S>? {
 		TODO("Not yet implemented")
 	}
 }
 
-fun <T> ArrayTypeInfo(type: GenericArrayType) = ArrayTypeInfo<T>(TypeInfo(type.genericComponentType))
+fun <T : Any> ArrayTypeInfo(type: GenericArrayType) = ArrayTypeInfo(TypeInfo<T>(type.genericComponentType))

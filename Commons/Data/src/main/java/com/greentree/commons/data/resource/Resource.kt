@@ -1,6 +1,6 @@
 package com.greentree.commons.data.resource
 
-interface Resource {
+sealed interface Resource {
 
 	val name: String
 
@@ -9,3 +9,14 @@ interface Resource {
 
 val Resource.lastModified
 	get() = lastModified()
+
+fun Resource.walk(block: (file: FileResource) -> Unit) {
+	return when(this) {
+		is ParentResource -> for(child in children) {
+			child.walk(block)
+		}
+
+		is FileResource -> block(this)
+		else -> TODO("$this")
+	}
+}

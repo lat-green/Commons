@@ -3,10 +3,11 @@ package com.greentree.commons.context.provider
 import com.greentree.commons.context.BeanContext
 import com.greentree.commons.context.BeanRegistration
 import com.greentree.commons.context.type
+import com.greentree.commons.reflection.info.TypeInfo
 
-data class TransientBeanProvider<T>(
+data class TransientBeanProvider<T : Any>(
 	val registration: BeanRegistration<T>,
-	override val type: Class<out T> = registration.type,
+	override val type: TypeInfo<out T> = registration.type,
 ) : BeanProvider<T> {
 
 	private val instances = mutableMapOf<BeanContext, T>()

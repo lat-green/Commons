@@ -11,13 +11,13 @@ data object TypeInfoBuilder {
 
 	@Deprecated("", ReplaceWith("TypeInfo<T>(field)", "com.greentree.commons.reflection.info.TypeInfo"))
 	@JvmStatic
-	fun <T> getTypeInfo(field: Field): TypeInfo<T> {
+	fun <T : Any> getTypeInfo(field: Field): TypeInfo<T> {
 		return TypeInfo<T>(field)
 	}
 
 	@Deprecated("", ReplaceWith("TypeInfo<T>(parameter)", "com.greentree.commons.reflection.info.TypeInfo"))
 	@JvmStatic
-	fun <T> getTypeInfo(parameter: Parameter): TypeInfo<T> {
+	fun <T : Any> getTypeInfo(parameter: Parameter): TypeInfo<T> {
 		return TypeInfo<T>(parameter)
 	}
 
@@ -30,18 +30,18 @@ data object TypeInfoBuilder {
 
 	@Deprecated("", ReplaceWith("TypeInfo(cls)", "com.greentree.commons.reflection.info.TypeInfo"))
 	@JvmStatic
-	fun <T> getTypeInfo(cls: Class<T>): TypeInfo<T> {
+	fun <T : Any> getTypeInfo(cls: Class<T>): TypeInfo<T> {
 		return TypeInfo(cls)
 	}
 
 	@Deprecated("", ReplaceWith("TypeInfo<T>(type)", "com.greentree.commons.reflection.info.TypeInfo"))
 	@JvmStatic
-	fun <T> getTypeInfo(type: Type): TypeInfo<T> {
+	fun <T : Any> getTypeInfo(type: Type): TypeInfo<T> {
 		return TypeInfo<T>(type)
 	}
 
 	@Deprecated("", ReplaceWith("TypeInfo<T>(type)", "com.greentree.commons.reflection.info.TypeInfo"))
-	fun <T> getTypeInfo(type: WildcardType): TypeInfo<T> {
+	fun <T : Any> getTypeInfo(type: WildcardType): TypeInfo<T> {
 		return TypeInfo(type)
 	}
 
@@ -50,7 +50,7 @@ data object TypeInfoBuilder {
 		ReplaceWith("TypeInfo.fromClass(type, *parameters)", "com.greentree.commons.reflection.info.TypeInfo")
 	)
 	@JvmStatic
-	fun <T> getTypeInfo(type: Class<T>, vararg parameters: Type): ParameterizedTypeInfo<T> {
+	fun <T : Any> getTypeInfo(type: Class<T>, vararg parameters: Type): ParameterizedTypeInfo<T> {
 		return ParameterizedTypeInfo.fromClass(type, *parameters)
 	}
 
@@ -59,11 +59,11 @@ data object TypeInfoBuilder {
 		ReplaceWith("TypeInfo.fromClass(type, *parameters)", "com.greentree.commons.reflection.info.TypeInfo")
 	)
 	@JvmStatic
-	fun <T> getTypeInfo(type: Class<T>, vararg parameters: ParameterizedTypeInfo<*>): ParameterizedTypeInfo<T> {
+	fun <T : Any> getTypeInfo(type: Class<T>, vararg parameters: ParameterizedTypeInfo<*>): ParameterizedTypeInfo<T> {
 		return ParameterizedTypeInfo.fromClass(type, *parameters)
 	}
 
 	@Deprecated("", ReplaceWith("TypeInfo<T>(type)", "com.greentree.commons.reflection.info.TypeInfo"))
 	@JvmStatic
-	fun <T> getTypeInfo(type: ParameterizedType) = ParameterizedTypeInfo<T>(type)
+	fun <T : Any> getTypeInfo(type: ParameterizedType) = ParameterizedTypeInfo<T>(type)
 }

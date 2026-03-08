@@ -11,23 +11,23 @@ interface BeanContext {
 	fun containsBean(name: String, type: Class<*>): Boolean = resolveProviderOrNull(name, type) != null
 	fun containsBean(type: Class<*>): Boolean = resolveAllProviders(type).isNotEmpty()
 
-	fun <T> resolveProviderOrNull(name: String): BeanProvider<T>?
+	fun <T : Any> resolveProviderOrNull(name: String): BeanProvider<T>?
 
-	fun <T> resolveProviderOrNull(name: String, type: Class<T>): BeanProvider<T>? {
+	fun <T : Any> resolveProviderOrNull(name: String, type: Class<T>): BeanProvider<T>? {
 		val provider = resolveProviderOrNull<T>(name) ?: return null
 		if(!TypeUtil.isExtends(type, provider.type))
 			return null
 		return provider
 	}
 
-	fun <T> resolveProviderOrNull(type: Class<T>): BeanProvider<T>? {
+	fun <T : Any> resolveProviderOrNull(type: Class<T>): BeanProvider<T>? {
 		return resolveAllProviders(type).one {
 			"more one for ('$type') $it"
 		}
 	}
 
-	fun <T> resolveAllProviders(type: Class<T>): Sequence<BeanProvider<T>>
-	fun <T> resolveAllBeans(type: Class<T>): Sequence<T> = resolveAllProviders(type).map { it.get(this) }
+	fun <T : Any> resolveAllProviders(type: Class<T>): Sequence<BeanProvider<T>>
+	fun <T : Any> resolveAllBeans(type: Class<T>): Sequence<T> = resolveAllProviders(type).map { it.get(this) }
 
 	companion object : () -> MutableBeanContext {
 
@@ -35,24 +35,25 @@ interface BeanContext {
 	}
 }
 
-fun <T> BeanContext.resolveBeanOrNull(name: String): T? =
+fun <T : Any> BeanContext.resolveBeanOrNull(name: String): T? =
 	resolveProviderOrNull<T>(name)?.get(this)
 
-fun <T> BeanContext.resolveBeanOrNull(name: String, type: Class<T>): T? = resolveProviderOrNull(name, type)?.get(this)
+fun <T : Any> BeanContext.resolveBeanOrNull(name: String, type: Class<T>): T? =
+	resolveProviderOrNull(name, type)?.get(this)
 
-fun <T> BeanContext.resolveBeanOrNull(type: Class<T>): T? = resolveProviderOrNull(type)?.get(this)
+fun <T : Any> BeanContext.resolveBeanOrNull(type: Class<T>): T? = resolveProviderOrNull(type)?.get(this)
 
 //fun <T> BeanContext.resolveBean(name: String): T =
 //	resolveBeanOrNull(name) ?: throw NullPointerException("bean '$name' not found")
-fun <T> BeanContext.resolveBean(name: String, type: Class<T>): T =
+fun <T : Any> BeanContext.resolveBean(name: String, type: Class<T>): T =
 	resolveBeanOrNull(name, type) ?: throw NullPointerException("bean '$name' $type not found")
 
-fun <T> BeanContext.resolveBean(type: Class<T>): T =
+fun <T : Any> BeanContext.resolveBean(type: Class<T>): T =
 	resolveBeanOrNull(type) ?: throw NullPointerException("bean $type not found")
 
-inline fun <reified T> BeanContext.resolveBean(name: String) = resolveBean(name, T::class.java)
-inline fun <reified T> BeanContext.resolveBean() = resolveBean(T::class.java)
-inline fun <reified T> BeanContext.resolveAllBeans() = resolveAllBeans(T::class.java)
+inline fun <reified T : Any> BeanContext.resolveBean(name: String) = resolveBean(name, T::class.java)
+inline fun <reified T : Any> BeanContext.resolveBean() = resolveBean(T::class.java)
+inline fun <reified T : Any> BeanContext.resolveAllBeans() = resolveAllBeans(T::class.java)
 
 fun <T : Any> BeanContext.resolveBean(name: String, type: KClass<T>) = resolveBean(name, type.java)
 fun <T : Any> BeanContext.resolveBean(type: KClass<T>) = resolveBean(type.java)

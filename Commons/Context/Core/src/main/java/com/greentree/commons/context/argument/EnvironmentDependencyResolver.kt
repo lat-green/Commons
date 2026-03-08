@@ -28,7 +28,7 @@ data class EnvironmentDependencyResolver(
 	)
 }
 
-private fun <T> stringToAny(type: TypeInfo<T>, str: String): T & Any = (when(type.toClass()) {
+private fun <T : Any> stringToAny(type: TypeInfo<T>, str: String): T = (when(type.toClass()) {
 	java.lang.Long.TYPE -> str.toLong()
 	Integer.TYPE -> str.toInt()
 	java.lang.Short.TYPE -> str.toShort()
@@ -45,4 +45,4 @@ private fun <T> stringToAny(type: TypeInfo<T>, str: String): T & Any = (when(typ
 	java.lang.Boolean::class.java -> str.toBoolean()
 	String::class.java -> str
 	else -> TODO("$type")
-} as T)!!
+} as T)

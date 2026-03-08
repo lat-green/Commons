@@ -57,7 +57,7 @@ interface AbstractCollectionSerializator<E : Any, C : MutableCollection<E>> : Se
 	}
 }
 
-fun <E> TypeInfo<out Collection<E>>.getElementType() = TypeUtil.getSuperType(this, Collection::class.java)
+fun <E : Any> TypeInfo<out Collection<E>>.getElementType() = TypeUtil.getSuperType(this, Collection::class.java)
 	.typeArguments[0] as TypeInfo<E>
 
 data class ArrayListSerializator<E : Any>(

@@ -4,10 +4,11 @@ import com.greentree.commons.context.BeanContext
 import com.greentree.commons.context.BeanRegistration
 import com.greentree.commons.context.type
 import com.greentree.commons.reflection.ProxyUtil
+import com.greentree.commons.reflection.info.TypeInfo
 
 data class ProxySingletonBeanProvider<T : Any>(
 	val registration: BeanRegistration<T>,
-	override val type: Class<out T> = registration.type,
+	override val type: TypeInfo<out T> = registration.type,
 ) : BeanProvider<T> {
 
 	private lateinit var proxy: T
@@ -18,11 +19,11 @@ data class ProxySingletonBeanProvider<T : Any>(
 			if(::proxy.isInitialized) {
 				return proxy
 			}
-			if(type.isInterface)
+			if(type.toClass().isInterface)
 				proxy = ProxyUtil.newLazyInstance(type) { instance }
 			else {
 				val interfaces = sequence {
-					var cls: Class<*>? = type
+					var cls: Class<*>? = type.toClass()
 					while(cls != null) {
 						yield(cls)
 						cls = cls.superclass

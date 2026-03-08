@@ -7,7 +7,7 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
-data class ParameterizedTypeInfo<T>(
+data class ParameterizedTypeInfo<T : Any>(
 	private val rawType0: Class<T>,
 	private val actualTypeArguments0: Array<out TypeInfo<*>>,
 ) : ParameterizedType, TypeInfo<T> {
@@ -39,7 +39,7 @@ data class ParameterizedTypeInfo<T>(
 				)
 			) as TypeInfo<T>
 
-	override fun <S> complementChildOrNull(child: Class<S>): TypeInfo<S>? {
+	override fun <S : Any> complementChildOrNull(child: Class<S>): TypeInfo<S>? {
 		if(!ClassUtil.isExtends(toClass(), child))
 			return null
 		if(child.typeParameters.size == 0)
@@ -89,7 +89,7 @@ data class ParameterizedTypeInfo<T>(
 
 	companion object {
 
-		fun <T> fromClass(
+		fun <T : Any> fromClass(
 			rawType: Class<T>,
 			vararg arguments: Type,
 		) =
@@ -98,7 +98,7 @@ data class ParameterizedTypeInfo<T>(
 				arguments.mapToArray { TypeInfo<Any>(it) },
 			)
 
-		fun <T> fromClass(
+		fun <T : Any> fromClass(
 			rawType: Class<T>,
 			vararg arguments: KClass<*>,
 		) =
@@ -125,17 +125,17 @@ data class ParameterizedTypeInfo<T>(
 				arguments.mapToArray { TypeInfo(it) },
 			)
 
-		inline fun <reified T> fromClass(
+		inline fun <reified T : Any> fromClass(
 			vararg arguments: Type,
 		) = fromClass(T::class.java, *arguments)
 
-		inline fun <reified T> fromClass(
+		inline fun <reified T : Any> fromClass(
 			vararg arguments: KClass<*>,
 		) = fromClass(T::class.java, *arguments)
 	}
 }
 
-fun <T> ParameterizedTypeInfo(type: ParameterizedType) = when(type) {
+fun <T : Any> ParameterizedTypeInfo(type: ParameterizedType) = when(type) {
 	is ParameterizedTypeInfo<*> -> type as ParameterizedTypeInfo<T>
 	else -> ParameterizedTypeInfo<T>(
 		type.rawType as Class<T>,

@@ -53,44 +53,44 @@ object TypeUtil {
 	}
 
 	@JvmStatic
-	fun <S> getSuperType(type: TypeInfo<out S>, superClass: Class<S>) =
+	fun <S : Any> getSuperType(type: TypeInfo<out S>, superClass: Class<S>) =
 		type.getSuperType(superClass) as TypeInfo<S>
 
 	@JvmStatic
-	fun <S, T> getFirstArgument(
+	fun <S : Any, T : Any> getFirstArgument(
 		type: TypeInfo<out S>,
 		superClass: Class<S>,
-	): Class<out T> = getSuperType(type, superClass).typeArguments[0].toClass() as Class<out T>
+	): TypeInfo<out T> = getSuperType(type, superClass).typeArguments[0] as TypeInfo<out T>
 
 	@JvmStatic
-	fun <S : Any, T> getFirstArgument(
+	fun <S : Any, T : Any> getFirstArgument(
 		type: TypeInfo<out S>,
 		superClass: KClass<S>,
-	): Class<out T> = getFirstArgument(type, superClass.java)
+	): TypeInfo<out T> = getFirstArgument(type, superClass.java)
 
 	@JvmStatic
-	fun <S : Any, T> getFirstArgument(
+	fun <S : Any, T : Any> getFirstArgument(
 		type: KClass<out S>,
 		superClass: Class<S>,
-	): Class<out T> = getFirstArgument(getTypeInfo(type), superClass)
+	): TypeInfo<out T> = getFirstArgument(TypeInfo(type), superClass)
 
 	@JvmStatic
-	fun <S : Any, T> getFirstArgument(
+	fun <S : Any, T : Any> getFirstArgument(
 		type: KClass<out S>,
 		superClass: KClass<S>,
-	): Class<out T> = getFirstArgument(getTypeInfo(type), superClass.java)
+	): TypeInfo<out T> = getFirstArgument(TypeInfo(type), superClass.java)
 
 	@JvmStatic
-	fun <S : Any, T> getFirstArgument(
+	fun <S : Any, T : Any> getFirstArgument(
 		type: Class<out S>,
 		superClass: Class<S>,
-	): Class<out T> = getFirstArgument(getTypeInfo(type), superClass)
+	): TypeInfo<out T> = getFirstArgument(TypeInfo(type), superClass)
 
 	@JvmStatic
-	fun <S : Any, T> getFirstArgument(
+	fun <S : Any, T : Any> getFirstArgument(
 		type: Class<out S>,
 		superClass: KClass<S>,
-	): Class<out T> = getFirstArgument(getTypeInfo(type), superClass.java)
+	): TypeInfo<out T> = getFirstArgument(TypeInfo(type), superClass.java)
 
 	fun <T> getSuperClassAndInterfacesAsClass(cls: Class<T>) = sequence {
 		cls.superclass?.let { superClass ->

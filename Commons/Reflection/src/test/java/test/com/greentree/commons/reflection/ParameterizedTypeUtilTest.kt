@@ -3,6 +3,7 @@ package test.com.greentree.commons.reflection
 import com.greentree.commons.reflection.ParameterizedTypeImpl
 import com.greentree.commons.reflection.ParameterizedTypeUtil
 import com.greentree.commons.reflection.info.ParameterizedTypeInfo
+import com.greentree.commons.reflection.info.TypeInfo
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.jvm.javaType
@@ -43,6 +44,10 @@ class ParameterizedTypeUtilTest {
 				Integer::class,
 			),
 		)
+		assertIsExtendsTrue(
+			TypeInfo(A::class.java),
+			ParameterizedTypeInfo.fromClass<A<String>>(String::class),
+		)
 	}
 
 	@Test
@@ -63,6 +68,8 @@ class ParameterizedTypeUtilTest {
 		val b: MutableCollection<in String>? = null
 	}
 }
+
+interface A<out T : Any>
 
 private fun assertIsExtendsFalse(
 	superType: Type,

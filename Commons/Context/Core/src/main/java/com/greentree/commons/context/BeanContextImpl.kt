@@ -9,14 +9,14 @@ class BeanContextImpl : MutableBeanContext {
 
 	override fun register(name: String, provider: BeanProvider<*>): MutableBeanContext {
 		if(name in providers)
-			throw RuntimeException("duplicate name $name")
+			throw RuntimeException("duplicate name '$name'")
 		providers[name] = provider
 		return this
 	}
 
-	override fun <T> resolveProviderOrNull(name: String) = providers[name] as BeanProvider<T>?
+	override fun <T : Any> resolveProviderOrNull(name: String) = providers[name] as BeanProvider<T>?
 
-	override fun <T> resolveAllProviders(type: Class<T>): Sequence<BeanProvider<T>> {
+	override fun <T : Any> resolveAllProviders(type: Class<T>): Sequence<BeanProvider<T>> {
 		return providers.values.asSequence().filter { TypeUtil.isExtends(type, it.type) } as Sequence<BeanProvider<T>>
 	}
 }

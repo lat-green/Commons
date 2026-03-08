@@ -107,10 +107,10 @@ interface AbstractMapSerializator<K : Any, V : Any, M : MutableMap<K, V>> : Seri
 	}
 }
 
-fun <K> TypeInfo<out Map<K, *>>.getKeyType() = TypeUtil.getSuperType(this, Map::class.java)
+fun <K : Any> TypeInfo<out Map<K, *>>.getKeyType() = TypeUtil.getSuperType(this, Map::class.java)
 	.typeArguments[0] as TypeInfo<K>
 
-fun <V> TypeInfo<out Map<*, V>>.getValueType() = TypeUtil.getSuperType(this, Map::class.java)
+fun <V : Any> TypeInfo<out Map<*, V>>.getValueType() = TypeUtil.getSuperType(this, Map::class.java)
 	.typeArguments[1] as TypeInfo<V>
 
 data class MapSerializator<K : Any, V : Any>(

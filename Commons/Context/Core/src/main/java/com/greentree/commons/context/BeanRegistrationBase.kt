@@ -4,5 +4,5 @@ import com.greentree.commons.reflection.returnType
 
 typealias BeanRegistration<T> = BeanContext.() -> T & Any
 
-val <T> BeanRegistration<T>.type
+val <T : Any> BeanRegistration<T>.type
 	get() = returnType(this)
