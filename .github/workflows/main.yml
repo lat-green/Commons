@@ -37,6 +37,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: oracle
+          java-version: 23
+
+      - name: Set up Maven
+        uses: s4u/setup-maven-action@v1
       
       # - name: Cache SonarCloud packages
       #   uses: actions/cache@v3
