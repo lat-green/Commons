@@ -18,6 +18,11 @@ interface FileResource : ChildResource {
 	 */
 	val length: Long
 
+	override val isFile
+		get() = true
+	override val isDirectory
+		get() = false
+
 	fun open(): InputStream
 
 	fun openChannel(): ScatteringByteChannel = Channels.newChannel(open()).asScattering

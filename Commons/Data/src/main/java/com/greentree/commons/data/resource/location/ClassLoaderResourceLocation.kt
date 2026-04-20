@@ -1,6 +1,7 @@
 package com.greentree.commons.data.resource.location
 
 import com.greentree.commons.data.resource.FileResource
+import com.greentree.commons.data.resource.NotFoundResource
 import com.greentree.commons.data.resource.Resource
 import com.greentree.commons.data.resource.URLFileResource
 import java.net.URL
@@ -9,12 +10,12 @@ data class ClassLoaderResourceLocation(val loader: ClassLoader) : ResourceLocati
 
 	constructor(cls: Class<*> = ClassLoaderResourceLocation::class.java) : this(cls.classLoader)
 
-	override fun getResourceOrNull(name: String): Resource? {
+	override fun getResource(name: String): Resource {
 		TODO("Not yet implemented")
 	}
 
-	override fun getFileResourceOrNull(name: String): FileResource? {
-		val url = getURL(name) ?: return null
+	override fun getFileResource(name: String): FileResource {
+		val url = getURL(name) ?: return NotFoundResource(name)
 		return URLFileResource(url)
 	}
 

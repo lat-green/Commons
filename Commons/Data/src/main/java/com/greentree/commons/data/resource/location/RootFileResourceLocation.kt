@@ -20,19 +20,19 @@ class RootFileResourceLocation(val root: File) : NamedResourceLocation, MutableR
 	constructor(file: String) : this(File(file))
 	constructor(path: Path) : this(path.toFile())
 
-	override fun getResourceOrNull(name: String): MutableResource {
+	override fun getResource(name: String): MutableResource {
 		val file = File(root, name)
 		return Resources.of(file)
 	}
 
-	override fun getFileResourceOrNull(name: String): MutableFileResource {
+	override fun getFileResource(name: String): MutableFileResource {
 		val file = File(root, name)
 		if(file.exists() && !file.isFile)
 			throw RuntimeException("$file is not file")
 		return Resources.of(file)
 	}
 
-	override fun getFolderResourceOrNull(name: String): MutableFolderResource {
+	override fun getFolderResource(name: String): MutableFolderResource {
 		val file = File(root, name)
 		if(file.exists() && !file.isDirectory)
 			throw RuntimeException("$file is not file")

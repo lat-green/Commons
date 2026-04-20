@@ -2,9 +2,9 @@ package com.greentree.commons.data.resource.location
 
 import com.greentree.commons.data.FileUtil
 import com.greentree.commons.data.resource.FileResource
+import com.greentree.commons.data.resource.NotFoundResource
 import com.greentree.commons.data.resource.ParentResource
 import com.greentree.commons.data.resource.Resource
-import com.greentree.commons.data.resource.ResourceNotFound
 import com.greentree.commons.util.exception.WrappedException
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -31,11 +31,11 @@ class ZipResourceLocation(private val zip: FileResource) : NamedResourceLocation
 		}
 	}
 
-	override fun getResourceOrNull(name: String): Resource {
+	override fun getResource(name: String): Resource {
 		zip.open().use { `in` ->
 			ZipInputStream(`in`).use { zip_in ->
 				return when(val entry = found(name, zip_in)) {
-					null -> throw ResourceNotFound(name)
+					null -> NotFoundResource(name)
 					else -> ZipEntryResource(entry)
 				}
 			}
@@ -75,6 +75,7 @@ class ZipResourceLocation(private val zip: FileResource) : NamedResourceLocation
 		}
 
 		override fun exists() = true
+
 		override val parent: ParentResource
 			get() = TODO("Not yet implemented")
 

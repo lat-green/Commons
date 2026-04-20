@@ -4,6 +4,10 @@ sealed interface Resource {
 
 	val name: String
 
+	fun exists(): Boolean
+	val isFile: Boolean
+	val isDirectory: Boolean
+
 	fun lastModified(): Long
 }
 

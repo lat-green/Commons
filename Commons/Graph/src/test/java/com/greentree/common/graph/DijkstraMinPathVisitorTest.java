@@ -21,7 +21,6 @@ public class DijkstraMinPathVisitorTest {
         final var pathfinder = new DijkstraMinPathFinder<>(g, "A");
         assertEquals(pathfinder.get("B"), new VertexPath<>("A", List.of("B")));
         assertEquals(pathfinder.get("C"), new VertexPath<>("A", List.of("B", "C")));
-
     }
 
 }

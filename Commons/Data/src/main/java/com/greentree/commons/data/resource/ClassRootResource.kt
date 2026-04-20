@@ -20,6 +20,10 @@ data class ClassRootResource(
 		TODO("Not yet implemented")
 	}
 
+	override fun setLastModified(time: Long) {
+		TODO("Not yet implemented")
+	}
+
 	override fun delete(): Boolean {
 		TODO("Not yet implemented")
 	}

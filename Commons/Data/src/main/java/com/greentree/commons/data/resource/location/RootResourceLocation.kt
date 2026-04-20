@@ -8,6 +8,4 @@ class RootResourceLocation(
 ) : MutableResourceLocation {
 
 	override fun getResource(name: String) = resource.getChildren(name) as MutableFileResource
-
-	override fun getResourceOrNull(name: String) = resource.getChildren(name) as MutableFileResource
 }

@@ -47,7 +47,8 @@ data class SystemFileResource(
 		FileChannel.open(path, StandardOpenOption.READ)
 
 	override fun exists() = file.exists()
-
+	override val isFile = file.isFile
+	override val isDirectory = file.isDirectory
 	override val parent
 		get() = SystemFileResource(file.parentFile)
 	override val name: String

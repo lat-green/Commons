@@ -14,7 +14,7 @@ data class RootUrlResourceLocation(
 
 	constructor(uri: String) : this(URI(uri))
 
-	override fun getResourceOrNull(name: String) = URLFileResource(
+	override fun getResource(name: String) = URLFileResource(
 		try {
 			URL(context, name)
 		} catch(e: MalformedURLException) {

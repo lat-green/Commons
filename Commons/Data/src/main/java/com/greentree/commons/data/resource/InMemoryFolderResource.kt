@@ -33,6 +33,10 @@ class InMemoryFolderResource(
 
 	override fun lastModified() = max(lastModified, childrenResources.maxOf { it.lastModified })
 
+	override fun setLastModified(time: Long) {
+		lastModified = time
+	}
+
 	override fun delete(): Boolean {
 		if(childrenResources.isEmpty())
 			return false

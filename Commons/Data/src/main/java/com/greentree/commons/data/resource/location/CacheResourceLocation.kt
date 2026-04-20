@@ -11,14 +11,14 @@ class CacheResourceLocation(
 	private val cacheLocation: MutableResourceLocation,
 ) : ResourceLocation {
 
-	override fun getResourceOrNull(name: String): FileResource? {
-		val source = sourceLocation.getFileResourceOrNull(name) ?: return null
+	override fun getResource(name: String): FileResource {
+		val source = sourceLocation.getFileResource(name)
 		val cache = cacheLocation.getFileResource(name)
 		return CacheFileResource(source, cache)
 	}
 
-	override fun getFileResourceOrNull(name: String): FileResource? {
-		val source = sourceLocation.getFileResourceOrNull(name) ?: return null
+	override fun getFileResource(name: String): FileResource {
+		val source = sourceLocation.getFileResource(name)
 		val cache = cacheLocation.getFileResource(name)
 		return CacheFileResource(source, cache)
 	}
