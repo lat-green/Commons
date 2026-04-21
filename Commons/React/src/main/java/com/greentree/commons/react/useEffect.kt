@@ -4,6 +4,13 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
+/**
+ * Хук эффекта - выполняет block при изменении dependency.
+ * Аналог React useEffect с проверкой по ссылке.
+ *
+ * @param dependency зависимость для отслеживания
+ * @param block функция, выполняемая при изменении
+ */
 @OptIn(ExperimentalContracts::class)
 inline fun ReactContext.useEffect(dependency: Any, block: () -> Unit) {
 	contract {
@@ -43,6 +50,12 @@ inline fun ReactContext.useEffect(block: () -> Unit) {
 	block()
 }
 
+/**
+ * Хук эффекта с автоматическим закрытием (AutoCloseable).
+ * Предыдущий ресурс закрывается при новом вызове.
+ * @param dependency зависимость
+ * @param block функция, возвращающая закрываемый ресурс
+ */
 @OptIn(ExperimentalContracts::class)
 inline fun ReactContext.useEffectClose(dependency: Any, block: () -> AutoCloseable) {
 	contract {
@@ -56,6 +69,11 @@ inline fun ReactContext.useEffectClose(dependency: Any, block: () -> AutoCloseab
 	}
 }
 
+/**
+ * Хук эффекта с закрытием по хэшу.
+ * @param dependency зависимость
+ * @param block функция
+ */
 @OptIn(ExperimentalContracts::class)
 inline fun ReactContext.useEffectCloseByHash(dependency: Any, block: () -> AutoCloseable) {
 	contract {
@@ -69,6 +87,11 @@ inline fun ReactContext.useEffectCloseByHash(dependency: Any, block: () -> AutoC
 	}
 }
 
+/**
+ * Хук эффекта с закрытием по same.
+ * @param dependency зависимость
+ * @param block функция
+ */
 @OptIn(ExperimentalContracts::class)
 inline fun ReactContext.useEffectCloseBySame(dependency: Any, block: () -> AutoCloseable) {
 	contract {
@@ -82,6 +105,10 @@ inline fun ReactContext.useEffectCloseBySame(dependency: Any, block: () -> AutoC
 	}
 }
 
+/**
+ * Хук эффекта с однократным закрытием (только при первом рендере).
+ * @param block функция
+ */
 @OptIn(ExperimentalContracts::class)
 inline fun ReactContext.useEffectClose(block: () -> AutoCloseable) {
 	contract {
