@@ -8,6 +8,12 @@ public final class FuncMapIterable<T, R> extends MapIterable<T, R> {
 
 	private final Function<? super T, ? extends R> func;
 
+	/**
+	 * Creates iterable that applies function to elements.
+	 *
+	 * @param iter source iterable
+	 * @param func mapping function
+	 */
 	public FuncMapIterable(Iterable<? extends T> iter, Function<? super T, ? extends R> func) {
 		super(iter);
 		this.func = func;
@@ -26,6 +32,12 @@ public final class FuncMapIterable<T, R> extends MapIterable<T, R> {
 		return Objects.hash(func) + 31 * super.hashCode();
 	}
 
+	/**
+	 * Applies function to element.
+	 *
+	 * @param t element to map
+	 * @return mapped element
+	 */
 	@Override
 	protected R func(T t) {
 		return func.apply(t);

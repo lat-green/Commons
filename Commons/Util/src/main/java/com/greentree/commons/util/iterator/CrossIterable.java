@@ -7,6 +7,12 @@ public class CrossIterable<T> implements Iterable<T> {
 
 	private final Iterable<? extends T> a, b;
 
+	/**
+	 * Creates cross product iterable. Larger iterable is stored as 'a'.
+	 *
+	 * @param a first iterable
+	 * @param b second iterable
+	 */
 	public CrossIterable(Iterable<? extends T> a, Iterable<? extends T> b) {
 		if(IteratorUtil.size(a) > IteratorUtil.size(b)) {
 			this.a = a;
@@ -30,6 +36,11 @@ public class CrossIterable<T> implements Iterable<T> {
 		return Objects.hash(a, b);
 	}
 
+	/**
+	 * Returns cross product iterator.
+	 *
+	 * @return cross product iterator
+	 */
 	@Override
 	public Iterator<T> iterator() {
 		return IteratorUtil.cross(a.iterator(), b.iterator());

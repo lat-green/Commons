@@ -5,7 +5,7 @@ import kotlin.math.max
 /**
  * Реализация директории, хранимой в памяти.
  * Содержит дочерние ресурсы (файлы и поддиректории) в оперативной памяти.
- * 
+ *
  * @property name имя директории
  * @property files начальный список ресурсов
  * @property parentResource родительская директория (опционально)
@@ -24,6 +24,7 @@ class InMemoryFolderResource(
 	override val parent: ParentResource
 		get() = parentResource ?: throw RuntimeException("parent not found")
 	private val childrenResources = files.toMutableList()
+
 	/**
 	 * Список дочерних ресурсов.
 	 */
@@ -71,7 +72,7 @@ class InMemoryFolderResource(
 	 * директории и всех её содержимых ресурсов.
 	 * @return время в миллисекундах с начала эпохи
 	 */
-	override fun lastModified() = max(lastModified, childrenResources.maxOf { it.lastModified })
+	override fun lastModified() = max(lastModified, childrenResources.maxOf { it.lastModified() })
 
 	/**
 	 * Устанавливает время последней модификации директории.

@@ -16,6 +16,12 @@ public class FilterIterator<E> implements Iterator<E>, Serializable {
 
 	private E next;
 
+	/**
+	 * Creates iterator that filters elements using the given predicate.
+	 *
+	 * @param iterator source iterator
+	 * @param filter predicate to test elements
+	 */
 	public FilterIterator(Iterator<? extends E> iterator, Predicate<? super E> filter) {
 		this.filter = filter;
 		this.iterator = iterator;
@@ -23,11 +29,21 @@ public class FilterIterator<E> implements Iterator<E>, Serializable {
 		next();
 	}
 
+	/**
+	 * Returns true if next element passes the filter.
+	 *
+	 * @return true if has more elements
+	 */
 	@Override
 	public boolean hasNext() {
 		return hasNext;
 	}
 
+	/**
+	 * Returns next element that passes the filter.
+	 *
+	 * @return next element
+	 */
 	@Override
 	public E next() {
 		if(!hasNext()) throw new NoSuchElementException();

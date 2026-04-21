@@ -7,17 +7,23 @@ import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
 public class FilterIterable<T> implements Iterable<T>, Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Predicate<? super T> filter;
 	private final Iterable<T> source;
-	
+
+	/**
+	 * Creates iterable that filters elements using the given predicate.
+	 *
+	 * @param source source iterable
+	 * @param filter predicate to test elements
+	 */
 	public FilterIterable(Iterable<T> source, Predicate<? super T> filter) {
 		this.filter = filter;
 		this.source = source;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if(this == obj)
@@ -27,25 +33,35 @@ public class FilterIterable<T> implements Iterable<T>, Serializable {
 		FilterIterable<?> other = (FilterIterable<?>) obj;
 		return Objects.equals(filter, other.filter) && Objects.equals(source, other.source);
 	}
-	
+
+	/**
+	 * Returns spliterator that filters elements.
+	 *
+	 * @return filtering spliterator
+	 */
 	@Override
 	public Spliterator<T> spliterator() {
 		return StreamSupport.stream(source.spliterator(), false).filter(filter).spliterator();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(filter, source);
 	}
-	
+
+	/**
+	 * Returns iterator that filters elements.
+	 *
+	 * @return filtering iterator
+	 */
 	@Override
 	public FilterIterator<T> iterator() {
 		return new FilterIterator<>(source.iterator(), filter);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "FilterIterable [filter=" + filter + ", iterable=" + source + "]";
 	}
-	
+
 }
