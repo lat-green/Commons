@@ -3,6 +3,16 @@ package com.greentree.commons.data.resource
 import java.io.InputStream
 import java.io.OutputStream
 
+/**
+ * Прокси-реализация изменяемого ресурса в памяти.
+ * Позволяет динамически менять тип ресурса (файл/директория) и делегирует
+ * операции к реальному ресурсу.
+ * 
+ * @property name имя ресурса
+ * @see MutableFileResource
+ * @see MutableFolderResource
+ * @see InMemoryResource
+ */
 data class InMemoryProxyMutableResource(
 	override val name: String,
 ) : MutableFolderResource, MutableFileResource, InMemoryResource {

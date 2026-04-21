@@ -13,67 +13,149 @@ import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.FileAttribute
 
+/**
+ * Реализация ресурса на основе файловой системы.
+ * Представляет файл или директорию в реальной файловой системе.
+ * Поддерживает чтение, запись, создание и удаление файлов/директорий.
+ * 
+ * @property file Java File объект
+ * @see MutableFileResource
+ * @see MutableFolderResource
+ * @see MutableRootResource
+ */
 data class SystemFileResource(
 	val file: File,
 ) : MutableFileResource, MutableFolderResource, MutableRootResource {
 
+	/**
+	 * Путь к файлу в виде Java NIO Path.
+	 */
 	val path: Path
 		get() = file.toPath()
 
+	/**
+	 * Устанавливает время последней модификации файла.
+	 * @param time время в миллисекундах с начала эпохи
+	 */
 	override fun setLastModified(time: Long) {
 		file.setLastModified(time)
 	}
 
+	/**
+	 * Создает новый файл, если он не существует.
+	 * @return true, если файл был создан
+	 */
 	override fun createThisFile() = file.createNewFile()
 
+	/**
+	 * Создает директорию и все необходимые родительские директории.
+	 * @return true, если директория была создана
+	 */
 	override fun createThisFolder() = file.mkdirs()
 
+	/**
+	 * Открывает файл для записи.
+	 * @return OutputStream для записи
+	 */
 	override fun openWrite() = FileOutputStream(file)
 
+	/**
+	 * Размер файла в байтах.
+	 */
 	override val length
 		get() = file.length()
 
+	/**
+	 * Открывает файл для чтения.
+	 * @return InputStream для чтения
+	 */
 	override fun open() = FileInputStream(file)
 
+	/**
+	 * Открывает асинхронный канал для чтения.
+	 * @return AsyncByteChannel
+	 */
 	override fun openAsyncChannel() =
 		AsynchronousFileChannelAsyncByteChannel(
 			AsynchronousFileChannel.open(path, StandardOpenOption.READ)
 		)
 
+	/**
+	 * Открывает канал для записи.
+	 * @return FileChannel для записи
+	 */
 	override fun openWriteChannel(): FileChannel =
 		FileChannel.open(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE)
 
+	/**
+	 * Открывает канал для чтения.
+	 * @return FileChannel для чтения
+	 */
 	override fun openChannel(): FileChannel =
 		FileChannel.open(path, StandardOpenOption.READ)
 
 	override fun exists() = file.exists()
 	override val isFile = file.isFile
 	override val isDirectory = file.isDirectory
+	/**
+	 * Родительская директория.
+	 */
 	override val parent
 		get() = SystemFileResource(file.parentFile)
+	/**
+	 * Имя файла.
+	 */
 	override val name: String
 		get() = file.name
 
 	override fun lastModified() = file.lastModified()
 
+	/**
+	 * Список дочерних файлов и директорий.
+	 */
 	override val children
 		get() = file.listFiles().map { SystemFileResource(it) }
 
+	/**
+	 * Получает дочерний ресурс по имени.
+	 * @param name имя дочернего файла или директории
+	 * @return SystemFileResource для указанного пути
+	 */
 	override fun getChildren(name: String) = SystemFileResource(File(file, name))
 
+	/**
+	 * Удаляет файл или директорию.
+	 * @return true, если удаление успешно
+	 */
 	override fun delete(): Boolean {
 		return file.delete()
 	}
 
+	/**
+	 * Событие создания файла.
+	 */
 	override val onCreate: RunObservable
 		get() = FileWatcher.onFileCreate(file)
+	/**
+	 * Событие модификации файла.
+	 */
 	override val onModify: RunObservable
 		get() = FileWatcher.onFileModify(file)
+	/**
+	 * Событие удаления файла.
+	 */
 	override val onDelete: RunObservable
 		get() = FileWatcher.onFileDelete(file)
 
 	companion object {
 
+		/**
+		 * Создает временный файлый ресурс.
+		 * @param prefix префикс имени файла
+		 * @param suffix суффикс имени файла
+		 * @param attrs атрибуты файла
+		 * @return SystemFileResource временного файла
+		 */
 		fun crateTempResource(prefix: String, suffix: String, vararg attrs: FileAttribute<*>): SystemFileResource {
 			val file = Files.createTempFile(prefix, suffix).toFile()
 			file.deleteOnExit()

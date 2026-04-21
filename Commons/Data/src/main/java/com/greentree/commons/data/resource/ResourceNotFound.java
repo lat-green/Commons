@@ -1,5 +1,11 @@
 package com.greentree.commons.data.resource;
 
+/**
+ * Исключение, выбрасываемое, когда ресурс не найден.
+ * Используется для индикации отсутствия запрашиваемого файла или директории.
+ * 
+ * @see NotFoundResource
+ */
 public class ResourceNotFound extends RuntimeException {
 
     public ResourceNotFound() {
